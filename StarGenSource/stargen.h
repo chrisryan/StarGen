@@ -11,6 +11,20 @@ typedef	enum actions {						// Callable StarGen can:
 	aListVerbosity,							//  - List values of the -v option
 } actions;
 
+typedef enum {
+	ffHTML,
+	ffTEXT,
+	ffCELESTIA,
+	ffCSV,
+	ffCSVdl,
+	ffSVG
+} out_formats;
+
+typedef enum {
+	gfGIF,
+	gfSVG
+} graphic_formats;
+
 int stargen (actions		action,			// One of the above
 			 char			flag_char,
 			 char *			path,			// OS path to where to write files
@@ -35,8 +49,8 @@ int stargen (actions		action,			// One of the above
 			 long double	ratio_arg,		// Change dust density (experimental)
 			 
 			 int			flags_arg,		// Options (see below)
-			 int			out_format,		// Output file formats (see below)
-			 int			graphic_format	// Graphic file formats (see below)
+			 out_formats	out_format,		// Output file formats (see below)
+			 graphic_formats	graphic_format	// Graphic file formats (see below)
 			 );
 
 										// Values of flags_arg:
@@ -52,18 +66,6 @@ int stargen (actions		action,			// One of the above
 #define fOnlyMultiHabitable		0x0200
 #define fOnlyJovianHabitable	0x0400
 #define fOnlyEarthlike			0x0800
-
-										// Values of out_format
-#define	ffHTML				'HTML'
-#define	ffTEXT				'TEXT'
-#define	ffCELESTIA			'.SSC'
-#define ffCSV				'.CSV'
-#define ffCSVdl				'+CSV'
-#define ffSVG				'.SVG'
-
-										// Values of graphic_format
-#define	gfGIF				'.GIF'
-#define gfSVG				'.SVG'
 
 										// The two predefined star catalogs.
 extern catalog	solstation;

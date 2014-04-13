@@ -1212,8 +1212,8 @@ int stargen (actions		action,
 			 long double	ratio_arg,
 			 
 			 int			flags_arg,
-			 int			out_format,
-			 int			graphic_format
+			 out_formats	out_format,
+			 graphic_formats	graphic_format
 			 )
 {
 	sun				sun					= {0.0, 0.0, 0.0, 0.0, 0.0, ""};
@@ -1266,9 +1266,6 @@ int stargen (actions		action,
 
 	if ((path == NULL) || (path[0] == '\0'))
 		path 		= default_path;
-	
-	if (graphic_format == 0)
-		graphic_format = gfGIF;
 	
 	if ((url_path_arg != NULL) && (url_path_arg[0] != '\0'))
 		url_path	= url_path_arg;

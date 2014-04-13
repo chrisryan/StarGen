@@ -133,8 +133,8 @@ int main (int argc, char *argv[])
 	long double	ratio_arg				= 0.0;
 
 	int			flags_arg				= 0;
-	int			out_format				= ffHTML;
-	int			graphic_format			= gfGIF;
+	out_formats		out_format			= ffHTML;
+	graphic_formats	graphic_format		= gfGIF;
 	
 	char 		*c						= NULL;
 	int  		skip					= FALSE;
