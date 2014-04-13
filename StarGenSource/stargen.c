@@ -1368,11 +1368,11 @@ int stargen (actions		action,
 			if (sgOut == NULL)
 				sgOut = stdout;
 			
-			fprintf (sgOut, "Size of float: %ld\n",
+			fprintf (sgOut, "Size of float: %u\n",
 					 sizeof(float));
-			fprintf (sgOut, "Size of doubles: %ld\n",
+			fprintf (sgOut, "Size of doubles: %u\n",
 					 sizeof(double));
-			fprintf (sgOut, "Size of long doubles: %ld\n\n",
+			fprintf (sgOut, "Size of long doubles: %u\n\n",
 					 sizeof(long double));
 			fprintf (sgOut, "Earth Eff Temp: %5.1Lf K, %5.1Lf C, Earth rel: %5.1Lf C\n\n",
 					 temp,
