@@ -154,3 +154,12 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+# Linux Specific build files
+Makefile
+*.o
+.deps
+StarGenSource/stargen
+config.h
+config.status
+stamp-h1
