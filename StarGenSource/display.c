@@ -807,7 +807,7 @@ void print_description(FILE*			file,
 		long double	ice        = (planet->ice_cover * 100.0);
 		long double	gravity    = planet->surf_grav;
 		
-		fprintf (file, opening);
+		fputs (opening, file);
 		
 		if (gravity < .8)				LPRINT ("Low-G")	/* .8 gees */
 		else if (gravity > 1.2)			LPRINT ("High-G")
@@ -884,7 +884,7 @@ void print_description(FILE*			file,
 		 || (planet->resonant_period))
 			LPRINT ("1-Face");
 		
-		fprintf (file, closing);
+		fputs (closing, file);
 	}
 }
 
