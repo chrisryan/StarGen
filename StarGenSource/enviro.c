@@ -14,8 +14,7 @@ const char* breathability_phrase[4] =
 		"poisonous"
 	};
 
-long double luminosity(mass_ratio)
-long double mass_ratio;
+long double luminosity(long double mass_ratio)
 {
 	long double n; 
 	
@@ -48,8 +47,7 @@ int orb_zone(long double luminosity, long double orb_radius)
 /*	 of grams/cc.  The radius returned is in units of km.					*/
 /*--------------------------------------------------------------------------*/
 
-long double volume_radius(mass, density)
-long double mass, density;
+long double volume_radius(long double mass, long double density)
 {
 	long double volume; 
 	
@@ -68,9 +66,7 @@ long double mass, density;
 /*	 eq.23, which appears on page 840.										*/
 /*--------------------------------------------------------------------------*/
 
-long double kothari_radius(mass, giant, zone)
-long double mass;
-int giant, zone;
+long double kothari_radius(long double mass, int giant, int zone)
 {
 	volatile long double temp1;
 	long double temp, temp2, atomic_weight, atomic_num;
@@ -158,8 +154,7 @@ long double empirical_density(long double mass, long double orb_radius,
 /*	radius is in km.  The density is returned in units of grams/cc.			*/
 /*--------------------------------------------------------------------------*/
 
-long double volume_density(mass, equat_radius)
-long double mass, equat_radius;
+long double volume_density(long double mass, long double equat_radius)
 {
 	long double volume; 
 	
@@ -175,8 +170,7 @@ long double mass, equat_radius;
 /*	masses.	 The period returned is in terms of Earth days.					*/
 /*--------------------------------------------------------------------------*/
 
-long double period(separation, small_mass, large_mass)
-long double separation, small_mass, large_mass;
+long double period(long double separation, long double small_mass, long double large_mass)
 {
 	long double period_in_years; 
 	
@@ -272,8 +266,7 @@ long double day_length(planet_pointer	planet)
 /*	 Inclination is returned in units of degrees.							*/
 /*--------------------------------------------------------------------------*/
 
-int inclination(orb_radius)
-long double orb_radius; 
+int inclination(long double orb_radius)
 {
 	int temp; 
 	
@@ -289,8 +282,7 @@ long double orb_radius;
 /*	velocity returned is in cm/sec.											*/
 /*--------------------------------------------------------------------------*/
 
-long double escape_vel(mass, radius)
-long double mass, radius;
+long double escape_vel(long double mass, long double radius)
 {
 	long double mass_in_grams, radius_in_cm;
 	
@@ -321,8 +313,7 @@ long double rms_vel(long double molecular_weight, long double exospheric_temp)
 /*	kilometers.																*/
 /*--------------------------------------------------------------------------*/
 
-long double molecule_limit(mass, equat_radius, exospheric_temp)
-long double mass, equat_radius, exospheric_temp;
+long double molecule_limit(long double mass, long double equat_radius, long double exospheric_temp)
 {
 	long double esc_velocity = escape_vel(mass,equat_radius);
 	
@@ -337,8 +328,7 @@ long double mass, equat_radius, exospheric_temp;
 /*	acceleration is returned in units of cm/sec2.							*/
 /*--------------------------------------------------------------------------*/
 
-long double acceleration(mass, radius)
-long double mass, radius;
+long double acceleration(long double mass, long double radius)
 {
 	return(GRAV_CONSTANT * (mass * SOLAR_MASS_IN_GRAMS) /
 					   pow2(radius * CM_PER_KM));
@@ -351,8 +341,7 @@ long double mass, radius;
 /*	units of Earth gravities.												*/
 /*--------------------------------------------------------------------------*/
 
-long double gravity(acceleration)
-long double acceleration; 
+long double gravity(long double acceleration)
 {
 	return(acceleration / EARTH_ACCELERATION);
 }
@@ -361,10 +350,8 @@ long double acceleration;
 /*	This implements Fogg's eq.17.  The 'inventory' returned is unitless.	*/
 /*--------------------------------------------------------------------------*/
 
-long double vol_inventory(mass, escape_vel, rms_vel, stellar_mass, zone, 
-					 greenhouse_effect, accreted_gas)
-long double mass, escape_vel, rms_vel, stellar_mass;
-int zone, greenhouse_effect, accreted_gas;
+long double vol_inventory(long double mass, long double escape_vel, long double rms_vel,
+				long double stellar_mass, int zone, int greenhouse_effect, int accreted_gas)
 {
 	long double velocity_ratio, proportion_const, temp1, temp2, earth_units;
 	
@@ -409,8 +396,7 @@ int zone, greenhouse_effect, accreted_gas;
 /*	fudge factor (EARTH_SURF_PRES_IN_MILLIBARS / 1000.) to correct for that	*/
 /*--------------------------------------------------------------------------*/
 
-long double pressure(volatile_gas_inventory, equat_radius, gravity)
-long double volatile_gas_inventory, equat_radius, gravity;
+long double pressure(long double volatile_gas_inventory, long double equat_radius, long double gravity)
 {
 	equat_radius = KM_EARTH_RADIUS / equat_radius;
 	return(volatile_gas_inventory * gravity * 
@@ -424,8 +410,7 @@ long double volatile_gas_inventory, equat_radius, gravity;
 /*	 returned in units of Kelvin.  This is Fogg's eq.21.					*/
 /*--------------------------------------------------------------------------*/
 
-long double boiling_point(surf_pressure)
-long double surf_pressure; 
+long double boiling_point(long double surf_pressure)
 {
 	long double surface_pressure_in_bars; 
 	
@@ -444,8 +429,7 @@ long double surf_pressure;
 /*	 surface covered by water is 71%, not 75% as Fogg used.					*/
 /*--------------------------------------------------------------------------*/
 
-long double hydro_fraction(volatile_gas_inventory, planet_radius)
-long double volatile_gas_inventory, planet_radius;
+long double hydro_fraction(long double volatile_gas_inventory, long double planet_radius)
 {
 	long double temp; 
 	
@@ -469,9 +453,8 @@ long double volatile_gas_inventory, planet_radius;
 /*	 covered by one Kg. of cloud.											*/
 /*--------------------------------------------------------------------------*/
 
-long double cloud_fraction(surf_temp, smallest_MW_retained, equat_radius, hydro_fraction)
-long double surf_temp, smallest_MW_retained, equat_radius,
-	hydro_fraction;
+long double cloud_fraction(long double surf_temp, long double smallest_MW_retained,
+							long double equat_radius, long double hydro_fraction)
 {
 	long double water_vapor_in_kg, fraction, surf_area, hydro_mass;
 	
@@ -501,8 +484,7 @@ long double surf_temp, smallest_MW_retained, equat_radius,
 /*	 is approximatly .016 (=1.6%).											*/
 /*--------------------------------------------------------------------------*/
 
-long double ice_fraction(hydro_fraction, surf_temp)
-long double hydro_fraction, surf_temp;
+long double ice_fraction(long double hydro_fraction, long double surf_temp)
 {
 	long double temp; 
 	
@@ -523,8 +505,7 @@ long double hydro_fraction, surf_temp;
 /*	radius in AU, and the temperature returned is in Kelvin.				*/
 /*--------------------------------------------------------------------------*/
 
-long double eff_temp(ecosphere_radius, orb_radius, albedo)
-long double ecosphere_radius, orb_radius, albedo;
+long double eff_temp(long double ecosphere_radius, long double orb_radius, long double albedo)
 {
 	return(sqrt(ecosphere_radius / orb_radius)
 		  * pow1_4((1.0 - albedo) / (1.0 - EARTH_ALBEDO))
@@ -532,8 +513,7 @@ long double ecosphere_radius, orb_radius, albedo;
 }
 
 
-long double est_temp(ecosphere_radius, orb_radius, albedo)
-long double ecosphere_radius, orb_radius, albedo;
+long double est_temp(long double ecosphere_radius, long double orb_radius, long double albedo)
 {
 	return(sqrt(ecosphere_radius / orb_radius)
 		  * pow1_4((1.0 - albedo) / (1.0 - EARTH_ALBEDO))
@@ -576,8 +556,7 @@ int grnhouse(long double r_ecosphere, long double orb_radius)
 /*	I tuned this by changing a pow(x,.25) to pow(x,.4) to match Venus - JLB	*/
 /*--------------------------------------------------------------------------*/
 
-long double green_rise(optical_depth, effective_temp, surf_pressure)
-long double optical_depth, effective_temp, surf_pressure;
+long double green_rise(long double optical_depth, long double effective_temp, long double surf_pressure)
 {
 	long double convection_factor = EARTH_CONVECTION_FACTOR * 
 									pow(surf_pressure / 
@@ -597,8 +576,8 @@ long double optical_depth, effective_temp, surf_pressure;
 /*	 of the three major components of albedo that lie below the clouds.		*/
 /*--------------------------------------------------------------------------*/
 
-long double planet_albedo(water_fraction, cloud_fraction, ice_fraction, surf_pressure)
-long double water_fraction, cloud_fraction, ice_fraction, surf_pressure;
+long double planet_albedo(long double water_fraction, long double cloud_fraction,
+							long double ice_fraction, long double surf_pressure)
 {
 	long double rock_fraction, cloud_adjustment, components, cloud_part,
 	rock_part, water_part, ice_part;
@@ -654,8 +633,7 @@ long double water_fraction, cloud_fraction, ice_fraction, surf_pressure;
 /*	 planet.																*/
 /*--------------------------------------------------------------------------*/
 
-long double opacity(molecular_weight, surf_pressure)
-long double molecular_weight, surf_pressure;
+long double opacity(long double molecular_weight, long double surf_pressure)
 {
 	long double optical_depth; 
 	
@@ -911,8 +889,7 @@ void calculate_surface_temp(planet_pointer 	planet,
 				planet->albedo);
 }
 
-void iterate_surface_temp(planet)
-planet_pointer planet; 
+void iterate_surface_temp(planet_pointer planet)
 {
 	int			count = 0;
 	long double initial_temp = est_temp(planet->sun->r_ecosphere, planet->a, planet->albedo);
