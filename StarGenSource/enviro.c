@@ -6,7 +6,7 @@
 #include	"stargen.h"
 #include	"utils.h"
 
-char* breathability_phrase[4] =
+const char* breathability_phrase[4] =
 	{
 		"none",
 		"breathable",

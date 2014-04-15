@@ -39,7 +39,7 @@ unsigned int breathability (planet_pointer);
 #define	UNBREATHABLE	2
 #define	POISONOUS		3
 
-extern char* breathability_phrase[4];
+extern const char* breathability_phrase[4];
 
 extern long double lim(long double x);
 long double soft(long double v, long double max, long double min);
