@@ -24,14 +24,14 @@ typedef struct gas {
 	long double	surf_pressure;		/* units of millibars (mb)			 */
 	} gas;
 
-typedef struct sun {
+typedef struct Sun {
 	long double	luminosity;
 	long double	mass;
 	long double life;
 	long double age;
 	long double r_ecosphere;
 	const char	*name;
-	} sun;
+	} Sun;
 
 typedef struct planets_record {
 	int			planet_no;
@@ -74,7 +74,7 @@ typedef struct planets_record {
 	long double	hydrosphere;		/* fraction of surface covered		 */
 	long double	cloud_cover;		/* fraction of surface covered		 */
 	long double	ice_cover;			/* fraction of surface covered		 */
-	sun*		sun;
+	Sun*		sun;
 	int			gases;				/* Count of gases in the atmosphere: */
 	gas*		atmosphere;
 	planet_type type;				/* Type code						 */

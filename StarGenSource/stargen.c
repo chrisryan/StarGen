@@ -300,10 +300,10 @@ ChemTable    gases[] =
 int max_gas = (sizeof(gases)/sizeof(ChemTable))-1;
 
 void init(void);
-void generate_stellar_system(sun*, int, planet_pointer, char, int, char *, long double, int, int);
-void calculate_gases(sun*, planet_pointer, char*);
-void generate_planet(planet_pointer, int, sun*, int, char*, int, int, int);
-void generate_planets(sun*, int, char, int, char *, int, int);
+void generate_stellar_system(Sun*, int, planet_pointer, char, int, char *, long double, int, int);
+void calculate_gases(Sun*, planet_pointer, char*);
+void generate_planet(planet_pointer, int, Sun*, int, char*, int, int, int);
+void generate_planets(Sun*, int, char, int, char *, int, int);
 void usage(char *);
 static int diminishing_abundance(const void *xp, const void *yp);
 static int diminishing_pressure(const void *xp, const void *yp);
@@ -323,7 +323,7 @@ void init()
 	(void)srand(flag_seed);
 }
 
-void generate_stellar_system(sun*			sun,
+void generate_stellar_system(Sun*			sun,
 							 int 			use_seed_system, 
 							 planet_pointer seed_system,
 							 char			flag_char,
@@ -379,7 +379,7 @@ void generate_stellar_system(sun*			sun,
 					 do_moons);
 }
 
-void calculate_gases(sun*			sun,
+void calculate_gases(Sun*			sun,
 					 planet_pointer	planet,
 					 char*			planet_id)
 {
@@ -533,7 +533,7 @@ void calculate_gases(sun*			sun,
 
 void generate_planet(planet_pointer	planet,
 					 int			planet_no,
-					 sun*			sun,
+					 Sun*			sun,
 					 int 			random_tilt, 
 					 char*			planet_id,
 					 int			do_gases,
@@ -1113,7 +1113,7 @@ void check_planet(planet_pointer	planet,
 	}
 }
 
-void generate_planets(sun*			sun,
+void generate_planets(Sun*			sun,
 					  int 			random_tilt, 
 					  char			flag_char,
 					  int			sys_no,
@@ -1216,7 +1216,7 @@ int stargen (actions		action,
 			 graphic_formats	graphic_format
 			 )
 {
-	sun				sun					= {0.0, 0.0, 0.0, 0.0, 0.0, ""};
+	Sun				sun					= {0.0, 0.0, 0.0, 0.0, 0.0, ""};
 	long double		min_mass 			= 0.4;
 	long double		inc_mass 			= 0.05;
 	long double		max_mass 			= 2.35;

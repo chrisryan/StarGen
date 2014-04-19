@@ -70,7 +70,7 @@ char *engineer_notation(long double d, int p)
 void text_describe_system(planet_pointer innermost_planet, int do_gases, long int seed)
 {
 	planet_pointer 	planet;
-	sun*			sun = innermost_planet->sun;
+	Sun*			sun = innermost_planet->sun;
 	int 			counter; 
 	
 	printf("Stargen - V%s; seed=%ld\n", stargen_revision, seed);
@@ -151,7 +151,7 @@ void text_describe_system(planet_pointer innermost_planet, int do_gases, long in
 void csv_describe_system(FILE *file, planet_pointer innermost_planet, int do_gases, long int seed)
 {
 	planet_pointer 	planet;
-	sun*			sun = innermost_planet->sun;
+	Sun*			sun = innermost_planet->sun;
 	int 			counter; 
 	char 			buffer[2000];
 	planet_pointer 	moon;
@@ -940,7 +940,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 					 int	graphic_format)
 {
 	planet_pointer 	planet;
-	sun*			sun = innermost_planet->sun;
+	Sun*			sun = innermost_planet->sun;
 	int 			counter; 
 	int				planet_count=0;
 	int				terrestrials_seen = FALSE;
