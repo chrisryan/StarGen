@@ -1,3 +1,5 @@
+#pragma once
+
 long double luminosity(long double);
 int orb_zone(long double, long double);
 long double volume_radius(long double, long double);

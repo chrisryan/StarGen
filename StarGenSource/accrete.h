@@ -1,3 +1,5 @@
+#pragma once
+
 void set_initial_conditions(long double, long double );
 long double stellar_dust_limit(long double);
 long double nearest_planet(long double);
