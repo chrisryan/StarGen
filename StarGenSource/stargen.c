@@ -25,7 +25,7 @@
 #include	"stargen.h"
 #include	"utils.h"
 
-char *	stargen_revision = "$Revision: 1.43 $";
+const char * stargen_revision = "$Revision: 1.43 $";
 
 /*  These are the global variables used during accretion:  */
 planet_pointer	innermost_planet;
@@ -1201,7 +1201,7 @@ int stargen (actions		action,
 			 
 			 FILE *			sgOut,
 			 FILE *			sgErr,
-			 char *			prognam,
+			 const char *	prognam,
 			 long double	mass_arg,
 			 long			seed_arg,
 			 int			count_arg,

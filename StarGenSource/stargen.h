@@ -38,7 +38,7 @@ int stargen (actions		action,			// One of the above
 			 								//	Thumbnails will be written there
 			 								//  for HTML format
 			 FILE *			sgErr,			// Stream to write errors to (opt.)
-			 char *			prognam,		// Name of program (opt.)
+			 const char *	prognam,		// Name of program (opt.)
 			 long double	mass_arg,		// Mass of star (not used with catalog)
 			 long			seed_arg,		// Random number seed
 			 int			count_arg,		// Number of systems (or cats) to do
@@ -111,4 +111,4 @@ extern int max_gas;
 #define DIRSEP	"/"
 #endif
 
-extern char *	stargen_revision;		// RCS revision of stargen.c
+extern const char *stargen_revision;		// RCS revision of stargen.c

@@ -11,8 +11,7 @@
 #define	MAX_EXP_DIGS	3
 #define	MAX_MAN_DIGS	20
 
-char *engineer_notation(long double d, 
-						int 		p)
+char *engineer_notation(long double d, int p)
 {
 	static char mansign;
 	static char expsign;
@@ -454,56 +453,54 @@ void csv_thumbnails(FILE*	file,
 			file_name);
 }
 
-char *type_string (planet_type type)
+const char *type_string (planet_type type)
 {
-	char *typeString = "Unknown";
-	
 	switch (type)
 	{
-		case tUnknown:			typeString = "Unknown";		break;
-		case tRock:				typeString = "Rock";		break;
-		case tVenusian:			typeString = "Venusian";	break;
-		case tTerrestrial:		typeString = "Terrestrial";	break;
-		case tSubSubGasGiant:	typeString = "GasDwarf";	break;
-		case tSubGasGiant:		typeString = "Sub-Jovian";	break;
-		case tGasGiant:			typeString = "Jovian";		break;
-		case tMartian:			typeString = "Martian";		break;
-		case tWater:			typeString = "Water";		break;
-		case tIce:				typeString = "Ice";			break;
-		case tAsteroids: 		typeString = "Asteroids";	break;
-		case t1Face:			typeString = "1Face";		break;
+		case tUnknown:			return "Unknown";
+		case tRock:				return "Rock";
+		case tVenusian:			return "Venusian";
+		case tTerrestrial:		return "Terrestrial";
+		case tSubSubGasGiant:	return "GasDwarf";
+		case tSubGasGiant:		return "Sub-Jovian";
+		case tGasGiant:			return "Jovian";
+		case tMartian:			return "Martian";
+		case tWater:			return "Water";
+		case tIce:				return "Ice";
+		case tAsteroids: 		return "Asteroids";
+		case t1Face:			return "1Face";
 	}
-	return typeString;
+
+	return "Unknown";
 }
 
-char *texture_name (planet_type type)
+const char *texture_name (planet_type type)
 {
-	char *typeString = "Unknown";
-	
 	switch (type)
 	{
-		case tUnknown:			typeString = "x.jpg";			break;
-		case tRock:				typeString = "callisto.jpg";	break;
-		case tVenusian:			typeString = "venuslike.jpg";	break;
-		case tTerrestrial:		typeString = "Earthlike.png";	break;
-		case tSubSubGasGiant:	typeString = "x.jpg";			break;
-		case tSubGasGiant:		typeString = "gasgiant.jpg";	break;
-		case tGasGiant:			typeString = "jupiterlike.jpg";	break;
-		case tMartian:			typeString = "mars.jpg";		break;
-		case tWater:			typeString = "x.jpg";			break;
-		case tIce:				typeString = "pluto.jpg";		break;
-		case tAsteroids: 		typeString = "asteroid.jpg";	break;
-		case t1Face:			typeString = "x.jpg";			break;
+		case tUnknown:			return "x.jpg";
+		case tRock:				return "callisto.jpg";
+		case tVenusian:			return "venuslike.jpg";
+		case tTerrestrial:		return "Earthlike.png";
+		case tSubSubGasGiant:	return "x.jpg";
+		case tSubGasGiant:		return "gasgiant.jpg";
+		case tGasGiant:			return "jupiterlike.jpg";
+		case tMartian:			return "mars.jpg";
+		case tWater:			return "x.jpg";
+		case tIce:				return "pluto.jpg";
+		case tAsteroids: 		return "asteroid.jpg";
+		case t1Face:			return "x.jpg";
 	}
-	return typeString;
+
+	return "Unknown";
 }
 
 void create_svg_file (FILE				*file_arg,
 					  planet_pointer	innermost_planet, 
-					  char				*path, 
-					  char 				*file_name, 
-					  char 				*svg_ext, 
-					  char 				*prognam)
+					  const char		*path, 
+					  const char 		*file_name, 
+					  const char 		*svg_ext, 
+					  const char 		*prognam)
 {
 	planet_pointer 	outermost_planet;
 	planet_pointer	planet;
@@ -697,15 +694,14 @@ void create_svg_file (FILE				*file_arg,
 	}
 }
 
-FILE *open_csv_file (char *path,
-					 char *file_name)
+FILE *open_csv_file (char *path, char *file_name)
 {
 	FILE *file;
 	char file_spec[120];
 
 	sprintf (&file_spec[0], "%s%s", path, file_name);
 	
-		file = fopen (file_spec, "w");
+	file = fopen (file_spec, "w");
 	
 	return file;
 }
@@ -714,13 +710,13 @@ FILE *open_csv_file (char *path,
  *	HTML document headers
  */
 
-FILE *open_html_file (char *system_name, 
+FILE *open_html_file (const char *system_name, 
 					  long	seed,
-					  char *path,
-					  char *url_path,
-					  char *file_name, 
-					  char *ext,
-					  char *prognam,
+					  const char *path,
+					  const char *url_path,
+					  const char *file_name, 
+					  const char *ext,
+					  const char *prognam,
 					  FILE *file_arg)
 {
 	FILE *file;
@@ -767,27 +763,25 @@ FILE *open_html_file (char *system_name,
 	return file;
 }
 
-void close_html_file(file)
-FILE *file;
+void close_html_file(FILE *file)
 {
-
-	fprintf (file,
+	fprintf(file,
 			"<p>\n\n"
 			"<center>\n"
 			"This page was created by <a href='" STARGEN_URL "'>StarGen</a>.\n"
 			"</center>\n"
 			"<p>\n\n"
 	        "</body>\n</html>\n");
-	fflush (file);
-	fclose (file);
+	fflush(file);
+	fclose(file);
 }
 
 #define LPRINT(x)	{fprintf (file, "%s%s", first ? "" : ", ", x); first = FALSE;}
 
 void print_description(FILE*			file,
-					   char*			opening,
+					   const char*		opening,
 					   planet_pointer 	planet,
-					   char*			closing)
+					   const char*		closing)
 {
 	if ((planet->type == tGasGiant)
 	 || (planet->type == tSubGasGiant)
@@ -1005,7 +999,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 			planet = planet->next_planet, counter++)
 		{
 			int	ppixels = ((int)( sqrt(planet->radius / KM_EARTH_RADIUS) * 30.)) + 1;
-			char *ptype = type_string (planet->type);
+			const char *ptype = type_string (planet->type);
 			char info[100];
 			
 			if (planet->type == tAsteroids)
@@ -1055,7 +1049,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 				 moon = moon->next_planet, moons++)
 			{
 				// DISPLAY THEM
-				char *mtype = type_string (moon->type);
+				const char *mtype = type_string (moon->type);
 				int	mpixels = ((int)( sqrt(moon->radius / KM_EARTH_RADIUS) * 30.)) + 1;
 	
 				if ((moon->type == tGasGiant)
@@ -1269,7 +1263,7 @@ void html_decribe_planet(planet_pointer planet,
 						 FILE*			file)
 {
 	char	planet_id[80];
-	char	*typeString = type_string (planet->type);
+	const char *typeString = type_string (planet->type);
 	
 	if (moons == 00)
 		sprintf(planet_id, "%d", counter);
@@ -1607,7 +1601,7 @@ void html_describe_system(planet_pointer 	innermost_planet,
 		planet != NULL;
 		planet=planet->next_planet, counter++)
 	{
-		char	*typeString = type_string (planet->type);
+		const char *typeString = type_string (planet->type);
 		
 		fprintf (file,
 	        "<tr align=right>\n"
@@ -1630,7 +1624,7 @@ void html_describe_system(planet_pointer 	innermost_planet,
 			moon != NULL;
 			moon=moon->next_planet, moons++)
 		{
-			char	*typeString = type_string (moon->type);
+			const char *typeString = type_string (moon->type);
 
 			fprintf (file,
 				"<tr align=right>\n"
@@ -1684,12 +1678,10 @@ void celestia_describe_system(planet_pointer innermost_planet, char* designation
 		planet != NULL;
 		planet=planet->next_planet, counter++)
 	{
-		char	*typeString = texture_name (planet->type);
-		
 		printf("\"p%d\" \"%s\"\n", counter, designation);
 		printf("{\n");
 
-		printf("	Texture \"%s\"\n",	typeString);
+		printf("	Texture \"%s\"\n",	texture_name(planet->type));
 		printf("	Radius %3.1Lf\n", planet->radius);
 		printf("	Mass %3.1Lf\n", planet->mass * SUN_MASS_IN_EARTH_MASSES);
 		printf("\n");

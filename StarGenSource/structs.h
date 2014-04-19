@@ -30,7 +30,7 @@ typedef struct sun {
 	long double life;
 	long double age;
 	long double r_ecosphere;
-	char		*name;
+	const char	*name;
 	} sun;
 
 typedef struct planets_record {
@@ -102,14 +102,14 @@ typedef struct star {
 	long double		e;
 	long double		a;
 	planet_pointer	known_planets;
-	char			*desig;
+	const char		*desig;
 	int				in_celestia;
-	char			*name;
+	const char		*name;
 	} star;
 
 typedef struct catalog {
 	int				count;
-	char*			arg;
+	const char*		arg;
 	star			(*stars)[];
 	} catalog;
 
@@ -125,9 +125,9 @@ typedef	struct gen
 typedef struct ChemTableS
 {
   int         	num;
-  char       	*symbol;
-  char			*html_symbol;
-  char       	*name;
+  const char	*symbol;
+  const char	*html_symbol;
+  const char	*name;
   long double	weight;
   long double	melt;
   long double	boil;
