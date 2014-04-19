@@ -36,8 +36,7 @@ planets sphinx2   ={ 3,	2.25,	0.02,	10.5,	EM(2.35),	false,	EM(2.35),	0, 	ZEROES,
 planets sphinx    ={ 2,	1.6,	0.02,	10.5,	EM(2.2),	false,	EM(2.2),	0, 	ZEROES,0,NULL, &sphinx2};
 planets manticore ={ 1,	1.115,	0.017,	23.5,	EM(1.01),	false,	EM(1.01),	0, 	ZEROES,0,NULL, &sphinx};
 
-
-star	manticores[] = 
+star	manticores[] =
 // L		Mass	Mass2	Eccen.	SMAxis	 Planets	Designation			Name
 {{1.00,		1.00,	0,		0,		0,		 &mercury,	"Sol",		 	 1, "The Solar System"},
  {1.24,		1.047,	1.0,	0.05,	79.2,	 &manticore,"Manticore A",	 1, "Manticore A"},
@@ -46,7 +45,7 @@ star	manticores[] =
 
 catalog	manticore_cat	= {sizeof(manticores) / sizeof (star),	"B", &manticores[0]};
 
-star	helios[] = 
+star	helios[] =
 // L		Mass	Mass2	Eccen.	SMAxis	 Planets	Designation		Name
 {{1.00,		1.00,	0,		0,		0,		 &mercury,	"Sol",		 1, "The Solar System"},
  {1.08,		1.0,	0.87,	0.45,	8.85,	 NULL,		"Helio A",	 1, "Helio A"},
@@ -60,7 +59,7 @@ planets ilaqrb={1, 0.21, 0.1,   0,     EM(600.),true,     0,   EM(600.), ZEROES,
 planets ilaqrc={2, 0.13, 0.27,  0,     EM(178.),true,     0,   EM(178.), ZEROES,0,NULL, &ilaqrb};
 planets ilaqrd={3, 0.021,0.22,  0,     EM(5.9), false,    EM(5.9),    0, ZEROES,0,NULL, &ilaqrc};	// EM(5.9) or 7.53 +/- 0.70 Earth-masses
 
-star	ilAqrs[] = 
+star	ilAqrs[] =
 // L		Mass	Mass2	Eccen.	SMAxis	 Planets	Designation	Celes	Name
 {{1.00,		1.00,	0,		0,		0,		 &mercury,	"Sol",		1, "The Solar System"},
 {0.0016,	0.32,	0,		0,		0,		 &ilaqrd,	"IL Aqr",	1, "IL Aquarii/Gliese 876"}	// 15.2
@@ -135,27 +134,27 @@ int main (int argc, char *argv[])
 	int			flags_arg				= 0;
 	out_formats		out_format			= ffHTML;
 	graphic_formats	graphic_format		= gfGIF;
-	
+
 	char 		*c						= NULL;
 	bool 		skip					= false;
 	int  		index					= 0;
 
 	prognam = argv[0];
-	
+
 	if ((c = strrchr(prognam, DIRSEP[0])) != NULL)
 		prognam = c + 1;
-	
+
 	if (argc <= 1)
 	{
 		usage(prognam);
 		return(1);
 	}
-	
+
 	while (--argc > 0 && (*++argv)[0] == '-') {
 		for (c = argv[0]+1, skip=false;
-			 (*c != '\0') && (!(skip)); 
+			 (*c != '\0') && (!(skip));
 			 c++)
-			switch (*c) 
+			switch (*c)
 			{
 			case '-':
 				use_stdout = true;
@@ -167,10 +166,10 @@ int main (int argc, char *argv[])
 			case 'm':	// set mass of star
 			{
 				double	m;	// gnu C doesn't like to scanf long doubles
-				
+
 				sscanf (++c, "%lf", &m);
 				mass_arg = m;
-				
+
 				skip = true;
 				break;
 			}
@@ -262,7 +261,7 @@ int main (int argc, char *argv[])
 						--argc;
 						c = (++argv)[0];
 					}
-				
+
 				if (*c != '\0')
 					strcpy(filename_arg, c);
 
@@ -297,13 +296,13 @@ int main (int argc, char *argv[])
 						--argc;
 						c = (++argv)[0];
 					}
-				
+
 				if (*c != '\0')
 					strcpy(path, c);
-				
+
 				if (strcmp(path + strlen(path) - strlen(DIRSEP), DIRSEP) != 0)
 					strncat (path, DIRSEP, 80-strlen(path));
-					
+
 				skip = true;
 				break;
 			case 'u':
@@ -313,13 +312,13 @@ int main (int argc, char *argv[])
 						--argc;
 						c = (++argv)[0];
 					}
-				
+
 				if (*c != '\0')
 					strcpy(url_path_arg, c);
-				
+
 				if (strcmp(url_path_arg + strlen(url_path_arg) - strlen("/"), "/") != 0)
 					strncat (url_path_arg, "/", 80-strlen(url_path_arg));
-				
+
 				skip = true;
 				break;
 			case 'g':
@@ -366,15 +365,15 @@ int main (int argc, char *argv[])
 			case 'A':
 			{
 				double ratio;
-				
+
 				sscanf (++c, "%lf", &ratio);
 				skip = true;
-				
+
 				if (ratio > 0.0)
 					ratio_arg = ratio;
 				break;
 			}
-			
+
 			default:
 				fprintf (stderr, "Unknown option: %s\n", c);
 			case '?':
@@ -383,24 +382,24 @@ int main (int argc, char *argv[])
 				return (1);
 			}
 	}
-	
+
 	for (index = 0; index < argc; index++) {
 		if ((strlen(argv[index]) + strlen(arg_name)) < sizeof(arg_name))
 		{
 			if (strlen(arg_name))
 				strcpy(arg_name+strlen(arg_name), " ");
-			
+
 			strcpy(arg_name+strlen(arg_name), argv[index]);
 		}
 	}
-	
+
 	stargen (action,
 			 flag_char,
 			 path,
 			 url_path_arg,
 			 filename_arg,
 			 arg_name,
-			 
+
 			 use_stdout ? stdout : NULL,
 			 stderr,
 			 prognam,
@@ -410,9 +409,9 @@ int main (int argc, char *argv[])
 			 increment_arg,
 			 catalog,
 			 sys_no_arg,
-			 
+
 			 ratio_arg,
-			 
+
 			 flags_arg,
 			 out_format,
 			 graphic_format

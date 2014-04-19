@@ -71,8 +71,8 @@ void text_describe_system(planet_pointer innermost_planet, bool do_gases, long i
 {
 	planet_pointer 	planet;
 	Sun*			sun = innermost_planet->sun;
-	int 			counter; 
-	
+	int 			counter;
+
 	printf("Stargen - V%s; seed=%ld\n", stargen_revision, seed);
 	printf("                          SYSTEM  CHARACTERISTICS\n");
 	printf("Stellar mass: %4.2Lf solar masses\n", sun->mass);
@@ -86,7 +86,7 @@ void text_describe_system(planet_pointer innermost_planet, bool do_gases, long i
 		planet != NULL;
 		planet=planet->next_planet, counter++)
 	{
-	   printf("%d\t%7.3Lf AU\t%8.3Lf EM\t%c\n", 
+	   printf("%d\t%7.3Lf AU\t%8.3Lf EM\t%c\n",
 			  counter, planet->a,planet->mass * SUN_MASS_IN_EARTH_MASSES,
 			  planet->gas_giant ? 'O' :
 			  ((planet->greenhouse_effect) && (planet->surf_pressure > 0.0)) ? '+' :
@@ -114,7 +114,7 @@ void text_describe_system(planet_pointer innermost_planet, bool do_gases, long i
 			printf("   Surface pressure:\t\t%5.3Lf\tEarth atmospheres",(planet->surf_pressure / 1000.0));
 			if ((planet->greenhouse_effect) && (planet->surf_pressure > 0.0))
 				printf("\tGREENHOUSE EFFECT\n");
-			else 
+			else
 				printf("\n");
 			printf("   Surface temperature:\t\t%4.2Lf\tdegrees Celcius\n",
 					(planet->surf_temp - FREEZING_POINT_OF_WATER));
@@ -139,8 +139,8 @@ void text_describe_system(planet_pointer innermost_planet, bool do_gases, long i
 		printf("\n\n");
 
 		if (do_gases
-		 && (planet->type != tGasGiant) 
-		 && (planet->type != tSubGasGiant) 
+		 && (planet->type != tGasGiant)
+		 && (planet->type != tSubGasGiant)
 		 && (planet->type != tSubSubGasGiant))
 		{
 			//gases?
@@ -152,10 +152,10 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
 {
 	planet_pointer 	planet;
 	Sun*			sun = innermost_planet->sun;
-	int 			counter; 
+	int 			counter;
 	char 			buffer[2000];
 	planet_pointer 	moon;
-	int 			moons; 
+	int 			moons;
 
 	fprintf (file,
 			"'%s', '%s', '%s', '%s', '%s', '%s', '%s'\n",
@@ -235,30 +235,30 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
 		planet=planet->next_planet, counter++)
 	{
 		char	*ptr = buffer;
-		
+
 		*buffer = '\0';
-		
+
 		if (do_gases && (planet->gases > 0))
 		{
 			int	i;
-			
+
 			for (i = 0; i < planet->gases; i++)
 			{
 				int n;
 				int index = max_gas;
 				int	poisonous = false;
-				
+
 				for (n = 0; n < max_gas; n++)
 				{
 					if (gases[n].num == planet->atmosphere[i].num)
 						index = n;
 				}
-				
+
 				if (inspired_partial_pressure (planet->surf_pressure,
 											   planet->atmosphere[i].surf_pressure)
 					> gases[index].max_ipp)
 					poisonous = true;
-				
+
 				if (((planet->atmosphere[i].surf_pressure
 					 / planet->surf_pressure) > .0005)
 				 || poisonous)
@@ -323,41 +323,41 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
 				planet->cloud_cover,
 				planet->ice_cover,
 				(do_gases && (planet->gases > 0))
-					? buffer 
+					? buffer
 					: "",
 				type_string (planet->type),
 				planet->minor_moons
 			);
-			
+
 		for (moon = planet->first_moon, moons=1;
 			moon != NULL;
 			moon=moon->next_planet, moons++)
 		{
 			ptr = buffer;
-			
+
 			*buffer = '\0';
-			
+
 			if (do_gases && (moon->gases > 0))
 			{
 				int	i;
-				
+
 				for (i = 0; i < moon->gases; i++)
 				{
 					int n;
 					int index = max_gas;
 					int	poisonous = false;
-					
+
 					for (n = 0; n < max_gas; n++)
 					{
 						if (gases[n].num == moon->atmosphere[i].num)
 							index = n;
 					}
-					
+
 					if (inspired_partial_pressure (moon->surf_pressure,
 												   moon->atmosphere[i].surf_pressure)
 						> gases[index].max_ipp)
 						poisonous = true;
-					
+
 					if (((moon->atmosphere[i].surf_pressure
 						 / moon->surf_pressure) > .0005)
 					 || poisonous)
@@ -375,7 +375,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
 					}
 				}
 			}
-	
+
 			fprintf (file,
 				"'%s %d.%d', %5.3Lf, %5.3Lf, %5.3Lf, %5.3Lf, %d, "
 					"%5.3Lf, %5.3Lf, %5.3Lf, %5.3Lf, %d, %5.3Lf, "
@@ -422,7 +422,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
 					moon->cloud_cover,
 					moon->ice_cover,
 					(do_gases && (moon->gases > 0))
-						? buffer 
+						? buffer
 						: "",
 					type_string (moon->type)
 				);
@@ -431,13 +431,13 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
 
 }
 
-void csv_thumbnails(FILE*	file, 
+void csv_thumbnails(FILE*	file,
 					char*	url_path,
 					char*	subdir,
 					char*	file_name,
 					char*	csv_url)
 {
-	fprintf(file, 
+	fprintf(file,
 			"<table border=3 cellpadding=2 align=center bgcolor='#FFE6CC' width='75%%'>\n"
 			"	<tr>\n"
 			"		<td align=center><a href='%s' type='text/csv'><img \n"
@@ -496,17 +496,17 @@ const char *texture_name (planet_type type)
 }
 
 void create_svg_file (FILE				*file_arg,
-					  planet_pointer	innermost_planet, 
-					  const char		*path, 
-					  const char 		*file_name, 
-					  const char 		*svg_ext, 
+					  planet_pointer	innermost_planet,
+					  const char		*path,
+					  const char 		*file_name,
+					  const char 		*svg_ext,
 					  const char 		*prognam)
 {
 	planet_pointer 	outermost_planet;
 	planet_pointer	planet;
 	FILE*	file = stdout;
 	char	file_spec[300];
-	
+
 	if (file_arg == NULL)
 	{
 		sprintf (&file_spec[0], "%s%s%s", path, file_name, svg_ext);
@@ -517,14 +517,14 @@ void create_svg_file (FILE				*file_arg,
 	{
 		file = file_arg;
 	}
-	
+
 	if (NULL != file)
 	{
 		for (outermost_planet = innermost_planet;
 			 outermost_planet->next_planet != NULL;
 			 outermost_planet=outermost_planet->next_planet)
 			;
-		
+
 		{
 			double long		max_x		= 760.;
 			double long		max_y		= 120.;
@@ -539,20 +539,20 @@ void create_svg_file (FILE				*file_arg,
 			double long		offset  	= -mult * (1.0 + min_log);
 			double long		em_scale 	= 5;
 			double long		x;
-	
+
 			for (x = floor;
 				 x <= ceiling;
 				 x += 1.0)
 			{
 				float	n;
-				
+
 				for (n = 1.;
 					 n < 9.9;
 					 n++)
 				{
 					if (inner_edge > pow(10., x + log10(n)))
 						min_log = x + log10(n);
-						
+
 					if ((max_log == 0.0)
 					 && (outer_edge < pow(10., x + log10(n))))
 					{
@@ -560,11 +560,11 @@ void create_svg_file (FILE				*file_arg,
 					}
 				}
 			}
-	
+
 			mult		= max_x / (max_log - min_log);
 			offset  	= -mult * (1.0 + min_log);
 			em_scale 	= 5;
-	
+
 			fprintf (file,
 					 "<?xml version='1.0' standalone='no'?>\n"
 					 "<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' \n"
@@ -582,17 +582,17 @@ void create_svg_file (FILE				*file_arg,
 					 margin, margin,
 					 max_x + (margin * 2.), max_y + (margin * 2.),
 					 (innermost_planet->sun)->name,
-					 prognam, stargen_revision, 
-					 (offset+mult)+(min_log*mult), max_y - margin, 
+					 prognam, stargen_revision,
+					 (offset+mult)+(min_log*mult), max_y - margin,
 					 (offset+mult)+(max_log*mult), max_y - margin
 					);
-			
+
 			for (x = floor;
 				 x <= ceiling;
 				 x += 1.0)
 			{
 				float	n;
-				
+
 				for (n = 1.;
 					 n < 9.9;
 					 n++)
@@ -610,9 +610,9 @@ void create_svg_file (FILE				*file_arg,
 					}
 				}
 			}
-	
+
 			fprintf (file,  "</g>\n\n" );
-	
+
 			{
 				long double min_r_ecosphere = sqrt( (innermost_planet->sun)->luminosity / 1.51 );
 				long double max_r_ecosphere = sqrt( (innermost_planet->sun)->luminosity / 0.48 );
@@ -622,7 +622,7 @@ void create_svg_file (FILE				*file_arg,
 						 (offset+mult)+(log10((innermost_planet->sun)->r_ecosphere)*mult), (max_y - margin) - 5,
 						 (offset+mult)+(log10((innermost_planet->sun)->r_ecosphere)*mult), (max_y - margin) + 5
 						);
-				
+
 				fprintf (file,
 						 "<line x1='%.0Lf' y1='%.0Lf' x2='%.0Lf' y2='%.0Lf' stroke='#66c' stroke-width='10' stroke-opacity='0.5' />\n",
 						 (offset+mult)+(log10(min_r_ecosphere)*mult), max_y - margin,
@@ -635,7 +635,7 @@ void create_svg_file (FILE				*file_arg,
 					 "   font-style='normal' font-weight='normal'\n"
 					 "   fill='black' text-anchor='middle'>\n"
 					);
-	
+
 			for (x = floor;
 				 x <= ceiling;
 				 x += 1.0)
@@ -652,7 +652,7 @@ void create_svg_file (FILE				*file_arg,
 			}
 
 			fprintf (file,  "\n" );
-	
+
 			for (planet = innermost_planet;
 				 planet != NULL;
 				 planet = planet->next_planet)
@@ -661,34 +661,34 @@ void create_svg_file (FILE				*file_arg,
 				double long r = pow((planet->mass * SUN_MASS_IN_EARTH_MASSES), 1./3.) * em_scale;
 				double long	x1 = (offset + mult) + (log10(planet->a * (1. - planet->e)) * mult);
 				double long	x2 = (offset + mult) + (log10(planet->a * (1. + planet->e)) * mult);
-	
+
 				fprintf (file,
 						 "    <circle cx='%.0Lf' cy='30' r='%.0Lf' fill='none' stroke='black' stroke-width='1' />\n"
 						 "    <line x1='%.0Lf' y1='%.0Lf' x2='%.0Lf' y2='%.0Lf' stroke='black' stroke-width='8' stroke-opacity='0.3'/>\n"
 						 "    <text x='%.0Lf' y='%.0Lf'>",
-						 x, r, 
+						 x, r,
 						 x1, (max_y - margin) - 15, x2, (max_y - margin) - 15,
 						 x, max_y - (margin * 2.)
 						);
-	
+
 				fprintf (file,
-						 (planet->mass * SUN_MASS_IN_EARTH_MASSES) <= 1.0 
+						 (planet->mass * SUN_MASS_IN_EARTH_MASSES) <= 1.0
 						 ? "%.2Lf"
-						 : (planet->mass * SUN_MASS_IN_EARTH_MASSES) <= 10.0 
+						 : (planet->mass * SUN_MASS_IN_EARTH_MASSES) <= 10.0
 						   ? "%.1Lf"
 						   : "%.0Lf",
 						 planet->mass * SUN_MASS_IN_EARTH_MASSES
 						);
-	
+
 				fprintf (file, "</text>\n\n");
 			}
-	
+
 			fprintf (file,
 					 "</g>\n"
 					 "</svg>\n"
 					);
 		}
-		
+
 		fflush (file);
 		fclose (file);
 	}
@@ -700,9 +700,9 @@ FILE *open_csv_file (char *path, char *file_name)
 	char file_spec[120];
 
 	sprintf (&file_spec[0], "%s%s", path, file_name);
-	
+
 	file = fopen (file_spec, "w");
-	
+
 	return file;
 }
 
@@ -710,11 +710,11 @@ FILE *open_csv_file (char *path, char *file_name)
  *	HTML document headers
  */
 
-FILE *open_html_file (const char *system_name, 
+FILE *open_html_file (const char *system_name,
 					  long	seed,
 					  const char *path,
 					  const char *url_path,
-					  const char *file_name, 
+					  const char *file_name,
 					  const char *ext,
 					  const char *prognam,
 					  FILE *file_arg)
@@ -722,7 +722,7 @@ FILE *open_html_file (const char *system_name,
 	FILE *file;
 	char file_spec[300];
 	int  noname = ((NULL == system_name) || (0 == system_name[0]));
-	
+
 	if (file_arg != NULL)
 	{
 		file = file_arg;
@@ -730,7 +730,7 @@ FILE *open_html_file (const char *system_name,
 	else
 	{
 		sprintf (&file_spec[0], "%s%s%s", path, file_name, ext);
-	
+
 		file = fopen (file_spec, "w");
 	}
 
@@ -750,7 +750,7 @@ FILE *open_html_file (const char *system_name,
 				"</style>\r"
 				"<link rel='icon' type='image/png' href='%sref/favicon.png'>\r"
 				"</head>\n<body bgcolor='" BGCOLOR "' text='" TXCOLOR "' "
-							   "link='" LINKCOLOR "' vlink='" TXCOLOR "' alink='" ALINKCOLOR "'>\n\n\n", 
+							   "link='" LINKCOLOR "' vlink='" TXCOLOR "' alink='" ALINKCOLOR "'>\n\n\n",
 				'"','"','"','"',
 				seed,
 				noname ? "" : " - ",
@@ -759,7 +759,7 @@ FILE *open_html_file (const char *system_name,
 				url_path
 				);
 	}
-	
+
 	return file;
 }
 
@@ -792,25 +792,25 @@ void print_description(FILE*			file,
 	else
 	{
 		int			first      = true;
-		long double	rel_temp   = (planet->surf_temp -  FREEZING_POINT_OF_WATER) - 
+		long double	rel_temp   = (planet->surf_temp -  FREEZING_POINT_OF_WATER) -
 								 EARTH_AVERAGE_CELSIUS;
 		long double	seas       = (planet->hydrosphere * 100.0);
 		long double	clouds     = (planet->cloud_cover * 100.0);
-		long double	atmosphere = (planet->surf_pressure / 
+		long double	atmosphere = (planet->surf_pressure /
 								 EARTH_SURF_PRES_IN_MILLIBARS);
 		long double	ice        = (planet->ice_cover * 100.0);
 		long double	gravity    = planet->surf_grav;
-		
+
 		fputs (opening, file);
-		
+
 		if (gravity < .8)				LPRINT ("Low-G")	/* .8 gees */
 		else if (gravity > 1.2)			LPRINT ("High-G")
-		
+
 		if (rel_temp < -5.)				LPRINT ("Cold")		/* 5 C below earth */
 		else if (rel_temp < -2.0)		LPRINT ("Cool")
 		else if (rel_temp > 7.5)		LPRINT ("Hot")
 		else if (rel_temp > 3.0)		LPRINT ("Warm")
-		
+
 		if (ice > 10.)					LPRINT ("Icy")		/* 10% surface is ice */
 
 		if (atmosphere < 0.001)			LPRINT ("Airless")
@@ -822,14 +822,14 @@ void print_description(FILE*			file,
 				else if (seas < 50.)	LPRINT ("Dry")
 				else if (seas > 80.)	LPRINT ("Wet")
 			}
-			
+
 			if (clouds < 10.)			LPRINT ("Cloudless")/* 10% cloud cover */
 			else if (clouds < 40.)		LPRINT ("Few clouds")
 			else if (clouds > 80.)		LPRINT ("Cloudy")
-			
+
 			if (planet->max_temp >= planet->boil_point)
 										LPRINT ("Boiling ocean")
-			
+
 			if (planet->surf_pressure < MIN_O2_IPP)
 										LPRINT ("Unbreathably thin atmosphere")
 			else if (atmosphere < 0.5)	LPRINT ("Thin atmosphere")
@@ -848,36 +848,36 @@ void print_description(FILE*			file,
 			int	i;
 			int	first = true;
 			unsigned int temp;
-			
+
 			fprintf (file, " (");
 
 			for (i = 0; i < planet->gases; i++)
 			{
 				int n;
 				int index = max_gas;
-				
+
 				for (n = 0; n < max_gas; n++)
 				{
 					if (gases[n].num == planet->atmosphere[i].num)
 						index = n;
 				}
-				
+
 				if ((planet->atmosphere[i].surf_pressure / planet->surf_pressure)
 					> .01)
 				{
 					LPRINT (gases[index].html_symbol);
 				}
 			}
-			
+
 			if ((temp = breathability (planet)) != NONE)
 				fprintf (file, " - %s)",
 					 breathability_phrase[temp]);
 		}
-		
+
 		if ((int)planet->day == (int)(planet->orb_period * 24.0)
 		 || (planet->resonant_period))
 			LPRINT ("1-Face");
-		
+
 		fputs (closing, file);
 	}
 }
@@ -896,7 +896,7 @@ void list_molecules(FILE*		file,
 	int count = 0;
 	int max   = 8;
 	int	first = true;
-	
+
 	MOL_PRINTF("H",								ATOMIC_HYDROGEN);
 	MOL_PRINTF("H<sub><small>2</small></sub>",	MOL_HYDROGEN);
 	MOL_PRINTF("He",							HELIUM);
@@ -925,10 +925,10 @@ void list_molecules(FILE*		file,
 /*
  *	Table of scaled planet pictures
  */
- 
-void html_thumbnails(planet_pointer innermost_planet, 
-					 FILE*	file, 
-					 char*	system_name, 
+
+void html_thumbnails(planet_pointer innermost_planet,
+					 FILE*	file,
+					 char*	system_name,
 					 char*	url_path,
 					 char*	system_url,
 					 char*	svg_url,
@@ -941,17 +941,17 @@ void html_thumbnails(planet_pointer innermost_planet,
 {
 	planet_pointer 	planet;
 	Sun*			sun = innermost_planet->sun;
-	int 			counter; 
+	int 			counter;
 	int				planet_count=0;
 	int				terrestrials_seen = false;
 	planet_pointer 	moon;
-	int 			moons; 
-	
+	int 			moons;
+
 	for (planet=innermost_planet;
 		 planet != NULL;
 		 planet=planet->next_planet)
 		planet_count++;
- 
+
 	fprintf (file,
 	        "\n<p>\n\n"
 	        "<table border=3 cellspacing=2 cellpadding=2 align=center "
@@ -962,7 +962,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 	if (file_name[0] == '\0')
 		fprintf (file, "%s", system_name);
 	else
-		fprintf (file, "<a href='%s'>%s</a>", 
+		fprintf (file, "<a href='%s'>%s</a>",
 						system_url, system_name);
 
 	fprintf (file,
@@ -972,7 +972,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 
 	if (graphic_format == gfSVG)
 	{
-		fprintf (file, 
+		fprintf (file,
 				 "<object data='%s' type='image/svg+xml'\n"
 				 "        width='100%%' height='100%%' border=1 style='background-color:white;'>\n",
 					svg_url
@@ -983,7 +983,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 		fprintf (file,
 					"<table border=0 cellspacing=0 cellpadding=3 bgcolor='" BGSPACE "' width='100%%'>\n"
 				);
-	
+
 		fprintf (file,
 					"<tr><td colspan=%d bgcolor='" BGHEADER "' align=center>\n"
 						"\t<font size='+1'  color='" TXHEADER "'><b>%d Planets</b> </font>\n"
@@ -991,9 +991,9 @@ void html_thumbnails(planet_pointer innermost_planet,
 					"</td></tr>\n"
 					"<tr valign=middle bgcolor='" BGSPACE "'>\n"
 					"<td bgcolor='" BGSPACE "'><img alt='Sun' src='%sref/Sun.gif' "
-						"width=15 height=63 border=0></td>\n", 
+						"width=15 height=63 border=0></td>\n",
 				planet_count+2, planet_count, url_path);
-				
+
 		for (planet = innermost_planet, counter = 1;
 			planet != NULL;
 			planet = planet->next_planet, counter++)
@@ -1001,41 +1001,41 @@ void html_thumbnails(planet_pointer innermost_planet,
 			int	ppixels = ((int)( sqrt(planet->radius / KM_EARTH_RADIUS) * 30.)) + 1;
 			const char *ptype = type_string (planet->type);
 			char info[100];
-			
+
 			if (planet->type == tAsteroids)
-				ppixels = (int)(25.0 + ( 5.0 * log ((planet->mass * SUN_MASS_IN_EARTH_MASSES) / 
+				ppixels = (int)(25.0 + ( 5.0 * log ((planet->mass * SUN_MASS_IN_EARTH_MASSES) /
 													ASTEROID_MASS_LIMIT)));
-			
+
 			if (ppixels < 3)
 				ppixels = 3;
-			
+
 			if ((planet->type == tGasGiant)
 			 || (planet->type == tSubSubGasGiant)
 			 || (planet->type == tSubGasGiant))
-				sprintf(&info[0], "%s: %.1LfEM (c. %.0Lf&deg;)", 
+				sprintf(&info[0], "%s: %.1LfEM (c. %.0Lf&deg;)",
 						ptype, planet->mass * SUN_MASS_IN_EARTH_MASSES,
 						planet->estimated_temp);
 			else if (planet->type == tUnknown)
-				sprintf(&info[0], "%s: %.1LfEM, %.2LfEM from gas (%.1Lf%c) Zone = %d", 
+				sprintf(&info[0], "%s: %.1LfEM, %.2LfEM from gas (%.1Lf%c) Zone = %d",
 						ptype, planet->mass * SUN_MASS_IN_EARTH_MASSES,
 						planet->gas_mass * SUN_MASS_IN_EARTH_MASSES,
 						100.0 * (planet->gas_mass / planet->mass), '%',
 						planet->orbit_zone);
 			else
-				sprintf(&info[0], "%s: %.2LfEM, %.2Lfg, %.1Lf&deg; Zone = %d", 
-						ptype, planet->mass * SUN_MASS_IN_EARTH_MASSES, planet->surf_grav, 
+				sprintf(&info[0], "%s: %.2LfEM, %.2Lfg, %.1Lf&deg; Zone = %d",
+						ptype, planet->mass * SUN_MASS_IN_EARTH_MASSES, planet->surf_grav,
 						(planet->surf_temp - FREEZING_POINT_OF_WATER),
 						planet->orbit_zone);
-			
+
 			fprintf (file,
 				"\t<td bgcolor='" BGSPACE "' align=center><a href='%s#%d' title='#%d - %s'>"
 					"<img alt='%s' src='%sref/%sPlanet.gif' width=%d height=%d border=0>"
-					"</a>", 
+					"</a>",
 				int_link ? "" : system_url,
-				counter, counter, info, ptype, 
-				url_path, ptype, 
+				counter, counter, info, ptype,
+				url_path, ptype,
 				ppixels, ppixels);
-	
+
 			if ((planet->type == tTerrestrial)
 			 || (planet->type == tWater)
 			 || (breathability (planet) == BREATHABLE)
@@ -1043,7 +1043,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 			  && (planet->surf_temp > FREEZING_POINT_OF_WATER - 15)
 			  && (planet->surf_temp < EARTH_AVERAGE_KELVIN + 15)))
 				terrestrials_seen = true;
-	
+
 			for (moon = planet->first_moon, moons=1;
 				 do_moons && moon != NULL;
 				 moon = moon->next_planet, moons++)
@@ -1051,33 +1051,33 @@ void html_thumbnails(planet_pointer innermost_planet,
 				// DISPLAY THEM
 				const char *mtype = type_string (moon->type);
 				int	mpixels = ((int)( sqrt(moon->radius / KM_EARTH_RADIUS) * 30.)) + 1;
-	
+
 				if ((moon->type == tGasGiant)
 				 || (moon->type == tSubSubGasGiant)
 				 || (moon->type == tSubGasGiant))
-					sprintf(&info[0], "%s: %.1LfEM (c. %.0Lf&deg;)", 
+					sprintf(&info[0], "%s: %.1LfEM (c. %.0Lf&deg;)",
 							mtype, moon->mass * SUN_MASS_IN_EARTH_MASSES,
 							moon->estimated_temp);
 				else if (moon->type == tUnknown)
-					sprintf(&info[0], "%s: %.1LfEM, %.2LfEM from gas (%.1Lf%c) Zone = %d", 
+					sprintf(&info[0], "%s: %.1LfEM, %.2LfEM from gas (%.1Lf%c) Zone = %d",
 							mtype, moon->mass * SUN_MASS_IN_EARTH_MASSES,
 							moon->gas_mass * SUN_MASS_IN_EARTH_MASSES,
 							100.0 * (moon->gas_mass / moon->mass), '%',
 							moon->orbit_zone);
 				else
-					sprintf(&info[0], "%s: %.2LfEM, %.2Lfg, %.1Lf&deg; Zone = %d", 
-							mtype, moon->mass * SUN_MASS_IN_EARTH_MASSES, moon->surf_grav, 
+					sprintf(&info[0], "%s: %.2LfEM, %.2Lfg, %.1Lf&deg; Zone = %d",
+							mtype, moon->mass * SUN_MASS_IN_EARTH_MASSES, moon->surf_grav,
 							(moon->surf_temp - FREEZING_POINT_OF_WATER),
 							moon->orbit_zone);
-	
+
 				fprintf (file,
 					"\n\t\t<br><a href='%s#%d.%d' title='#%d.%d - %s'>"
 						"<img alt='%s' src='%sref/%sPlanet.gif' width=%d height=%d border=0>"
-						"</a>", 
+						"</a>",
 					int_link ? "" : system_url,
-					counter, moons, counter, moons, info, mtype, 
+					counter, moons, counter, moons, info, mtype,
 					url_path, mtype, mpixels, mpixels);
-	
+
 				if ((moon->type == tTerrestrial)
 				 || (moon->type == tWater)
 				 || (breathability (moon) == BREATHABLE)
@@ -1086,25 +1086,25 @@ void html_thumbnails(planet_pointer innermost_planet,
 				  && (moon->surf_temp < EARTH_AVERAGE_KELVIN + 15)))
 					terrestrials_seen = true;
 			}
-			
+
 			fprintf (file, "</td>\n");
 		}
-		
-		fprintf (file, 
+
+		fprintf (file,
 				 "<td bgcolor='" BGSPACE "' align=right valign=bottom>"
 				 "<a href='%sref/Key.html'><font size='-3' color='" TXSPACE "'>See<br>Key</font></a></td>\n"
 				 "</tr></table>\n",
 				 url_path);
 	}
-	
+
 	if (graphic_format == gfSVG)
 	{
-		fprintf (file, 
+		fprintf (file,
 				 "</object>\n"
 				);
 	}
-	
-	fprintf (file, 
+
+	fprintf (file,
 			 "</td></tr>\n");
 
 /*
@@ -1114,7 +1114,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 	if (terrestrials && terrestrials_seen)
 	{
 		fprintf (file, "<tr><td colspan=2><table width='100%%'>");
-		
+
 		for (planet=innermost_planet, counter=1;
 			planet != NULL;
 			planet=planet->next_planet, counter++)
@@ -1127,16 +1127,16 @@ void html_thumbnails(planet_pointer innermost_planet,
 				fprintf (file,
 						 "\n\t<tr><td align=right width='5%%'>"
 						 "<a href='%s#%d'><small>#%d</small></a>"
-						 "</td>\n\t\t<td><small>%s: </small>", 
+						 "</td>\n\t\t<td><small>%s: </small>",
 						 int_link ? "" : system_url,
-						 counter, counter, 
+						 counter, counter,
 						 type_string(planet->type));
-				
+
 				print_description(file, "", planet, "");
 
 				fprintf (file, "</td></tr>");
 			}
-			
+
 			for (moon=planet->first_moon, moons=1;
 				moon != NULL;
 				moon=moon->next_planet, moons++)
@@ -1149,23 +1149,21 @@ void html_thumbnails(planet_pointer innermost_planet,
 					fprintf (file,
  							 "\n\t<tr><td align=right width='5%%'>"
  							 "<a href='%s#%d.%d'><small>#%d.%d</small></a>"
- 							 "</td>\n\t\t<td><small>%s: </small>", 
+ 							 "</td>\n\t\t<td><small>%s: </small>",
 							 int_link ? "" : system_url,
-							 counter, moons, counter, moons, 
+							 counter, moons, counter, moons,
 							 type_string(moon->type));
-					
+
 					print_description(file, "", moon, "");
-	
+
 					fprintf (file, "</td></tr>");
 				}
 			}
-
-			
 		}
 
 		fprintf (file, "</table></td></tr>\n");
 	}
-	
+
 	if (details)
 	{
 		long double min_r_ecosphere = sqrt( sun->luminosity / 1.51 );
@@ -1177,7 +1175,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 		        "</td></tr>\n");
 		fprintf (file,
 		        "<tr><td>Stellar mass</td>\n"
-		        "\t<td>%4.2Lf solar masses</td></tr>\n", 
+		        "\t<td>%4.2Lf solar masses</td></tr>\n",
 				sun->mass);
 		fprintf (file,
 		        "<tr><td>Stellar luminosity</td>\n"
@@ -1211,41 +1209,41 @@ void html_thumbnail_totals(FILE *file)
 		        	"\t<font size='+1' color='" TXHEADER "'>"
 		        	"<b>Summary</b></font></th></tr>\n"
 	        );
-	
-	fprintf (file, 
+
+	fprintf (file,
 			"<tr bgcolor='" BGTABLE "'><td align=right>\n"
 				"\tEarthlike planets\n</td><td align=center>\n\t%d\n</td></tr>\n", total_earthlike);
-	fprintf (file, 
+	fprintf (file,
 			"<tr bgcolor='" BGTABLE "'><td align=right>\n"
 				"\tBreathable atmospheres\n</td><td align=center>\n\t%d\n</td></tr>\n", total_habitable);
-	fprintf (file, 
+	fprintf (file,
 			"<tr bgcolor='" BGTABLE "'><td align=right>\n"
-				"\tBreathable g range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n", 
-			 min_breathable_g, 
+				"\tBreathable g range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n",
+			 min_breathable_g,
 			 max_breathable_g);
-	fprintf (file, 
+	fprintf (file,
 			"<tr bgcolor='" BGTABLE "'><td align=right>\n"
-				"\tTerrestrial g range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n", 
+				"\tTerrestrial g range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n",
 			 min_breathable_terrestrial_g,
 			 max_breathable_terrestrial_g);
-	fprintf (file, 
+	fprintf (file,
 			"<tr bgcolor='" BGTABLE "'><td align=right>\n"
-				"\tBreathable pressure range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n", 
-			 min_breathable_p, 
+				"\tBreathable pressure range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n",
+			 min_breathable_p,
 			 max_breathable_p);
-	fprintf (file, 
+	fprintf (file,
 			"<tr bgcolor='" BGTABLE "'><td align=right>\n"
-				"\tBreathable temp range\n</td><td align=center>\n\t%+.1Lf C -  %+.1Lf C\n</td></tr>\n", 
-			 min_breathable_temp - EARTH_AVERAGE_KELVIN, 
+				"\tBreathable temp range\n</td><td align=center>\n\t%+.1Lf C -  %+.1Lf C\n</td></tr>\n",
+			 min_breathable_temp - EARTH_AVERAGE_KELVIN,
 			 max_breathable_temp - EARTH_AVERAGE_KELVIN);
-	fprintf (file, 
+	fprintf (file,
 			"<tr bgcolor='" BGTABLE "'><td align=right>\n"
-				"\tBreathable illumination range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n", 
-			 min_breathable_l, 
+				"\tBreathable illumination range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n",
+			 min_breathable_l,
 			 max_breathable_l);
-	fprintf (file, 
+	fprintf (file,
 			"<tr bgcolor='" BGTABLE "'><td align=right>\n"
-				"\tTerrestrial illumination range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n", 
+				"\tTerrestrial illumination range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n",
 			 min_breathable_terrestrial_l,
 			 max_breathable_terrestrial_l);
 
@@ -1253,7 +1251,6 @@ void html_thumbnail_totals(FILE *file)
 	        "</table>\n\n"
 	        );
 }
-
 
 void html_decribe_planet(planet_pointer planet,
 						 int			counter,
@@ -1264,42 +1261,42 @@ void html_decribe_planet(planet_pointer planet,
 {
 	char	planet_id[80];
 	const char *typeString = type_string (planet->type);
-	
+
 	if (moons == 00)
 		sprintf(planet_id, "%d", counter);
 	else
 		sprintf(planet_id, "%d.%d", counter, moons);
-	
+
 	fprintf (file,
 			"<p>\n<a name='%s'></a><table border=3 cellspacing=2 cellpadding=2 align=center "
 										 "bgcolor='" BGTABLE "' width='%d%%'>\n"
 			"<colgroup span=1 align=left valign=middle>"
 			"<colgroup span=2 align=left valign=middle>"
 			"<tr><th colspan=3 bgcolor='" BGHEADER "' align=center>\n"
-				"<font size='+2' color='" TXHEADER "'>%s #%s Statistics</font></th></tr>\n", 
+				"<font size='+2' color='" TXHEADER "'>%s #%s Statistics</font></th></tr>\n",
 			planet_id,
 			(moons == 00) ? 95 : 90,
 			(moons == 00) ? "Planet" : "Moon",
 			planet_id);
-	
+
 	fprintf (file,
 			"<tr><th>Planet type</th>"
 			"<td colspan=2><img alt='%s' src='%sref/%s.gif' align=middle width=20 height=20>%s",
-			typeString, 
-			url_path, 
-			typeString, 
+			typeString,
+			url_path,
+			typeString,
 			typeString);
 
 	if ((int)planet->day == (int)(planet->orb_period * 24.0))
 		fprintf (file, "<br>Tidally Locked 1 Face\n");
-		
+
 	if (planet->resonant_period)
 		fprintf (file, "<br>Resonant Spin Locked\n");
-	
+
 	print_description(file, "<br>", planet, "");
 
 	fprintf (file, "</td></tr>\n");
-				
+
 	fprintf (file,
 		"<tr><th>Distance from primary star</th><td>%.2LG KM</td>"
 		"<td>%5.3Lf AU</td></tr>\n",
@@ -1312,11 +1309,11 @@ void html_decribe_planet(planet_pointer planet,
 
 	if ((planet->dust_mass * SUN_MASS_IN_EARTH_MASSES >= 0.0006)
 	 && (planet->gas_mass * SUN_MASS_IN_EARTH_MASSES >= 0.0006)
-	 && (planet->type != tGasGiant) 
+	 && (planet->type != tGasGiant)
 	 && (planet->type != tSubGasGiant))
 	{
 		int core_size = (int)((50. * planet->core_radius) / planet->radius);
-		
+
 		if (core_size <= 49)
 		{
 			fprintf (file,
@@ -1325,9 +1322,9 @@ void html_decribe_planet(planet_pointer planet,
 					"<td width=50 height=50 align=right valign=bottom bgcolor='#000000' background='%sref/Atmosphere.gif'>"
 					"<img src='%sref/Core.gif' alt='' width=%d height=%d>"
 					"</td></tr></table>"
-					"\n", 
-					url_path, 
-					url_path, 
+					"\n",
+					url_path,
+					url_path,
 					url_path,
 					url_path,
 					core_size,
@@ -1349,31 +1346,31 @@ void html_decribe_planet(planet_pointer planet,
 				planet->dust_mass * SUN_MASS_IN_EARTH_MASSES,
 				planet->gas_mass * SUN_MASS_IN_EARTH_MASSES);
 	}
-	
+
 	fprintf (file,
 		"</td></tr>\n");
 
-	if ((planet->type != tGasGiant) 
-	 && (planet->type != tSubGasGiant) 
+	if ((planet->type != tGasGiant)
+	 && (planet->type != tSubGasGiant)
 	 && (planet->type != tSubSubGasGiant))
 	{
 		long double	celsius = (planet->surf_temp - FREEZING_POINT_OF_WATER);
-		
+
 		fprintf (file,
 				"<tr><th>Surface gravity</th>"
 				"<td>%4.1Lf cm/sec<sup>2</sup></td>"
 				"<td>%4.2Lf Earth gees</td></tr>\n",
 					planet->surf_accel,
 					planet->surf_grav);
-		
+
 		fprintf (file,
 				 "<tr><th>Surface pressure</th><td>%5.0Lf millibars",
 				planet->surf_pressure);
-		
+
 		fprintf (file,
 				 "</td><td>%5.3Lf Earth atmospheres</td></tr>\n",
 				 (planet->surf_pressure / EARTH_SURF_PRES_IN_MILLIBARS));
-		
+
 		fprintf (file,
 				"<tr><th>Surface temperature</th>"
 				"<td>%5.1Lf&deg; Celcius"
@@ -1385,59 +1382,57 @@ void html_decribe_planet(planet_pointer planet,
 					celsius - EARTH_AVERAGE_CELSIUS,
 					((celsius - EARTH_AVERAGE_CELSIUS) * 1.8));
 
-		
 		if (planet->greenhs_rise > 0.1)
 		{
-			fprintf (file, 
-				"<br>%+4.1Lf&deg; C greenhouse effect", 
+			fprintf (file,
+				"<br>%+4.1Lf&deg; C greenhouse effect",
 					planet->greenhs_rise);
 
 			if ((planet->greenhouse_effect) && (planet->surf_pressure > 0.0))
 				fprintf (file, " (GH)");
-		
+
 		}
-		
+
 		fprintf (file,"</td></tr>\n");
-		
-		
+
 		{
-			fprintf (file, 
+			fprintf (file,
 				"<tr><th>Normal temperature range</th>"
 				"<td><center><table>\n");
 
-			if (fabs(planet->high_temp - planet->max_temp) > 10 
+			if (fabs(planet->high_temp - planet->max_temp) > 10
 			 || fabs(planet->low_temp - planet->min_temp) > 10)
 			{
 				fprintf (file, "\t<tr><th>Night</th><th></th><th>Day</th></tr>\n");
-				
-				fprintf (file, 
+
+				fprintf (file,
 					"\t<tr><td>%5.1Lf&deg; C<br>%5.1Lf&deg; F</td>"
 					"<td> - </td>",
 						planet->low_temp - FREEZING_POINT_OF_WATER,
 						32.0 + (1.8 * (planet->low_temp - FREEZING_POINT_OF_WATER)));
 
-				fprintf (file, 
+				fprintf (file,
 					"<td>%5.1Lf&deg; C<br>%5.1Lf&deg; F</td>"
 					"</tr>\n",
 						planet->high_temp - FREEZING_POINT_OF_WATER,
 						32.0 + (1.8 * (planet->high_temp - FREEZING_POINT_OF_WATER)));
 			}
-			
+
 			fprintf (file, "\t<tr><th>Min</th><th></th><th>Max</th></tr>\n");
-				
-			fprintf (file, 
+
+			fprintf (file,
 				"\t<tr><td>%5.1Lf&deg; C<br>%5.1Lf&deg; F</td>"
 				"<td> - </td>",
 				planet->min_temp - FREEZING_POINT_OF_WATER,
 				32.0 + (1.8 * (planet->min_temp - FREEZING_POINT_OF_WATER)));
 
-			fprintf (file, 
+			fprintf (file,
 				"<td>%5.1Lf&deg; C<br>%5.1Lf&deg; F</td>"
 				"</tr>\n",
 					planet->max_temp - FREEZING_POINT_OF_WATER,
 					32.0 + (1.8 * (planet->max_temp - FREEZING_POINT_OF_WATER)));
 
-		fprintf (file, 
+		fprintf (file,
 			"</table></center></td></tr>\n");
 		}
 	}
@@ -1466,32 +1461,32 @@ void html_decribe_planet(planet_pointer planet,
 		"<tr><th>Molecular weight retained</th><td>%4.1Lf and above</td>"
 		"<td>",
 			planet->molec_weight);
-			
+
 	list_molecules(file, planet->molec_weight);
-	
+
 	if (do_gases && (planet->gases > 0))
 	{
 		int	i;
-		
+
 		fprintf (file, "\n<table border=0 cellspacing=0 cellpadding=0>\n");
-		
+
 		for (i = 0; i < planet->gases; i++)
 		{
 			int n;
 			int index = max_gas;
 			int	poisonous = false;
-			
+
 			for (n = 0; n < max_gas; n++)
 			{
 				if (gases[n].num == planet->atmosphere[i].num)
 					index = n;
 			}
-			
+
 			if (inspired_partial_pressure (planet->surf_pressure,
 										   planet->atmosphere[i].surf_pressure)
 				> gases[index].max_ipp)
 				poisonous = true;
-			
+
 			if (((planet->atmosphere[i].surf_pressure
 				 / planet->surf_pressure) > .0005)
 			 || poisonous)
@@ -1513,7 +1508,7 @@ void html_decribe_planet(planet_pointer planet,
 		}
 		fprintf (file, "</table>\n");
 	}
-	
+
 	fprintf (file, "</td></tr>\n");
 	fprintf (file,
 		"<tr><th>Axial tilt</th><td>%2.0Lf&deg;</td>"
@@ -1538,7 +1533,7 @@ void html_decribe_planet(planet_pointer planet,
 		fprintf (file,
 			"<br>%4.2Lf Earth years",
 			planet->orb_period / DAYS_IN_A_YEAR);
-	fprintf (file, 
+	fprintf (file,
 		"</td></tr>\n");
 	fprintf (file,
 		"<tr><th>Length of day</th><td>%4.2Lf hours</td>"
@@ -1546,7 +1541,7 @@ void html_decribe_planet(planet_pointer planet,
 			planet->day);
 
 	if ((planet->type != tGasGiant)
-	 && (planet->type != tSubGasGiant) 
+	 && (planet->type != tSubGasGiant)
 	 && (planet->type != tSubSubGasGiant))
 	{
 		fprintf (file,
@@ -1574,21 +1569,20 @@ void html_decribe_planet(planet_pointer planet,
 		"</table>\n\n<p>\n<br>\n\n");
 }
 
-
-void html_describe_system(planet_pointer 	innermost_planet, 
+void html_describe_system(planet_pointer 	innermost_planet,
 						  bool 				do_gases,
 						  char*				url_path,
 						  FILE*				file)
 {
 	planet_pointer 	planet;
-	int 			counter; 
+	int 			counter;
 	planet_pointer 	moon;
-	int 			moons; 
-	
+	int 			moons;
+
 	/*
 	 *	System summary
 	 */
-	 
+
 	fprintf (file,
 	        "\n<table border=3 cellspacing=2 cellpadding=2 align=center bgcolor='" BGTABLE "' width='90%c'>\n"
 			"<tr><th colspan=7 bgcolor='" BGHEADER "' align=center>\n"
@@ -1602,7 +1596,7 @@ void html_describe_system(planet_pointer 	innermost_planet,
 		planet=planet->next_planet, counter++)
 	{
 		const char *typeString = type_string (planet->type);
-		
+
 		fprintf (file,
 	        "<tr align=right>\n"
 				"\t<td><a href='#%d'>%d</a></td>\n"
@@ -1612,12 +1606,12 @@ void html_describe_system(planet_pointer 	innermost_planet,
 				"\t<td>%8.3Lf EM</td>\n"
 				"\t<td>%8.3Lf ER</td>"
 				"</tr>\n",
-				counter, counter, 
-			    typeString, 
-			    url_path, 
-			    typeString, 
-			    typeString, 
-				planet->a, 
+				counter, counter,
+			    typeString,
+			    url_path,
+			    typeString,
+			    typeString,
+				planet->a,
 				planet->mass * SUN_MASS_IN_EARTH_MASSES,
 				planet->radius / KM_EARTH_RADIUS);
 		for (moon=planet->first_moon, moons=1;
@@ -1636,12 +1630,12 @@ void html_describe_system(planet_pointer 	innermost_planet,
 					"\t<td>%8.3Lf EM</td>\n"
 					"\t<td>%8.3Lf ER</td>"
 					"</tr>\n",
-					counter, moons, counter, moons, 
-					typeString, 
-					url_path, 
-					typeString, 
-					typeString, 
-					moon->a, 
+					counter, moons, counter, moons,
+					typeString,
+					url_path,
+					typeString,
+					typeString,
+					moon->a,
 					moon->mass * SUN_MASS_IN_EARTH_MASSES,
 					moon->radius / KM_EARTH_RADIUS);
 		}
@@ -1649,11 +1643,11 @@ void html_describe_system(planet_pointer 	innermost_planet,
 	}
 	fprintf (file,
 	        "</table>\n<br clear=all>\n");
-	
+
 	/*
 	 *	Tables for individual planets
 	 */
-	 
+
 	for (planet=innermost_planet, counter=1;
 		planet != NULL;
 		planet=planet->next_planet, counter++)
@@ -1672,8 +1666,8 @@ void html_describe_system(planet_pointer 	innermost_planet,
 void celestia_describe_system(planet_pointer innermost_planet, char* designation)
 {
 	planet_pointer planet;
-	int counter; 
-	
+	int counter;
+
 	for (planet=innermost_planet, counter=1;
 		planet != NULL;
 		planet=planet->next_planet, counter++)
@@ -1685,7 +1679,7 @@ void celestia_describe_system(planet_pointer innermost_planet, char* designation
 		printf("	Radius %3.1Lf\n", planet->radius);
 		printf("	Mass %3.1Lf\n", planet->mass * SUN_MASS_IN_EARTH_MASSES);
 		printf("\n");
-		
+
 		switch (planet->type)
 		{
 			 case tUnknown:
@@ -1781,7 +1775,7 @@ void celestia_describe_system(planet_pointer innermost_planet, char* designation
 				printf("\n");
 				break;
 		}
-		
+
 		printf("	EllipticalOrbit {\n");
 		printf("		Period            %4.2Lf  # years\n", planet->orb_period / DAYS_IN_A_YEAR);
 		printf("		SemiMajorAxis     %5.3Lf  # AU\n", planet->a);

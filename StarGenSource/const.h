@@ -47,8 +47,6 @@
 #define MAX_O3_IPP	(0.1 * PPM_PRSSURE)			/* Dole, p. 18				*/
 #define MAX_CH4_IPP	(50000. * PPM_PRSSURE)		/* Dole, p. 18				*/
 
-
-
 #define EARTH_CONVECTION_FACTOR (0.43)			/* from Hart, eq.20			*/
 //      FREEZING_POINT_OF_WATER (273.0)			/* Units of degrees Kelvin	*/
 #define FREEZING_POINT_OF_WATER (273.15)		/* Units of degrees Kelvin	*/

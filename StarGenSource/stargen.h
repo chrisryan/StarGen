@@ -34,8 +34,8 @@ int stargen (actions		action,			// One of the above
 			 								//  the ref directory with images
 			 char *			filename_arg,	// Output file name (optional)
 			 char *			sys_name_arg,	// Human readble System name (opt.)
-			 
-			 FILE *			sgOut,			// Main stream to write to 
+
+			 FILE *			sgOut,			// Main stream to write to
 			 								//	Thumbnails will be written there
 			 								//  for HTML format
 			 FILE *			sgErr,			// Stream to write errors to (opt.)
@@ -46,9 +46,9 @@ int stargen (actions		action,			// One of the above
 			 int			incr_arg,		// Amount to increment seed by
 			 catalog *		cat_arg,		// A star catalog (see below)
 			 int			sys_no_arg,		// Star within a catalog (0 = all)
-			 
+
 			 long double	ratio_arg,		// Change dust density (experimental)
-			 
+
 			 int			flags_arg,		// Options (see below)
 			 out_formats	out_format,		// Output file formats (see below)
 			 graphic_formats	graphic_format	// Graphic file formats (see below)
@@ -75,7 +75,6 @@ extern catalog  jimb;
 										// You can roll your own (see main.c)
 
 extern planets mercury;					// For building private catalogs
-
 
 extern int          flag_verbose;		// Likely to move into stargen() args.
 

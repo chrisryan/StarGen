@@ -16,15 +16,14 @@ const char* breathability_phrase[4] =
 
 long double luminosity(long double mass_ratio)
 {
-	long double n; 
-	
+	long double n;
+
 	if (mass_ratio < 1.0)
 		n = 1.75 * (mass_ratio - 0.1) + 3.325;
-	else 
+	else
 		n = 0.5 * (2.0 - mass_ratio) + 4.4;
 	return(pow(mass_ratio,n));
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	 This function, given the orbital radius of a planet in AU, returns		*/
@@ -37,10 +36,9 @@ int orb_zone(long double luminosity, long double orb_radius)
 		return(1);
 	else if (orb_radius < (15.0 * sqrt(luminosity)))
 		return(2);
-	else 
+	else
 		return(3);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	 The mass is in units of solar masses, and the density is in units		*/
@@ -49,8 +47,8 @@ int orb_zone(long double luminosity, long double orb_radius)
 
 long double volume_radius(long double mass, long double density)
 {
-	long double volume; 
-	
+	long double volume;
+
 	mass = mass * SOLAR_MASS_IN_GRAMS;
 	volume = mass / density;
 	return(pow((3.0 * volume) / (4.0 * PI),(1.0 / 3.0)) / CM_PER_KM);
@@ -70,7 +68,7 @@ long double kothari_radius(long double mass, bool giant, int zone)
 {
 	volatile long double temp1;
 	long double temp, temp2, atomic_weight, atomic_num;
-	
+
 	if (zone == 1)
 	{
 		if (giant)
@@ -78,13 +76,13 @@ long double kothari_radius(long double mass, bool giant, int zone)
 			atomic_weight = 9.5;
 			atomic_num = 4.5;
 		}
-		else 
+		else
 		{
 			atomic_weight = 15.0;
 			atomic_num = 8.0;
 		}
 	}
-	else 
+	else
 		if (zone == 2)
 		{
 			if (giant)
@@ -92,62 +90,60 @@ long double kothari_radius(long double mass, bool giant, int zone)
 				atomic_weight = 2.47;
 				atomic_num = 2.0;
 			}
-			else 
+			else
 			{
 				atomic_weight = 10.0;
 				atomic_num = 5.0;
 			}
 		}
-		else 
+		else
 		{
 			if (giant)
 			{
 				atomic_weight = 7.0;
 				atomic_num = 4.0;
 			}
-			else 
+			else
 			{
 				atomic_weight = 10.0;
 				atomic_num = 5.0;
 			}
 		}
-	
+
 	temp1 = atomic_weight * atomic_num;
-	
+
 	temp = (2.0 * BETA_20 * pow(SOLAR_MASS_IN_GRAMS,(1.0 / 3.0)))
 	     / (A1_20 * pow(temp1, (1.0 / 3.0)));
-	
+
 	temp2 = A2_20 * pow(atomic_weight,(4.0 / 3.0)) * pow(SOLAR_MASS_IN_GRAMS,(2.0 / 3.0));
 	temp2 = temp2 * pow(mass,(2.0 / 3.0));
 	temp2 = temp2 / (A1_20 * pow2(atomic_num));
 	temp2 = 1.0 + temp2;
 	temp = temp / temp2;
 	temp = (temp * pow(mass,(1.0 / 3.0))) / CM_PER_KM;
-	
+
 	temp /= JIMS_FUDGE;			/* Make Earth = actual earth */
-	
+
 	return(temp);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	The mass passed in is in units of solar masses, and the orbital radius	*/
 /*	is in units of AU.	The density is returned in units of grams/cc.		*/
 /*--------------------------------------------------------------------------*/
 
-long double empirical_density(long double mass, long double orb_radius, 
+long double empirical_density(long double mass, long double orb_radius,
 							  long double r_ecosphere, bool gas_giant)
 {
-	long double temp; 
-	
+	long double temp;
+
 	temp = pow(mass * SUN_MASS_IN_EARTH_MASSES,(1.0 / 8.0));
 	temp = temp * pow1_4(r_ecosphere / orb_radius);
 	if (gas_giant)
 		return(temp * 1.2);
-	else 
+	else
 		return(temp * 5.5);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	The mass passed in is in units of solar masses, and the equatorial		*/
@@ -156,14 +152,13 @@ long double empirical_density(long double mass, long double orb_radius,
 
 long double volume_density(long double mass, long double equat_radius)
 {
-	long double volume; 
-	
+	long double volume;
+
 	mass = mass * SOLAR_MASS_IN_GRAMS;
 	equat_radius = equat_radius * CM_PER_KM;
 	volume = (4.0 * PI * pow3(equat_radius)) / 3.0;
 	return(mass / volume);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	The separation is in units of AU, and both masses are in units of solar */
@@ -172,12 +167,11 @@ long double volume_density(long double mass, long double equat_radius)
 
 long double period(long double separation, long double small_mass, long double large_mass)
 {
-	long double period_in_years; 
-	
+	long double period_in_years;
+
 	period_in_years = sqrt(pow3(separation) / (small_mass + large_mass));
 	return(period_in_years * DAYS_IN_A_YEAR);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	 Fogg's information for this routine came from Dole "Habitable Planets	*/
@@ -202,7 +196,7 @@ long double day_length(planet_pointer	planet)
 	long double	equatorial_radius_in_cm = planet->radius * CM_PER_KM;
 	long double	year_in_hours			= planet->orb_period * 24.0;
 	bool giant = (planet->type == tGasGiant ||
-				 planet->type == tSubGasGiant || 
+				 planet->type == tSubGasGiant ||
 				 planet->type == tSubSubGasGiant);
 	long double	k2;
 	long double	base_angular_velocity;
@@ -217,7 +211,7 @@ long double day_length(planet_pointer	planet)
 
 	if (giant)
 		k2 = 0.24;
-	else 
+	else
 		k2 = 0.33;
 
 	base_angular_velocity = sqrt(2.0 * J * (planetary_mass_in_grams) /
@@ -232,7 +226,7 @@ long double day_length(planet_pointer	planet)
 								 (EARTH_MASS_IN_GRAMS / planetary_mass_in_grams) *
 								 pow(planet->sun->mass, 2.0) *
 								 (1.0 / pow(planet->a, 6.0));
-	ang_velocity = base_angular_velocity + (change_in_angular_velocity * 
+	ang_velocity = base_angular_velocity + (change_in_angular_velocity *
 											planet->sun->age);
 
 /* Now we change from rad/sec to hours/rotation.						 */
@@ -242,7 +236,7 @@ long double day_length(planet_pointer	planet)
 	   stopped = true;
 	   day_in_hours = INCREDIBLY_LARGE_NUMBER ;
 	}
-	else 
+	else
 		day_in_hours = RADIANS_PER_ROTATION / (SECONDS_PER_HOUR * ang_velocity);
 
 	if ((day_in_hours >= year_in_hours) || stopped)
@@ -253,13 +247,12 @@ long double day_length(planet_pointer	planet)
 		  planet->resonant_period 	= true;
 		  return(spin_resonance_factor * year_in_hours);
 		}
-		else 
+		else
 		  return(year_in_hours);
 	}
 
 	return(day_in_hours);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	 The orbital radius is expected in units of Astronomical Units (AU).	*/
@@ -268,12 +261,11 @@ long double day_length(planet_pointer	planet)
 
 int inclination(long double orb_radius)
 {
-	int temp; 
-	
+	int temp;
+
 	temp = (int)(pow(orb_radius,0.2) * about(EARTH_AXIAL_TILT,0.4));
 	return(temp % 360);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	 This function implements the escape velocity calculation.	Note that	*/
@@ -285,12 +277,11 @@ int inclination(long double orb_radius)
 long double escape_vel(long double mass, long double radius)
 {
 	long double mass_in_grams, radius_in_cm;
-	
+
 	mass_in_grams = mass * SOLAR_MASS_IN_GRAMS;
 	radius_in_cm = radius * CM_PER_KM;
 	return(sqrt(2.0 * GRAV_CONSTANT * mass_in_grams / radius_in_cm));
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	This is Fogg's eq.16.  The molecular weight (usually assumed to be N2)	*/
@@ -305,7 +296,6 @@ long double rms_vel(long double molecular_weight, long double exospheric_temp)
 		   * CM_PER_METER);
 }
 
-
 /*--------------------------------------------------------------------------*/
 /*	 This function returns the smallest molecular weight retained by the	*/
 /*	body, which is useful for determining the atmosphere composition.		*/
@@ -316,7 +306,7 @@ long double rms_vel(long double molecular_weight, long double exospheric_temp)
 long double molecule_limit(long double mass, long double equat_radius, long double exospheric_temp)
 {
 	long double esc_velocity = escape_vel(mass,equat_radius);
-	
+
 	return ((3.0 * MOLAR_GAS_CONST * exospheric_temp) /
 			(pow2((esc_velocity/ GAS_RETENTION_THRESHOLD) / CM_PER_METER)));
 
@@ -333,7 +323,6 @@ long double acceleration(long double mass, long double radius)
 	return(GRAV_CONSTANT * (mass * SOLAR_MASS_IN_GRAMS) /
 					   pow2(radius * CM_PER_KM));
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	 This function calculates the surface gravity of a planet.	The			*/
@@ -354,7 +343,7 @@ long double vol_inventory(long double mass, long double escape_vel, long double 
 				long double stellar_mass, int zone, bool greenhouse_effect, bool accreted_gas)
 {
 	long double velocity_ratio, proportion_const, temp1, temp2, earth_units;
-	
+
 	velocity_ratio = escape_vel / rms_vel;
 	if (velocity_ratio >= GAS_RETENTION_THRESHOLD)
 	{
@@ -379,13 +368,12 @@ long double vol_inventory(long double mass, long double escape_vel, long double 
 		temp2 = temp1;
 		if (greenhouse_effect || accreted_gas)
 			return(temp2);
-		else 
+		else
 			return(temp2 / 140.0);	/* 100 -> 140 JLB */
 	}
-	else 
+	else
 		return(0.0);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	This implements Fogg's eq.18.  The pressure returned is in units of		*/
@@ -399,8 +387,8 @@ long double vol_inventory(long double mass, long double escape_vel, long double 
 long double pressure(long double volatile_gas_inventory, long double equat_radius, long double gravity)
 {
 	equat_radius = KM_EARTH_RADIUS / equat_radius;
-	return(volatile_gas_inventory * gravity * 
-			(EARTH_SURF_PRES_IN_MILLIBARS / 1000.) / 
+	return(volatile_gas_inventory * gravity *
+			(EARTH_SURF_PRES_IN_MILLIBARS / 1000.) /
 			pow2(equat_radius));
 }
 
@@ -412,14 +400,13 @@ long double pressure(long double volatile_gas_inventory, long double equat_radiu
 
 long double boiling_point(long double surf_pressure)
 {
-	long double surface_pressure_in_bars; 
-	
-	surface_pressure_in_bars = surf_pressure / MILLIBARS_PER_BAR;
-	return (1.0 / ((log(surface_pressure_in_bars) / -5050.5) + 
-				   (1.0 / 373.0) ));
-	
-}
+	long double surface_pressure_in_bars;
 
+	surface_pressure_in_bars = surf_pressure / MILLIBARS_PER_BAR;
+	return (1.0 / ((log(surface_pressure_in_bars) / -5050.5) +
+				   (1.0 / 373.0) ));
+
+}
 
 /*--------------------------------------------------------------------------*/
 /*	 This function is Fogg's eq.22.	 Given the volatile gas inventory and	*/
@@ -431,16 +418,15 @@ long double boiling_point(long double surf_pressure)
 
 long double hydro_fraction(long double volatile_gas_inventory, long double planet_radius)
 {
-	long double temp; 
-	
+	long double temp;
+
 	temp = (0.71 * volatile_gas_inventory / 1000.0)
 			 * pow2(KM_EARTH_RADIUS / planet_radius);
 	if (temp >= 1.0)
 		return(1.0);
-	else 
+	else
 		return(temp);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	 Given the surface temperature of a planet (in Kelvin), this function	*/
@@ -457,23 +443,22 @@ long double cloud_fraction(long double surf_temp, long double smallest_MW_retain
 							long double equat_radius, long double hydro_fraction)
 {
 	long double water_vapor_in_kg, fraction, surf_area, hydro_mass;
-	
+
 	if (smallest_MW_retained > WATER_VAPOR)
 		return(0.0);
-	else 
+	else
 	{
 		surf_area = 4.0 * PI * pow2(equat_radius);
 		hydro_mass = hydro_fraction * surf_area * EARTH_WATER_MASS_PER_AREA;
-		water_vapor_in_kg = (0.00000001 * hydro_mass) * 
+		water_vapor_in_kg = (0.00000001 * hydro_mass) *
 							exp(Q2_36 * (surf_temp - EARTH_AVERAGE_KELVIN));
 		fraction = CLOUD_COVERAGE_FACTOR * water_vapor_in_kg / surf_area;
 		if (fraction >= 1.0)
 			return(1.0);
-		else 
+		else
 			return(fraction);
 	}
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	 Given the surface temperature of a planet (in Kelvin), this function	*/
@@ -486,19 +471,18 @@ long double cloud_fraction(long double surf_temp, long double smallest_MW_retain
 
 long double ice_fraction(long double hydro_fraction, long double surf_temp)
 {
-	long double temp; 
-	
-	if (surf_temp > 328.0) 
+	long double temp;
+
+	if (surf_temp > 328.0)
 		surf_temp = 328.0;
 	temp = pow(((328.0 - surf_temp) / 90.0), 5.0);
 	if (temp > (1.5 * hydro_fraction))
 		temp = (1.5 * hydro_fraction);
 	if (temp >= 1.0)
 		return(1.0);
-	else 
+	else
 		return(temp);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	This is Fogg's eq.19.  The ecosphere radius is given in AU, the orbital */
@@ -512,14 +496,12 @@ long double eff_temp(long double ecosphere_radius, long double orb_radius, long 
 		  * EARTH_EFFECTIVE_TEMP);
 }
 
-
 long double est_temp(long double ecosphere_radius, long double orb_radius, long double albedo)
 {
 	return(sqrt(ecosphere_radius / orb_radius)
 		  * pow1_4((1.0 - albedo) / (1.0 - EARTH_ALBEDO))
 		  * EARTH_AVERAGE_KELVIN);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /* Old grnhouse:                                                            */
@@ -540,13 +522,12 @@ long double est_temp(long double ecosphere_radius, long double orb_radius, long 
 bool grnhouse(long double r_ecosphere, long double orb_radius)
 {
 	long double	temp = eff_temp(r_ecosphere, orb_radius, GREENHOUSE_TRIGGER_ALBEDO);
-	
+
 	if (temp > FREEZING_POINT_OF_WATER)
 		return(true);
-	else 
+	else
 		return(false);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	This is Fogg's eq.20, and is also Hart's eq.20 in his "Evolution of		*/
@@ -558,17 +539,16 @@ bool grnhouse(long double r_ecosphere, long double orb_radius)
 
 long double green_rise(long double optical_depth, long double effective_temp, long double surf_pressure)
 {
-	long double convection_factor = EARTH_CONVECTION_FACTOR * 
-									pow(surf_pressure / 
+	long double convection_factor = EARTH_CONVECTION_FACTOR *
+									pow(surf_pressure /
 										EARTH_SURF_PRES_IN_MILLIBARS, 0.4);
-	long double rise = (pow1_4(1.0 + 0.75 * optical_depth) - 1.0) * 
+	long double rise = (pow1_4(1.0 + 0.75 * optical_depth) - 1.0) *
 					   effective_temp * convection_factor;
-	
+
 	if (rise < 0.0) rise = 0.0;
-	
+
 	return rise;
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	 The surface temperature passed in is in units of Kelvin.				*/
@@ -581,7 +561,7 @@ long double planet_albedo(long double water_fraction, long double cloud_fraction
 {
 	long double rock_fraction, cloud_adjustment, components, cloud_part,
 	rock_part, water_part, ice_part;
-	
+
 	rock_fraction = 1.0 - water_fraction - ice_fraction;
 	components = 0.0;
 	if (water_fraction > 0.0)
@@ -590,33 +570,33 @@ long double planet_albedo(long double water_fraction, long double cloud_fraction
 		components = components + 1.0;
 	if (rock_fraction > 0.0)
 		components = components + 1.0;
-	
+
 	cloud_adjustment = cloud_fraction / components;
-	
+
 	if (rock_fraction >= cloud_adjustment)
 		rock_fraction = rock_fraction - cloud_adjustment;
-	else 
+	else
 		rock_fraction = 0.0;
-	
+
 	if (water_fraction > cloud_adjustment)
 		water_fraction = water_fraction - cloud_adjustment;
-	else 
+	else
 		water_fraction = 0.0;
-		
+
 	if (ice_fraction > cloud_adjustment)
 		ice_fraction = ice_fraction - cloud_adjustment;
-	else 
+	else
 		ice_fraction = 0.0;
-		
+
 	cloud_part = cloud_fraction * CLOUD_ALBEDO;		/* about(...,0.2); */
-	
+
 	if (surf_pressure == 0.0)
 	{
 		rock_part = rock_fraction * ROCKY_AIRLESS_ALBEDO;	/* about(...,0.3); */
 		ice_part = ice_fraction * AIRLESS_ICE_ALBEDO;		/* about(...,0.4); */
 		water_part = 0;
 	}
-	else 
+	else
 	{
 		rock_part = rock_fraction * ROCKY_ALBEDO;	/* about(...,0.1); */
 		water_part = water_fraction * WATER_ALBEDO;	/* about(...,0.2); */
@@ -626,7 +606,6 @@ long double planet_albedo(long double water_fraction, long double cloud_fraction
 	return(cloud_part + rock_part + water_part + ice_part);
 }
 
-
 /*--------------------------------------------------------------------------*/
 /*	 This function returns the dimensionless quantity of optical depth,		*/
 /*	 which is useful in determining the amount of greenhouse effect on a	*/
@@ -635,8 +614,8 @@ long double planet_albedo(long double water_fraction, long double cloud_fraction
 
 long double opacity(long double molecular_weight, long double surf_pressure)
 {
-	long double optical_depth; 
-	
+	long double optical_depth;
+
 	optical_depth = 0.0;
 	if ((molecular_weight >= 0.0) && (molecular_weight < 10.0))
 		optical_depth = optical_depth + 3.0;
@@ -651,29 +630,28 @@ long double opacity(long double molecular_weight, long double surf_pressure)
 
 	if (surf_pressure >= (70.0 * EARTH_SURF_PRES_IN_MILLIBARS))
 		optical_depth = optical_depth * 8.333;
-	else 
+	else
 		if (surf_pressure >= (50.0 * EARTH_SURF_PRES_IN_MILLIBARS))
 			optical_depth = optical_depth * 6.666;
-		else 
+		else
 			if (surf_pressure >= (30.0 * EARTH_SURF_PRES_IN_MILLIBARS))
 				optical_depth = optical_depth * 3.333;
-			else 
+			else
 				if (surf_pressure >= (10.0 * EARTH_SURF_PRES_IN_MILLIBARS))
 					optical_depth = optical_depth * 2.0;
-				else 
+				else
 					if (surf_pressure >= (5.0 * EARTH_SURF_PRES_IN_MILLIBARS))
 						optical_depth = optical_depth * 1.5;
 
 	return(optical_depth);
 }
 
-
 /*
  *	calculates the number of years it takes for 1/e of a gas to escape
- *	from a planet's atmosphere. 
+ *	from a planet's atmosphere.
  *	Taken from Dole p. 34. He cites Jeans (1916) & Jones (1923)
  */
-long double gas_life(long double molecular_weight, 
+long double gas_life(long double molecular_weight,
 					 planet_pointer planet)
 {
 	long double v = rms_vel(molecular_weight, planet->exospheric_temp);
@@ -681,19 +659,19 @@ long double gas_life(long double molecular_weight,
 	long double r = (planet->radius * CM_PER_KM);
 	long double t = (pow3(v) / (2.0 * pow2(g) * r)) * exp((3.0 * g * r) / pow2(v));
 	long double years = t / (SECONDS_PER_HOUR * 24.0 * DAYS_IN_A_YEAR);
-	
+
 //	long double ve = planet->esc_velocity;
 //	long double k = 2;
 //	long double t2 = ((k * pow3(v) * r) / pow4(ve)) * exp((3.0 * pow2(ve)) / (2.0 * pow2(v)));
 //	long double years2 = t2 / (SECONDS_PER_HOUR * 24.0 * DAYS_IN_A_YEAR);
-		
+
 //	if (flag_verbose & 0x0040)
-//		fprintf (stderr, "gas_life: %LGs, V ratio: %Lf\n", 
+//		fprintf (stderr, "gas_life: %LGs, V ratio: %Lf\n",
 //				years, ve / v);
 
 	if (years > 2.0E10)
 		years = INCREDIBLY_LARGE_NUMBER;
-		
+
 	return years;
 }
 
@@ -703,14 +681,14 @@ long double min_molec_weight (planet_pointer planet)
 	long double radius  = planet->radius;
 	long double temp    = planet->exospheric_temp;
 	long double target  = 5.0E9;
-	
+
 	long double guess_1 = molecule_limit (mass, radius, temp);
 	long double	guess_2 = guess_1;
-	
+
 	long double life = gas_life(guess_1, planet);
-	
+
 	int	loops = 0;
-	
+
 	if (NULL != planet->sun)
 	{
 		target = planet->sun->age;
@@ -745,12 +723,11 @@ long double min_molec_weight (planet_pointer planet)
 		else
 			guess_2 = guess_3;
 	}
-	
+
 	life = gas_life(guess_2, planet);
 
 	return (guess_2);
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	 The temperature calculated is in degrees Kelvin.						*/
@@ -781,17 +758,17 @@ void calculate_surface_temp(planet_pointer 	planet,
 	if (first)
 	{
 		planet->albedo = EARTH_ALBEDO;
-	
+
 		effective_temp 		= eff_temp(planet->sun->r_ecosphere, planet->a, planet->albedo);
-		greenhouse_temp     = green_rise(opacity(planet->molec_weight, 
-												 planet->surf_pressure), 
-										 effective_temp, 
+		greenhouse_temp     = green_rise(opacity(planet->molec_weight,
+												 planet->surf_pressure),
+										 effective_temp,
 										 planet->surf_pressure);
 		planet->surf_temp   = effective_temp + greenhouse_temp;
 
 		set_temp_range(planet);
 	}
-	
+
 	if (planet->greenhouse_effect
 	 && planet->max_temp < planet->boil_point)
 	{
@@ -803,7 +780,7 @@ void calculate_surface_temp(planet_pointer 	planet,
 					planet->boil_point);
 
 		planet->greenhouse_effect = false;
-		
+
 		planet->volatile_gas_inventory 	= vol_inventory(planet->mass,
 													    planet->esc_velocity,
 													    planet->rms_velocity,
@@ -817,23 +794,23 @@ void calculate_surface_temp(planet_pointer 	planet,
 												   planet->surf_grav);
 
 		planet->boil_point 			= boiling_point(planet->surf_pressure);
-	}	
+	}
 
 	water_raw     			=
-	planet->hydrosphere		= hydro_fraction(planet->volatile_gas_inventory, 
+	planet->hydrosphere		= hydro_fraction(planet->volatile_gas_inventory,
 											 planet->radius);
 	clouds_raw     			=
-	planet->cloud_cover 	= cloud_fraction(planet->surf_temp, 
-											 planet->molec_weight, 
-											 planet->radius, 
+	planet->cloud_cover 	= cloud_fraction(planet->surf_temp,
+											 planet->molec_weight,
+											 planet->radius,
 											 planet->hydrosphere);
-	planet->ice_cover   	= ice_fraction(planet->hydrosphere, 
+	planet->ice_cover   	= ice_fraction(planet->hydrosphere,
 										   planet->surf_temp);
-	
+
 	if ((planet->greenhouse_effect)
 	 && (planet->surf_pressure > 0.0))
 		planet->cloud_cover	= 1.0;
-	
+
 	if ((planet->high_temp >= planet->boil_point)
 	 && (!first)
 	 && !((int)planet->day == (int)(planet->orb_period * 24.0) ||
@@ -841,7 +818,7 @@ void calculate_surface_temp(planet_pointer 	planet,
 	{
 		planet->hydrosphere	= 0.0;
 		boil_off = true;
-		
+
 		if (planet->molec_weight > WATER_VAPOR)
 			planet->cloud_cover = 0.0;
 		else
@@ -850,16 +827,16 @@ void calculate_surface_temp(planet_pointer 	planet,
 
 	if (planet->surf_temp < (FREEZING_POINT_OF_WATER - 3.0))
 		planet->hydrosphere	= 0.0;
-	
-	planet->albedo			= planet_albedo(planet->hydrosphere, 
-											planet->cloud_cover, 
-											planet->ice_cover, 
+
+	planet->albedo			= planet_albedo(planet->hydrosphere,
+											planet->cloud_cover,
+											planet->ice_cover,
 											planet->surf_pressure);
-	
+
 	effective_temp 			= eff_temp(planet->sun->r_ecosphere, planet->a, planet->albedo);
 	greenhouse_temp     	= green_rise(opacity(planet->molec_weight,
-												 planet->surf_pressure), 
-										 effective_temp, 
+												 planet->surf_pressure),
+										 effective_temp,
 										 planet->surf_pressure);
 	planet->surf_temp   	= effective_temp + greenhouse_temp;
 
@@ -877,7 +854,7 @@ void calculate_surface_temp(planet_pointer 	planet,
 
 	if (flag_verbose & 0x0020)
 		fprintf (stderr, "%5.1Lf AU: %5.1Lf = %5.1Lf ef + %5.1Lf gh%c "
-				"(W: %4.2Lf (%4.2Lf) C: %4.2Lf (%4.2Lf) I: %4.2Lf A: (%4.2Lf))\n", 
+				"(W: %4.2Lf (%4.2Lf) C: %4.2Lf (%4.2Lf) I: %4.2Lf A: (%4.2Lf))\n",
 				planet->a,
 				planet->surf_temp - FREEZING_POINT_OF_WATER,
 				effective_temp - FREEZING_POINT_OF_WATER,
@@ -898,7 +875,7 @@ void iterate_surface_temp(planet_pointer planet)
 	long double h2o_life = gas_life (WATER_VAPOR,     planet);
 	long double n2_life  = gas_life (MOL_NITROGEN,    planet);
 	long double n_life   = gas_life (ATOMIC_NITROGEN, planet);
-	
+
 	if (flag_verbose & 0x20000)
 		fprintf (stderr, "%d:                     %5.1Lf it [%5.1Lf re %5.1Lf a %5.1Lf alb]\n",
 				planet->planet_no,
@@ -921,17 +898,17 @@ void iterate_surface_temp(planet_pointer planet)
 		long double last_ice	= planet->ice_cover;
 		long double last_temp	= planet->surf_temp;
 		long double last_albedo	= planet->albedo;
-		
+
 		calculate_surface_temp(planet, false,
-							   last_water, last_clouds, last_ice, 
+							   last_water, last_clouds, last_ice,
 							   last_temp, last_albedo);
-		
+
 		if (fabs(planet->surf_temp - last_temp) < 0.25)
 			break;
 	}
 
 	planet->greenhs_rise = planet->surf_temp - initial_temp;
-	
+
 	if (flag_verbose & 0x20000)
 		fprintf (stderr, "%d: %5.1Lf gh = %5.1Lf (%5.1Lf C) st - %5.1Lf it [%5.1Lf re %5.1Lf a %5.1Lf alb]\n",
 				planet->planet_no,
@@ -953,10 +930,9 @@ long double inspired_partial_pressure (long double surf_pressure,
 {
 	long double pH2O = (H20_ASSUMED_PRESSURE);
 	long double fraction = gas_pressure / surf_pressure;
-	
+
 	return	(surf_pressure - pH2O) * fraction;
 }
-
 
 /*--------------------------------------------------------------------------*/
 /*	 This function uses figures on the maximum inspired partial pressures   */
@@ -972,15 +948,15 @@ unsigned int breathability (planet_pointer planet)
 
 	if (planet->gases == 0)
 		return NONE;
-	
+
 	for (index = 0; index < planet->gases; index++)
 	{
 		int	n;
 		int	gas_no = 0;
-		
+
 		long double ipp = inspired_partial_pressure (planet->surf_pressure,
 													 planet->atmosphere[index].surf_pressure);
-		
+
 		for (n = 0; n < max_gas; n++)
 		{
 			if (gases[n].num == planet->atmosphere[index].num)
@@ -989,11 +965,11 @@ unsigned int breathability (planet_pointer planet)
 
 		if (ipp > gases[gas_no].max_ipp)
 			return POISONOUS;
-			
+
 		if (planet->atmosphere[index].num == AN_O)
 			oxygen_ok = ((ipp >= MIN_O2_IPP) && (ipp <= MAX_O2_IPP));
 	}
-	
+
 	if (oxygen_ok)
 		return BREATHABLE;
 	else
