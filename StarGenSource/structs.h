@@ -39,7 +39,7 @@ typedef struct planets_record {
 	long double e;					/* eccentricity of solar orbit		 */
 	long double	axial_tilt;			/* units of degrees					 */
 	long double mass;				/* mass (in solar masses)			 */
-	int 		gas_giant;			/* TRUE if the planet is a gas giant */
+	bool		gas_giant;			/* TRUE if the planet is a gas giant */
 	long double	dust_mass;			/* mass, ignoring gas				 */
 	long double	gas_mass;			/* mass, ignoring dust				 */
 									/*   ZEROES start here               */
@@ -51,7 +51,7 @@ typedef struct planets_record {
 	long double density;			/* density (in g/cc)				 */
 	long double orb_period;			/* length of the local year (days)	 */
 	long double day;				/* length of the local day (hours)	 */
-	int 		resonant_period;	/* TRUE if in resonant rotation		 */
+	bool		resonant_period;	/* TRUE if in resonant rotation		 */
 	long double	esc_velocity;		/* units of cm/sec					 */
 	long double	surf_accel;			/* units of cm/sec2					 */
 	long double	surf_grav;			/* units of Earth gravities			 */
@@ -59,7 +59,7 @@ typedef struct planets_record {
 	long double molec_weight;		/* smallest molecular weight retained*/
 	long double	volatile_gas_inventory;
 	long double	surf_pressure;		/* units of millibars (mb)			 */
-	int		 	greenhouse_effect;	/* runaway greenhouse effect?		 */
+	bool	 	greenhouse_effect;	/* runaway greenhouse effect?		 */
 	long double	boil_point;			/* the boiling point of water (Kelvin)*/
 	long double	albedo;				/* albedo of the planet				 */
 	long double	exospheric_temp;	/* units of degrees Kelvin			 */
@@ -78,20 +78,20 @@ typedef struct planets_record {
 	int			gases;				/* Count of gases in the atmosphere: */
 	gas*		atmosphere;
 	planet_type type;				/* Type code						 */
-	int			minor_moons;
+									/*   ZEROES end here                 */
+	bool		minor_moons;
 	planet_pointer first_moon;
-									/*   ZEROES end here               */
 	planet_pointer next_planet;
 	} planets;
 
 /*	Define the solar system for comparisons, etc. */
-#define ZEROES 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NULL,0,NULL,tUnknown
+#define ZEROES 0,0,0,0,0,0,0,0,false,0,0,0,0,0,0,0,false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NULL,0,NULL,tUnknown
 
 typedef struct dust_record {
 	long double inner_edge;
 	long double outer_edge;
-	int 		dust_present;
-	int 		gas_present;
+	bool		dust_present;
+	bool		gas_present;
 	dust_pointer next_band;
 	 } dust;
 
@@ -103,7 +103,7 @@ typedef struct star {
 	long double		a;
 	planet_pointer	known_planets;
 	const char		*desig;
-	int				in_celestia;
+	bool			in_celestia;
 	const char		*name;
 	} star;
 

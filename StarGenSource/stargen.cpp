@@ -88,39 +88,39 @@ int max_type_count = 0;
 #define AVE(x,y)	((x+y)/2.)
 
 			/*	   No Orbit   Eccen. Tilt Mass    Gas Giant? Dust Mass   Gas */
-planets luna     ={1,2.571e-3,0.055,1.53, EM(.01229), FALSE, EM(.01229), 0, ZEROES,0,NULL, NULL};
-planets callisto ={4,1.259e-2,0    ,0   , EM(1.62e-2),FALSE,EM(1.62-2 ), 0, ZEROES,0,NULL, NULL};
-planets ganymede ={3,7.16e-3,0.0796,0   , EM(2.6e-2 ),FALSE,EM(2.6e-2 ), 0, ZEROES,0,NULL, &callisto};
-planets europa   ={2,4.49e-3,0.0075,0   , EM(7.9e-3 ),FALSE,EM(7.9e-3 ), 0, ZEROES,0,NULL, &ganymede};
-planets io       ={1,2.82e-3,0.0006,0   , EM(1.21e-2),FALSE,EM(1.21e-2), 0, ZEROES,0,NULL, &europa};
-planets iapetus  ={6,2.38e-2,0.029, 0   , EM(8.4e-4 ),FALSE,EM(8.4e-4 ), 0, ZEROES,0,NULL, NULL};
-planets hyperion ={5,9.89e-3,0.110, 0   , EM(1.82e-5),FALSE,EM(1.82e-5), 0, ZEROES,0,NULL, &iapetus};
-planets titan    ={4,8.17e-3,0.0289,0   , EM(2.3e-2 ),FALSE,EM(2.3e-2 ), 0, ZEROES,0,NULL, &hyperion};
-planets rhea     ={3,3.52e-3,0.0009,0   , EM(3.85e-4),FALSE,EM(3.85e-4), 0, ZEROES,0,NULL, &titan};
-planets dione    ={2,2.52e-3,0.0021,0   , EM(1.74e-4),FALSE,EM(1.74e-4), 0, ZEROES,0,NULL, &rhea};
-planets tethys   ={1,1.97e-3,0.000, 0   , EM(1.09e-4),FALSE,EM(1.09e-4), 0, ZEROES,0,NULL, &dione};
-planets triton   ={1,2.36e-3,0.000, 0   , EM(2.31e-2),FALSE,EM(2.31e-2), 0, ZEROES,0,NULL, NULL};
+planets luna     ={1,2.571e-3,0.055,1.53, EM(.01229), false, EM(.01229), 0, ZEROES,0,NULL, NULL};
+planets callisto ={4,1.259e-2,0    ,0   , EM(1.62e-2),false,EM(1.62-2 ), 0, ZEROES,0,NULL, NULL};
+planets ganymede ={3,7.16e-3,0.0796,0   , EM(2.6e-2 ),false,EM(2.6e-2 ), 0, ZEROES,0,NULL, &callisto};
+planets europa   ={2,4.49e-3,0.0075,0   , EM(7.9e-3 ),false,EM(7.9e-3 ), 0, ZEROES,0,NULL, &ganymede};
+planets io       ={1,2.82e-3,0.0006,0   , EM(1.21e-2),false,EM(1.21e-2), 0, ZEROES,0,NULL, &europa};
+planets iapetus  ={6,2.38e-2,0.029, 0   , EM(8.4e-4 ),false,EM(8.4e-4 ), 0, ZEROES,0,NULL, NULL};
+planets hyperion ={5,9.89e-3,0.110, 0   , EM(1.82e-5),false,EM(1.82e-5), 0, ZEROES,0,NULL, &iapetus};
+planets titan    ={4,8.17e-3,0.0289,0   , EM(2.3e-2 ),false,EM(2.3e-2 ), 0, ZEROES,0,NULL, &hyperion};
+planets rhea     ={3,3.52e-3,0.0009,0   , EM(3.85e-4),false,EM(3.85e-4), 0, ZEROES,0,NULL, &titan};
+planets dione    ={2,2.52e-3,0.0021,0   , EM(1.74e-4),false,EM(1.74e-4), 0, ZEROES,0,NULL, &rhea};
+planets tethys   ={1,1.97e-3,0.000, 0   , EM(1.09e-4),false,EM(1.09e-4), 0, ZEROES,0,NULL, &dione};
+planets triton   ={1,2.36e-3,0.000, 0   , EM(2.31e-2),false,EM(2.31e-2), 0, ZEROES,0,NULL, NULL};
 planets charon   ={1,19571/
-                   KM_PER_AU,0.000, 0   , EM(2.54e-4),FALSE,EM(2.54e-4), 0, ZEROES,0,NULL, NULL};
+                   KM_PER_AU,0.000, 0   , EM(2.54e-4),false,EM(2.54e-4), 0, ZEROES,0,NULL, NULL};
 
-planets xena   ={11,67.6681,0.44177,0   , EM(.0025),FALSE, EM(.0025),    0, ZEROES,0,NULL,    NULL};
-planets pluto  ={10,39.529,0.248,122.5, EM(0.002),  FALSE, EM(0.002),    0, ZEROES,0,&charon, &xena};
-planets neptune={ 9,30.061,0.010, 29.6, EM(17.14),  TRUE,  0,   EM(17.14),  ZEROES,0,&triton, &pluto};
-planets uranus ={ 8,19.191,0.046, 97.9, EM(14.530), TRUE,  0,   EM(14.530), ZEROES,0,NULL,    &neptune};
-planets saturn ={ 7,9.539, 0.056, 26.7, EM(95.18),  TRUE,  0,   EM(95.18),  ZEROES,0,&tethys, &uranus};
-planets jupiter={ 6,5.203, 0.048,  3.1, EM(317.9),  TRUE,  0,   EM(317.9),  ZEROES,0,&io,     &saturn};
+planets xena   ={11,67.6681,0.44177,0   , EM(.0025),false, EM(.0025),    0, ZEROES,0,NULL,    NULL};
+planets pluto  ={10,39.529,0.248,122.5, EM(0.002),  false, EM(0.002),    0, ZEROES,0,&charon, &xena};
+planets neptune={ 9,30.061,0.010, 29.6, EM(17.14),  true,  0,   EM(17.14),  ZEROES,0,&triton, &pluto};
+planets uranus ={ 8,19.191,0.046, 97.9, EM(14.530), true,  0,   EM(14.530), ZEROES,0,NULL,    &neptune};
+planets saturn ={ 7,9.539, 0.056, 26.7, EM(95.18),  true,  0,   EM(95.18),  ZEROES,0,&tethys, &uranus};
+planets jupiter={ 6,5.203, 0.048,  3.1, EM(317.9),  true,  0,   EM(317.9),  ZEROES,0,&io,     &saturn};
 planets ceres  ={ 5,2.766, 0.080,  0,   9.5e20 /
-                           SOLAR_MASS_IN_KILOGRAMS, FALSE, 9.5e20 /
+                           SOLAR_MASS_IN_KILOGRAMS, false, 9.5e20 /
                                                 SOLAR_MASS_IN_KILOGRAMS, 0, ZEROES,0,NULL,    &jupiter};
-planets mars   ={ 4,1.524, 0.093, 25.2, EM(0.1074), FALSE, EM(0.1074),   0, ZEROES,0,NULL,    &ceres};
-planets earth  ={ 3,1.000, 0.017, 23.5, EM(1.00),   FALSE, EM(1.00),     0, ZEROES,0,&luna,   &mars};
-planets venus  ={ 2,0.723, 0.007,177.3, EM(0.815),  FALSE, EM(0.815),    0, ZEROES,0,NULL,    &earth};
-planets mercury={ 1,0.387, 0.206,  2,   EM(0.055),  FALSE, EM(0.055),    0, ZEROES,0,NULL,    &venus};
+planets mars   ={ 4,1.524, 0.093, 25.2, EM(0.1074), false, EM(0.1074),   0, ZEROES,0,NULL,    &ceres};
+planets earth  ={ 3,1.000, 0.017, 23.5, EM(1.00),   false, EM(1.00),     0, ZEROES,0,&luna,   &mars};
+planets venus  ={ 2,0.723, 0.007,177.3, EM(0.815),  false, EM(0.815),    0, ZEROES,0,NULL,    &earth};
+planets mercury={ 1,0.387, 0.206,  2,   EM(0.055),  false, EM(0.055),    0, ZEROES,0,NULL,    &venus};
 planet_pointer solar_system = &mercury;
 
-/* planets ceres  ={ 5,2.767, 0.079,  0, EM(0.000134), FALSE, EM(0.000134), 0, ZEROES,0,NULL , &jupiter}; */
+/* planets ceres  ={ 5,2.767, 0.079,  0, EM(0.000134), false, EM(0.000134), 0, ZEROES,0,NULL , &jupiter}; */
 
-/* planets	titan2 ={ 7,9.539, 0.056, 26.7 , EM(0.02259), FALSE, EM(0.02259),EM(.001), ZEROES,0,NULL, &uranus}; */
+/* planets	titan2 ={ 7,9.539, 0.056, 26.7 , EM(0.02259), false, EM(0.02259),EM(.001), ZEROES,0,NULL, &uranus}; */
 
 /* Seeds for accreting the solar system */
 			/*	 No Orbit  Eccen... */
@@ -143,9 +143,9 @@ planets UMa47I	={ 1,2.11, 	0.096, 	0, 0, 0, 0, 0, ZEROES,0,NULL, &UMa47II};
 planets horIotI	={ 1,0.925,	0.161,	0, 0, 0, 0, 0, ZEROES,0,NULL, NULL};
 
 			/*	No Orbit Eccen. Tilt   Mass    Gas Giant? Dust Mass   Gas */
-planets	smallest={0, 0.0, 0.0,	20.0,	EM(0.4),   FALSE,  EM(0.4),   0.0, ZEROES,0,NULL, NULL};
-planets	average	={0, 0.0, 0.0,	20.0,	EM(1.0),   FALSE,  EM(1.0),    0.0, ZEROES,0,NULL, NULL};
-planets	largest	={0, 0.0, 0.0,	20.0,	EM(1.6),   FALSE,  EM(1.6),   0.0, ZEROES,0,NULL, NULL};
+planets	smallest={0, 0.0, 0.0,	20.0,	EM(0.4),   false,  EM(0.4),   0.0, ZEROES,0,NULL, NULL};
+planets	average	={0, 0.0, 0.0,	20.0,	EM(1.0),   false,  EM(1.0),    0.0, ZEROES,0,NULL, NULL};
+planets	largest	={0, 0.0, 0.0,	20.0,	EM(1.6),   false,  EM(1.6),   0.0, ZEROES,0,NULL, NULL};
  
 				/*    L  Mass	Mass2	Eccen.	SemiMajorAxis	Designation	Name	*/
 star	perdole[] = {{0, 1.00,	0,		0,		0,				 &mercury,	"Sol",		 1, "The Solar System"},
@@ -300,10 +300,10 @@ ChemTable    gases[] =
 int max_gas = (sizeof(gases)/sizeof(ChemTable))-1;
 
 void init(void);
-void generate_stellar_system(Sun*, int, planet_pointer, char, int, char *, long double, int, int);
+void generate_stellar_system(Sun*, bool, planet_pointer, char, int, char *, long double, bool, bool);
 void calculate_gases(Sun*, planet_pointer, char*);
-void generate_planet(planet_pointer, int, Sun*, int, char*, int, int, int);
-void generate_planets(Sun*, int, char, int, char *, int, int);
+void generate_planet(planet_pointer, int, Sun*, bool, char*, bool, bool, bool);
+void generate_planets(Sun*, bool, char, int, char *, bool, bool);
 void usage(char *);
 static int diminishing_abundance(const void *xp, const void *yp);
 static int diminishing_pressure(const void *xp, const void *yp);
@@ -324,14 +324,14 @@ void init()
 }
 
 void generate_stellar_system(Sun*			sun,
-							 int 			use_seed_system, 
+							 bool 			use_seed_system,
 							 planet_pointer seed_system,
 							 char			flag_char,
 							 int			sys_no,
 							 char*			system_name,
 							 long double 	outer_planet_limit,
-							 int			do_gases,
-							 int			do_moons)
+							 bool			do_gases,
+							 bool			do_moons)
 {
 	long double		outer_dust_limit;
 
@@ -534,11 +534,11 @@ void calculate_gases(Sun*			sun,
 void generate_planet(planet_pointer	planet,
 					 int			planet_no,
 					 Sun*			sun,
-					 int 			random_tilt, 
+					 bool 			random_tilt,
 					 char*			planet_id,
-					 int			do_gases,
-					 int			do_moons,
-					 int			is_moon)
+					 bool			do_gases,
+					 bool			do_moons,
+					 bool			is_moon)
 {
 		planet->atmosphere		= NULL;
 		planet->gases			= 0;
@@ -550,7 +550,7 @@ void generate_planet(planet_pointer	planet,
 		planet->greenhs_rise	= 0;
 		planet->planet_no		= planet_no;
 		planet->sun				= sun;
-		planet->resonant_period = FALSE;
+		planet->resonant_period = false;
 
 		planet->orbit_zone 		= orb_zone(sun->luminosity, planet->a);
 
@@ -559,13 +559,13 @@ void generate_planet(planet_pointer	planet,
 			planet->axial_tilt 	= inclination(planet->a);
 		planet->exospheric_temp = EARTH_EXOSPHERE_TEMP / pow2(planet->a / sun->r_ecosphere);
 		planet->rms_velocity 	= rms_vel(MOL_NITROGEN,planet->exospheric_temp);
-		planet->core_radius 	= kothari_radius(planet->dust_mass,FALSE,planet->orbit_zone);
+		planet->core_radius 	= kothari_radius(planet->dust_mass,false,planet->orbit_zone);
 
 		// Calculate the radius as a gas giant, to verify it will retain gas.
 		// Then if mass > Earth, it's at least 5% gas and retains He, it's
 		// some flavor of gas giant.
 		
-		planet->density 		= empirical_density(planet->mass,planet->a, sun->r_ecosphere, TRUE);
+		planet->density 		= empirical_density(planet->mass,planet->a, sun->r_ecosphere, true);
 		planet->radius 			= volume_radius(planet->mass,planet->density);
 		
 		planet->surf_accel   	= acceleration(planet->mass,planet->radius);
@@ -586,7 +586,7 @@ void generate_planet(planet_pointer	planet,
 		}
 		else // If not, it's rocky.
 		{
-			planet->radius 		= kothari_radius(planet->mass,FALSE,planet->orbit_zone);
+			planet->radius 		= kothari_radius(planet->mass,false,planet->orbit_zone);
 			planet->density 	= volume_density(planet->mass,planet->radius);
 
 			planet->surf_accel  = acceleration(planet->mass,planet->radius);
@@ -640,7 +640,7 @@ void generate_planet(planet_pointer	planet,
 		 || (planet->type == tSubGasGiant) 
 		 || (planet->type == tSubSubGasGiant))
 		{
-			planet->greenhouse_effect 		= FALSE;
+			planet->greenhouse_effect 		= false;
 			planet->volatile_gas_inventory 	= INCREDIBLY_LARGE_NUMBER;
 			planet->surf_pressure 			= INCREDIBLY_LARGE_NUMBER;
 			
@@ -817,7 +817,7 @@ void generate_planet(planet_pointer	planet,
 										sun, random_tilt, 
 										moon_id,
 										do_gases, 
-										do_moons, TRUE);	// Adjusts ptr->density
+										do_moons, true);	// Adjusts ptr->density
 						
 						roche_limit = 2.44 * planet->radius * pow((planet->density / ptr->density), (1.0 / 3.0));
 						hill_sphere = planet->a * KM_PER_AU * pow((planet->mass / (3.0 * sun->mass)), (1.0 / 3.0));
@@ -902,7 +902,7 @@ void check_planet(planet_pointer	planet,
 			(!planet->resonant_period) &&		// Option needed?
 			((int)planet->day != (int)(planet->orb_period * 24.0)))
 		{
-			int	list_it	= FALSE;
+			int	list_it	= false;
 			long double illumination = pow2 (1.0 / planet->a) 
 										* (planet->sun)->luminosity;
 			
@@ -913,7 +913,7 @@ void check_planet(planet_pointer	planet,
 				min_breathable_temp = planet->surf_temp;
 
 				if (flag_verbose & 0x0002)
-					list_it = TRUE;
+					list_it = true;
 			}
 
 			if (max_breathable_temp < planet->surf_temp)
@@ -921,7 +921,7 @@ void check_planet(planet_pointer	planet,
 				max_breathable_temp = planet->surf_temp;
 
 				if (flag_verbose & 0x0002)
-					list_it = TRUE;
+					list_it = true;
 			}
 		
 			if (min_breathable_g > planet->surf_grav)
@@ -929,7 +929,7 @@ void check_planet(planet_pointer	planet,
 				min_breathable_g = planet->surf_grav;
 
 				if (flag_verbose & 0x0002)
-					list_it = TRUE;
+					list_it = true;
 			}
 			
 			if (max_breathable_g < planet->surf_grav)
@@ -937,7 +937,7 @@ void check_planet(planet_pointer	planet,
 				max_breathable_g = planet->surf_grav;
 
 				if (flag_verbose & 0x0002)
-					list_it = TRUE;
+					list_it = true;
 			}
 			
 			if (min_breathable_l > illumination)
@@ -945,7 +945,7 @@ void check_planet(planet_pointer	planet,
 				min_breathable_l = illumination;
 
 				if (flag_verbose & 0x0002)
-					list_it = TRUE;
+					list_it = true;
 			}
 			
 			if (max_breathable_l < illumination)
@@ -953,7 +953,7 @@ void check_planet(planet_pointer	planet,
 				max_breathable_l = illumination;
 
 				if (flag_verbose & 0x0002)
-					list_it = TRUE;
+					list_it = true;
 			}
 			
 			if (planet->type == tTerrestrial)
@@ -963,7 +963,7 @@ void check_planet(planet_pointer	planet,
 					min_breathable_terrestrial_g = planet->surf_grav;
 
 					if (flag_verbose & 0x0002)
-						list_it = TRUE;
+						list_it = true;
 				}
 
 				if (max_breathable_terrestrial_g < planet->surf_grav)
@@ -971,7 +971,7 @@ void check_planet(planet_pointer	planet,
 					max_breathable_terrestrial_g = planet->surf_grav;
 
 					if (flag_verbose & 0x0002)
-						list_it = TRUE;
+						list_it = true;
 				}
 
 				if (min_breathable_terrestrial_l > illumination)
@@ -979,7 +979,7 @@ void check_planet(planet_pointer	planet,
 					min_breathable_terrestrial_l = illumination;
 
 					if (flag_verbose & 0x0002)
-						list_it = TRUE;
+						list_it = true;
 				}
 
 				if (max_breathable_terrestrial_l < illumination)
@@ -987,7 +987,7 @@ void check_planet(planet_pointer	planet,
 					max_breathable_terrestrial_l = illumination;
 
 					if (flag_verbose & 0x0002)
-						list_it = TRUE;
+						list_it = true;
 				}
 			}
 
@@ -996,7 +996,7 @@ void check_planet(planet_pointer	planet,
 				min_breathable_p = planet->surf_pressure;
 
 				if (flag_verbose & 0x0002)
-					list_it = TRUE;
+					list_it = true;
 			}
 			
 			if (max_breathable_p < planet->surf_pressure)
@@ -1004,11 +1004,11 @@ void check_planet(planet_pointer	planet,
 				max_breathable_p = planet->surf_pressure;
 
 				if (flag_verbose & 0x0002)
-					list_it = TRUE;
+					list_it = true;
 			}
 
 			if (flag_verbose & 0x0004)
-				list_it = TRUE;
+				list_it = true;
 			
 			if (list_it)
 			fprintf (stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\tl=%4.2Lf\t%s\n", 
@@ -1114,12 +1114,12 @@ void check_planet(planet_pointer	planet,
 }
 
 void generate_planets(Sun*			sun,
-					  int 			random_tilt, 
+					  bool 			random_tilt,
 					  char			flag_char,
 					  int			sys_no,
 					  char*			system_name,
-					  int			do_gases,
-					  int			do_moons)
+					  bool			do_gases,
+					  bool			do_moons)
 {
 	planet_pointer	planet;
 	int				planet_no = 0;
@@ -1139,14 +1139,14 @@ void generate_planets(Sun*			sun,
 		generate_planet(planet, planet_no,
 						sun, random_tilt, 
 						planet_id,
-						do_gases, do_moons, FALSE);
+						do_gases, do_moons, false);
 		
 		/*
 		 *	Now we're ready to test for habitable planets,
 		 *	so we can count and log them and such
 		 */
 		 
-		 check_planet(planet, planet_id, FALSE);
+		 check_planet(planet, planet_id, false);
 						
 		for (moon=planet->first_moon, moons=1;
 			moon != NULL;
@@ -1157,7 +1157,7 @@ void generate_planets(Sun*			sun,
 			sprintf(moon_id,
 					"%s.%d",
 					planet_id, moons);
-			check_planet(moon, moon_id, TRUE);
+			check_planet(moon, moon_id, true);
 		}
 	}
 }
@@ -1238,25 +1238,25 @@ int stargen (actions		action,
 	int  			index				= 0;
 	int				do_catalog			= ((cat_arg != NULL) && (sys_no_arg == 0));
 	int				catalog_count		= 0;
-	int				do_gases			= (flags_arg & fDoGases) != 0;
-	int 			use_solar_system	= (flags_arg & fUseSolarsystem) != 0;
-	int				reuse_solar_system	= (flags_arg & fReuseSolarsystem) != 0;
-	int				use_known_planets	= (flags_arg & fUseKnownPlanets) != 0;
-	int				no_generate			= (flags_arg & fNoGenerate) != 0;
-	int				do_moons			= (flags_arg & fDoMoons) != 0;
-	int				only_habitable		= (flags_arg & fOnlyHabitable) != 0;
-	int				only_multi_habitable= (flags_arg & fOnlyMultiHabitable) != 0;
-	int				only_jovian_habitable=(flags_arg & fOnlyJovianHabitable) != 0;
-	int				only_earthlike		= (flags_arg & fOnlyEarthlike) != 0;
+	bool			do_gases			= (flags_arg & fDoGases) != 0;
+	bool			use_solar_system	= (flags_arg & fUseSolarsystem) != 0;
+	bool			reuse_solar_system	= (flags_arg & fReuseSolarsystem) != 0;
+	bool			use_known_planets	= (flags_arg & fUseKnownPlanets) != 0;
+	bool			no_generate			= (flags_arg & fNoGenerate) != 0;
+	bool			do_moons			= (flags_arg & fDoMoons) != 0;
+	bool			only_habitable		= (flags_arg & fOnlyHabitable) != 0;
+	bool			only_multi_habitable= (flags_arg & fOnlyMultiHabitable) != 0;
+	bool			only_jovian_habitable=(flags_arg & fOnlyJovianHabitable) != 0;
+	bool			only_earthlike		= (flags_arg & fOnlyEarthlike) != 0;
 
 	if (do_catalog)
 		catalog_count = cat_arg->count;
 
 	if (only_habitable && only_multi_habitable)
-		only_habitable = FALSE;
+		only_habitable = false;
 
 	if (only_habitable && only_earthlike)
-		only_habitable = FALSE;
+		only_habitable = false;
 
 	if (sgErr == NULL)
 		sgErr = stderr;
@@ -1433,12 +1433,12 @@ int stargen (actions		action,
 		sun.age 		= 5.0E9;
 		sun.r_ecosphere	= 1.0;
 		
-		use_solar_system = TRUE;
+		use_solar_system = true;
 	}
 	else if (do_catalog)
 	{
 		system_count = catalog_count + ((system_count - 1) * (catalog_count - 1));
-		use_solar_system = TRUE;
+		use_solar_system = true;
 	}
 	
 	if ((system_count > 1)
@@ -1548,10 +1548,10 @@ int stargen (actions		action,
 		char			*cp;
 		long double		outer_limit			= 0.0;
 		int 			sys_no 				= 0;
-		int				has_known_planets 	= FALSE;
+		bool			has_known_planets 	= false;
 		planet_pointer	seed_planets 		= NULL;
-		int				use_seed_system		= FALSE;
-		int				in_celestia 		= 0;
+		bool			use_seed_system		= false;
+		bool			in_celestia 		= false;
 
 		init();
 
@@ -1568,7 +1568,7 @@ int stargen (actions		action,
 			}
 
 			if (cat_arg->stars[sys_no].known_planets != NULL)
-				has_known_planets = TRUE;
+				has_known_planets = true;
 
 			if (use_known_planets || no_generate)  
 			{
@@ -1668,18 +1668,18 @@ int stargen (actions		action,
 		if (reuse_solar_system)
 		{
 			seed_planets	= solar_system;
-			use_seed_system	= TRUE;
+			use_seed_system	= true;
 		}
 		else if (use_solar_system)
 		{
 			if  (index == 0)
 			{
 				seed_planets	= solar_system;
-				use_seed_system	= TRUE;
+				use_seed_system	= true;
 			}
 			else
 			{
-				use_seed_system	= FALSE;
+				use_seed_system	= false;
 
 				if (!use_known_planets)
 					seed_planets = NULL;
@@ -1821,7 +1821,7 @@ int stargen (actions		action,
 						html_thumbnails(innermost_planet, thumbnails, 
 										system_name, 
 										url_path, system_url, svg_url, file_name,
-										FALSE, TRUE, FALSE, do_moons, graphic_format);
+										false, true, false, do_moons, graphic_format);
 
  					if ((system_count == 1) || (sgOut == NULL))
  					{
@@ -1837,7 +1837,7 @@ int stargen (actions		action,
 							html_thumbnails(innermost_planet, html_file, 
 											system_name, 
 											url_path, system_url, svg_url, file_name,
-											TRUE, FALSE, TRUE, do_moons, graphic_format);
+											true, false, true, do_moons, graphic_format);
 							html_describe_system(innermost_planet, do_gases, url_path, html_file);
 							close_html_file(html_file);
 						}
@@ -1861,7 +1861,7 @@ int stargen (actions		action,
 				break;
 				
 				case ffCELESTIA:
-					if (in_celestia != 0)
+					if (in_celestia != false)
 					{
 						if (has_known_planets && !use_known_planets)
 							fprintf (sgErr, "Skipping %s -- Has planets in Celestia already\n", 

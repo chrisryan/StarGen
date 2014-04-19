@@ -41,9 +41,9 @@ void set_initial_conditions(long double inner_limit_of_dust,
 	dust_head->next_band = NULL;
 	dust_head->outer_edge = outer_limit_of_dust;
 	dust_head->inner_edge = inner_limit_of_dust;
-	dust_head->dust_present = TRUE;
-	dust_head->gas_present = TRUE;
-	dust_left = TRUE;
+	dust_head->dust_present = true;
+	dust_head->gas_present = true;
+	dust_left = true;
 	cloud_eccentricity = 0.2;
 }
 
@@ -82,7 +82,7 @@ int dust_available(long double inside_range, long double outside_range)
 		&& (current_dust_band->outer_edge < inside_range))
 		current_dust_band = current_dust_band->next_band;
 	if (current_dust_band == NULL)
-		dust_here = FALSE;
+		dust_here = false;
 	else dust_here = current_dust_band->dust_present;
 	while ((current_dust_band != NULL)
 		&& (current_dust_band->inner_edge < outside_range)) {
@@ -96,16 +96,16 @@ void update_dust_lanes(long double min, long double max, long double mass,
 					   long double crit_mass, long double body_inner_bound, 
 					   long double body_outer_bound)
 {
-	int 			gas; 
+	bool 			gas;
 	dust_pointer	node1;
 	dust_pointer	node2;
 	dust_pointer	node3;
 	
-	dust_left = FALSE;
+	dust_left = false;
 	if ((mass > crit_mass))
-		gas = FALSE;
+		gas = false;
 	else 
-		gas = TRUE;
+		gas = true;
 	node1 = dust_head;
 	while ((node1 != NULL))
 	{
@@ -114,11 +114,11 @@ void update_dust_lanes(long double min, long double max, long double mass,
 			node2 = (dust *)malloc(sizeof(dust));
 			node2->inner_edge = min;
 			node2->outer_edge = max;
-			if ((node1->gas_present == TRUE))
+			if ((node1->gas_present == true))
 				node2->gas_present = gas;
 			else 
-				node2->gas_present = FALSE;
-			node2->dust_present = FALSE;
+				node2->gas_present = false;
+			node2->dust_present = false;
 			node3 = (dust *)malloc(sizeof(dust));
 			node3->inner_edge = max;
 			node3->outer_edge = node1->outer_edge;
@@ -141,11 +141,11 @@ void update_dust_lanes(long double min, long double max, long double mass,
 				node2->inner_edge = max;
 				node1->next_band = node2;
 				node1->outer_edge = max;
-				if ((node1->gas_present == TRUE))
+				if ((node1->gas_present == true))
 					node1->gas_present = gas;
 				else 
-					node1->gas_present = FALSE;
-				node1->dust_present = FALSE;
+					node1->gas_present = false;
+				node1->dust_present = false;
 				node1 = node2->next_band;
 			}
 			else 
@@ -153,11 +153,11 @@ void update_dust_lanes(long double min, long double max, long double mass,
 				{
 					node2 = (dust *)malloc(sizeof(dust));
 					node2->next_band = node1->next_band;
-					node2->dust_present = FALSE;
-					if ((node1->gas_present == TRUE))
+					node2->dust_present = false;
+					if ((node1->gas_present == true))
 						node2->gas_present = gas;
 					else 
-						node2->gas_present = FALSE;
+						node2->gas_present = false;
 					node2->outer_edge = node1->outer_edge;
 					node2->inner_edge = min;
 					node1->next_band = node2;
@@ -167,9 +167,9 @@ void update_dust_lanes(long double min, long double max, long double mass,
 				else 
 					if (((node1->inner_edge >= min) && (node1->outer_edge <= max)))
 					{
-						if ((node1->gas_present == TRUE))
+						if ((node1->gas_present == true))
 							node1->gas_present = gas;
-						node1->dust_present = FALSE;
+						node1->dust_present = false;
 						node1 = node1->next_band;
 					}
 					else 
@@ -182,7 +182,7 @@ void update_dust_lanes(long double min, long double max, long double mass,
 		if (((node1->dust_present)
 			&& (((node1->outer_edge >= body_inner_bound)
 				&& (node1->inner_edge <= body_outer_bound)))))
-			dust_left = TRUE;
+			dust_left = true;
 		node2 = node1->next_band;
 		if ((node2 != NULL))
 		{
@@ -230,12 +230,12 @@ long double collect_dust(long double last_mass, long double *new_dust,
 		return(0.0);
 	else 
 	{
-		if ((dust_band->dust_present == FALSE))
+		if ((dust_band->dust_present == false))
 			temp_density = 0.0;
 		else 
 			temp_density = dust_density;
 			
-		if (((last_mass < crit_mass) || (dust_band->gas_present == FALSE)))
+		if (((last_mass < crit_mass) || (dust_band->gas_present == false)))
 			mass_density = temp_density;
 		else
 		{
@@ -329,7 +329,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 							long double dust_mass, long double gas_mass,
 							long double stell_luminosity_ratio,
 							long double body_inner_bound, long double body_outer_bound,
-							int			do_moons)
+							bool		do_moons)
 {
 	planet_pointer	the_planet;
 	planet_pointer	next_planet;
@@ -340,7 +340,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 	long double 	dist1;
 	long double 	dist2;
 	
-	finished = FALSE;
+	finished = false;
 	prev_planet = NULL;
 
 // First we try to find an existing planet with an over-lapping orbit.
@@ -417,7 +417,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 						the_moon->atmosphere 	= NULL;
 						the_moon->next_planet 	= NULL;
 						the_moon->first_moon 	= NULL;
-						the_moon->gas_giant 	= FALSE;
+						the_moon->gas_giant 	= false;
 						the_moon->atmosphere	= NULL;
 						the_moon->albedo		= 0;
 						the_moon->gases			= 0;
@@ -427,7 +427,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 						the_moon->max_temp		= 0;
 						the_moon->min_temp		= 0;
 						the_moon->greenhs_rise	= 0;
-						the_moon->minor_moons 	= 0;
+						the_moon->minor_moons 	= false;
 	
 						if ((the_moon->dust_mass + the_moon->gas_mass)
 						  > (the_planet->dust_mass + the_planet->gas_mass))
@@ -453,7 +453,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 							the_planet->first_moon = the_moon;
 						}
 						
-						finished = TRUE;
+						finished = true;
 						
 						if (flag_verbose & 0x0100)
 							fprintf (stderr, "Moon Captured... "
@@ -499,7 +499,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 				the_planet->dust_mass += dust_mass + new_dust;
 				the_planet->gas_mass += gas_mass + new_gas;
 				if (temp >= crit_mass)
-					the_planet->gas_giant = TRUE;
+					the_planet->gas_giant = true;
 					
 				while (the_planet->next_planet != NULL && the_planet->next_planet->a < new_a)
 				{
@@ -516,7 +516,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 				}
 			}
 
-			finished = TRUE;
+			finished = true;
 			break;
 		}
 		else 
@@ -546,12 +546,12 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 		the_planet->max_temp		= 0;
 		the_planet->min_temp		= 0;
 		the_planet->greenhs_rise	= 0;
-		the_planet->minor_moons 	= 0;
+		the_planet->minor_moons 	= false;
 		
 		if ((mass >= crit_mass))
-			the_planet->gas_giant = TRUE;
+			the_planet->gas_giant = true;
 		else 
-			the_planet->gas_giant = FALSE;
+			the_planet->gas_giant = false;
 		
 		if ((planet_head == NULL))
 		{
@@ -590,7 +590,7 @@ planet_pointer dist_planetary_masses(long double stell_mass_ratio,
 									 long double outer_planet_limit,
 									 long double dust_density_coeff,
 									 planet_pointer seed_system,
-									 int		 do_moons)
+									 bool		 do_moons)
 {
 	long double 	a; 
 	long double 	e; 

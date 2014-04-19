@@ -66,7 +66,7 @@ long double volume_radius(long double mass, long double density)
 /*	 eq.23, which appears on page 840.										*/
 /*--------------------------------------------------------------------------*/
 
-long double kothari_radius(long double mass, int giant, int zone)
+long double kothari_radius(long double mass, bool giant, int zone)
 {
 	volatile long double temp1;
 	long double temp, temp2, atomic_weight, atomic_num;
@@ -136,7 +136,7 @@ long double kothari_radius(long double mass, int giant, int zone)
 /*--------------------------------------------------------------------------*/
 
 long double empirical_density(long double mass, long double orb_radius, 
-							  long double r_ecosphere, int gas_giant)
+							  long double r_ecosphere, bool gas_giant)
 {
 	long double temp; 
 	
@@ -201,7 +201,7 @@ long double day_length(planet_pointer	planet)
 	long double planetary_mass_in_grams = planet->mass * SOLAR_MASS_IN_GRAMS;
 	long double	equatorial_radius_in_cm = planet->radius * CM_PER_KM;
 	long double	year_in_hours			= planet->orb_period * 24.0;
-	int giant = (planet->type == tGasGiant ||
+	bool giant = (planet->type == tGasGiant ||
 				 planet->type == tSubGasGiant || 
 				 planet->type == tSubSubGasGiant);
 	long double	k2;
@@ -211,9 +211,9 @@ long double day_length(planet_pointer	planet)
 	long double	spin_resonance_factor;
 	long double	day_in_hours;
 
-	int stopped = FALSE;
+	int stopped = false;
 
-	planet->resonant_period = FALSE;	/* Warning: Modify the planet */
+	planet->resonant_period = false;	/* Warning: Modify the planet */
 
 	if (giant)
 		k2 = 0.24;
@@ -239,7 +239,7 @@ long double day_length(planet_pointer	planet)
 
 	if (ang_velocity <= 0.0)
 	{
-	   stopped = TRUE;
+	   stopped = true;
 	   day_in_hours = INCREDIBLY_LARGE_NUMBER ;
 	}
 	else 
@@ -250,7 +250,7 @@ long double day_length(planet_pointer	planet)
 		if (planet->e > 0.1)
 		{
 		  spin_resonance_factor 	= (1.0 - planet->e) / (1.0 + planet->e);
-		  planet->resonant_period 	= TRUE;
+		  planet->resonant_period 	= true;
 		  return(spin_resonance_factor * year_in_hours);
 		}
 		else 
@@ -351,7 +351,7 @@ long double gravity(long double acceleration)
 /*--------------------------------------------------------------------------*/
 
 long double vol_inventory(long double mass, long double escape_vel, long double rms_vel,
-				long double stellar_mass, int zone, int greenhouse_effect, int accreted_gas)
+				long double stellar_mass, int zone, bool greenhouse_effect, bool accreted_gas)
 {
 	long double velocity_ratio, proportion_const, temp1, temp2, earth_units;
 	
@@ -537,14 +537,14 @@ long double est_temp(long double ecosphere_radius, long double orb_radius, long 
 /*	Neither zone, nor r_greenhouse are used in this version				JLB	*/
 /*--------------------------------------------------------------------------*/
 
-int grnhouse(long double r_ecosphere, long double orb_radius)
+bool grnhouse(long double r_ecosphere, long double orb_radius)
 {
 	long double	temp = eff_temp(r_ecosphere, orb_radius, GREENHOUSE_TRIGGER_ALBEDO);
 	
 	if (temp > FREEZING_POINT_OF_WATER)
-		return(TRUE);
+		return(true);
 	else 
-		return(FALSE);
+		return(false);
 }
 
 
@@ -765,7 +765,7 @@ long double min_molec_weight (planet_pointer planet)
 /*--------------------------------------------------------------------------*/
 
 void calculate_surface_temp(planet_pointer 	planet,
-							int				first, 
+							bool			first,
 							long double		last_water,
 							long double 	last_clouds,
 							long double 	last_ice,
@@ -776,7 +776,7 @@ void calculate_surface_temp(planet_pointer 	planet,
 	long double water_raw;
 	long double clouds_raw;
 	long double greenhouse_temp;
-	int			boil_off = FALSE;
+	bool		boil_off = false;
 
 	if (first)
 	{
@@ -802,7 +802,7 @@ void calculate_surface_temp(planet_pointer 	planet,
 					planet->max_temp,
 					planet->boil_point);
 
-		planet->greenhouse_effect = 0;
+		planet->greenhouse_effect = false;
 		
 		planet->volatile_gas_inventory 	= vol_inventory(planet->mass,
 													    planet->esc_velocity,
@@ -840,7 +840,7 @@ void calculate_surface_temp(planet_pointer 	planet,
 		  (planet->resonant_period)))
 	{
 		planet->hydrosphere	= 0.0;
-		boil_off = TRUE;
+		boil_off = true;
 		
 		if (planet->molec_weight > WATER_VAPOR)
 			planet->cloud_cover = 0.0;
@@ -910,7 +910,7 @@ void iterate_surface_temp(planet_pointer planet)
 		fprintf (stderr, "\nGas lifetimes: H2 - %Lf, H2O - %Lf, N - %Lf, N2 - %Lf\n",
 				h2_life, h2o_life, n_life, n2_life);
 
-	calculate_surface_temp(planet, TRUE, 0, 0, 0, 0, 0);
+	calculate_surface_temp(planet, true, 0, 0, 0, 0, 0);
 
 	for (count = 0;
 		 count <= 25;
@@ -922,7 +922,7 @@ void iterate_surface_temp(planet_pointer planet)
 		long double last_temp	= planet->surf_temp;
 		long double last_albedo	= planet->albedo;
 		
-		calculate_surface_temp(planet, FALSE, 
+		calculate_surface_temp(planet, false,
 							   last_water, last_clouds, last_ice, 
 							   last_temp, last_albedo);
 		
@@ -967,7 +967,7 @@ long double inspired_partial_pressure (long double surf_pressure,
 
 unsigned int breathability (planet_pointer planet)
 {
-	int	oxygen_ok	= FALSE;
+	bool oxygen_ok	= false;
 	int index;
 
 	if (planet->gases == 0)

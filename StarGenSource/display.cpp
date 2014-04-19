@@ -67,7 +67,7 @@ char *engineer_notation(long double d, int p)
 	return (output);
 }
 
-void text_describe_system(planet_pointer innermost_planet, int do_gases, long int seed)
+void text_describe_system(planet_pointer innermost_planet, bool do_gases, long int seed)
 {
 	planet_pointer 	planet;
 	Sun*			sun = innermost_planet->sun;
@@ -148,7 +148,7 @@ void text_describe_system(planet_pointer innermost_planet, int do_gases, long in
 	}
 }
 
-void csv_describe_system(FILE *file, planet_pointer innermost_planet, int do_gases, long int seed)
+void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_gases, long int seed)
 {
 	planet_pointer 	planet;
 	Sun*			sun = innermost_planet->sun;
@@ -246,7 +246,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, int do_gas
 			{
 				int n;
 				int index = max_gas;
-				int	poisonous = FALSE;
+				int	poisonous = false;
 				
 				for (n = 0; n < max_gas; n++)
 				{
@@ -257,7 +257,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, int do_gas
 				if (inspired_partial_pressure (planet->surf_pressure,
 											   planet->atmosphere[i].surf_pressure)
 					> gases[index].max_ipp)
-					poisonous = TRUE;
+					poisonous = true;
 				
 				if (((planet->atmosphere[i].surf_pressure
 					 / planet->surf_pressure) > .0005)
@@ -345,7 +345,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, int do_gas
 				{
 					int n;
 					int index = max_gas;
-					int	poisonous = FALSE;
+					int	poisonous = false;
 					
 					for (n = 0; n < max_gas; n++)
 					{
@@ -356,7 +356,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, int do_gas
 					if (inspired_partial_pressure (moon->surf_pressure,
 												   moon->atmosphere[i].surf_pressure)
 						> gases[index].max_ipp)
-						poisonous = TRUE;
+						poisonous = true;
 					
 					if (((moon->atmosphere[i].surf_pressure
 						 / moon->surf_pressure) > .0005)
@@ -776,7 +776,7 @@ void close_html_file(FILE *file)
 	fclose(file);
 }
 
-#define LPRINT(x)	{fprintf (file, "%s%s", first ? "" : ", ", x); first = FALSE;}
+#define LPRINT(x)	{fprintf (file, "%s%s", first ? "" : ", ", x); first = false;}
 
 void print_description(FILE*			file,
 					   const char*		opening,
@@ -791,7 +791,7 @@ void print_description(FILE*			file,
 	}
 	else
 	{
-		int			first      = TRUE;
+		int			first      = true;
 		long double	rel_temp   = (planet->surf_temp -  FREEZING_POINT_OF_WATER) - 
 								 EARTH_AVERAGE_CELSIUS;
 		long double	seas       = (planet->hydrosphere * 100.0);
@@ -846,7 +846,7 @@ void print_description(FILE*			file,
 		if (planet->gases > 0)
 		{
 			int	i;
-			int	first = TRUE;
+			int	first = true;
 			unsigned int temp;
 			
 			fprintf (file, " (");
@@ -895,7 +895,7 @@ void list_molecules(FILE*		file,
 {
 	int count = 0;
 	int max   = 8;
-	int	first = TRUE;
+	int	first = true;
 	
 	MOL_PRINTF("H",								ATOMIC_HYDROGEN);
 	MOL_PRINTF("H<sub><small>2</small></sub>",	MOL_HYDROGEN);
@@ -933,17 +933,17 @@ void html_thumbnails(planet_pointer innermost_planet,
 					 char*	system_url,
 					 char*	svg_url,
 					 char*	file_name,
-					 int	details,
-					 int	terrestrials,
-					 int	int_link,
-					 int    do_moons,
+					 bool	details,
+					 bool	terrestrials,
+					 bool	int_link,
+					 bool	do_moons,
 					 int	graphic_format)
 {
 	planet_pointer 	planet;
 	Sun*			sun = innermost_planet->sun;
 	int 			counter; 
 	int				planet_count=0;
-	int				terrestrials_seen = FALSE;
+	int				terrestrials_seen = false;
 	planet_pointer 	moon;
 	int 			moons; 
 	
@@ -1042,7 +1042,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 			 || ((planet->surf_pressure > 0.001)
 			  && (planet->surf_temp > FREEZING_POINT_OF_WATER - 15)
 			  && (planet->surf_temp < EARTH_AVERAGE_KELVIN + 15)))
-				terrestrials_seen = TRUE;
+				terrestrials_seen = true;
 	
 			for (moon = planet->first_moon, moons=1;
 				 do_moons && moon != NULL;
@@ -1084,7 +1084,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 				 || ((moon->surf_pressure > 0.001)
 				  && (moon->surf_temp > FREEZING_POINT_OF_WATER - 15)
 				  && (moon->surf_temp < EARTH_AVERAGE_KELVIN + 15)))
-					terrestrials_seen = TRUE;
+					terrestrials_seen = true;
 			}
 			
 			fprintf (file, "</td>\n");
@@ -1258,7 +1258,7 @@ void html_thumbnail_totals(FILE *file)
 void html_decribe_planet(planet_pointer planet,
 						 int			counter,
 						 int			moons,
-						 int 			do_gases, 
+						 bool			do_gases,
 						 char*			url_path,
 						 FILE*			file)
 {
@@ -1479,7 +1479,7 @@ void html_decribe_planet(planet_pointer planet,
 		{
 			int n;
 			int index = max_gas;
-			int	poisonous = FALSE;
+			int	poisonous = false;
 			
 			for (n = 0; n < max_gas; n++)
 			{
@@ -1490,7 +1490,7 @@ void html_decribe_planet(planet_pointer planet,
 			if (inspired_partial_pressure (planet->surf_pressure,
 										   planet->atmosphere[i].surf_pressure)
 				> gases[index].max_ipp)
-				poisonous = TRUE;
+				poisonous = true;
 			
 			if (((planet->atmosphere[i].surf_pressure
 				 / planet->surf_pressure) > .0005)
@@ -1576,7 +1576,7 @@ void html_decribe_planet(planet_pointer planet,
 
 
 void html_describe_system(planet_pointer 	innermost_planet, 
-						  int 				do_gases, 
+						  bool 				do_gases,
 						  char*				url_path,
 						  FILE*				file)
 {

@@ -31,10 +31,10 @@
 #define AVE(x,y)	((x+y)/2.)
 
 				/*  No 	Orbit	Eccen. 	Tilt	Mass		Giant?	Dust Mass	Gas */
-planets sphinx3   ={ 4,	3.0,	0.046,	10.5,	EM(2.35),	FALSE,	EM(2.35),	0, 	ZEROES,0,NULL, NULL};
-planets sphinx2   ={ 3,	2.25,	0.02,	10.5,	EM(2.35),	FALSE,	EM(2.35),	0, 	ZEROES,0,NULL, &sphinx3};
-planets sphinx    ={ 2,	1.6,	0.02,	10.5,	EM(2.2),	FALSE,	EM(2.2),	0, 	ZEROES,0,NULL, &sphinx2};
-planets manticore ={ 1,	1.115,	0.017,	23.5,	EM(1.01),	FALSE,	EM(1.01),	0, 	ZEROES,0,NULL, &sphinx};
+planets sphinx3   ={ 4,	3.0,	0.046,	10.5,	EM(2.35),	false,	EM(2.35),	0, 	ZEROES,0,NULL, NULL};
+planets sphinx2   ={ 3,	2.25,	0.02,	10.5,	EM(2.35),	false,	EM(2.35),	0, 	ZEROES,0,NULL, &sphinx3};
+planets sphinx    ={ 2,	1.6,	0.02,	10.5,	EM(2.2),	false,	EM(2.2),	0, 	ZEROES,0,NULL, &sphinx2};
+planets manticore ={ 1,	1.115,	0.017,	23.5,	EM(1.01),	false,	EM(1.01),	0, 	ZEROES,0,NULL, &sphinx};
 
 
 star	manticores[] = 
@@ -56,9 +56,9 @@ star	helios[] =
 catalog	helio		= {sizeof(helios) / sizeof (star), "?",	&helios[0]};
 
 			     /*	No Orbit Eccen. Tilt   Mass    Gas Giant? Dust Mass   Gas */
-planets ilaqrb={1, 0.21, 0.1,   0,     EM(600.),TRUE,     0,   EM(600.), ZEROES,0,NULL, NULL};
-planets ilaqrc={2, 0.13, 0.27,  0,     EM(178.),TRUE,     0,   EM(178.), ZEROES,0,NULL, &ilaqrb};
-planets ilaqrd={3, 0.021,0.22,  0,     EM(5.9), FALSE,    EM(5.9),    0, ZEROES,0,NULL, &ilaqrc};	// EM(5.9) or 7.53 +/- 0.70 Earth-masses
+planets ilaqrb={1, 0.21, 0.1,   0,     EM(600.),true,     0,   EM(600.), ZEROES,0,NULL, NULL};
+planets ilaqrc={2, 0.13, 0.27,  0,     EM(178.),true,     0,   EM(178.), ZEROES,0,NULL, &ilaqrb};
+planets ilaqrd={3, 0.021,0.22,  0,     EM(5.9), false,    EM(5.9),    0, ZEROES,0,NULL, &ilaqrc};	// EM(5.9) or 7.53 +/- 0.70 Earth-masses
 
 star	ilAqrs[] = 
 // L		Mass	Mass2	Eccen.	SMAxis	 Planets	Designation	Celes	Name
@@ -121,7 +121,7 @@ int main (int argc, char *argv[])
 	char		filename_arg[300]		= "";
 	char 		arg_name [80] 			= "";
 
-	int			use_stdout				= FALSE;
+	bool		use_stdout				= false;
 	char *		prognam;
 	long double	mass_arg				= 0.0;
 	long		seed_arg				= 0;
@@ -137,7 +137,7 @@ int main (int argc, char *argv[])
 	graphic_formats	graphic_format		= gfGIF;
 	
 	char 		*c						= NULL;
-	int  		skip					= FALSE;
+	bool 		skip					= false;
 	int  		index					= 0;
 
 	prognam = argv[0];
@@ -152,17 +152,17 @@ int main (int argc, char *argv[])
 	}
 	
 	while (--argc > 0 && (*++argv)[0] == '-') {
-		for (c = argv[0]+1, skip=FALSE; 
+		for (c = argv[0]+1, skip=false;
 			 (*c != '\0') && (!(skip)); 
 			 c++)
 			switch (*c) 
 			{
 			case '-':
-				use_stdout = TRUE;
+				use_stdout = true;
 				break;
 			case 's':	// set random seed
 				seed_arg = atol(&(*++c));
-				skip = TRUE;
+				skip = true;
 				break;
 			case 'm':	// set mass of star
 			{
@@ -171,16 +171,16 @@ int main (int argc, char *argv[])
 				sscanf (++c, "%lf", &m);
 				mass_arg = m;
 				
-				skip = TRUE;
+				skip = true;
 				break;
 			}
 			case 'n':	// number of systems
 				count_arg = atoi(&(*++c));
-				skip = TRUE;
+				skip = true;
 				break;
 			case 'i':	// number of systems
 				increment_arg = atoi(&(*++c));
-				skip = TRUE;
+				skip = true;
 				break;
 /*
 			case 'T':	// Use the solar system with Titan, not Saturn
@@ -202,7 +202,7 @@ int main (int argc, char *argv[])
 				++c;
 				if ((toupper(*c) != 'X') && (*c != '\0'))
 					sys_no_arg = atoi(c) + 1;
-				skip = TRUE;
+				skip = true;
 				break;
 			case 'W':
 				catalog = &solstation;
@@ -210,7 +210,7 @@ int main (int argc, char *argv[])
 				++c;
 				if ((toupper(*c) != 'X') && (*c != '\0'))
 					sys_no_arg = atoi(c) + 1;
-				skip = TRUE;
+				skip = true;
 				break;
 			case 'F':
 				catalog = &jimb;
@@ -218,7 +218,7 @@ int main (int argc, char *argv[])
 				++c;
 				if ((toupper(*c) != 'X') && (*c != '\0'))
 					sys_no_arg = atoi(c) + 1;
-				skip = TRUE;
+				skip = true;
 				break;
 			case 'f':
 				catalog = &jimb;
@@ -242,9 +242,9 @@ int main (int argc, char *argv[])
 				++c;
 				if ((toupper(*c) != 'X') && (*c != '\0'))
 					sys_no_arg = atoi(c) + 1;
-				skip = TRUE;
+				skip = true;
 				flags_arg |= fNoGenerate;
-				sphinx.greenhouse_effect = TRUE;
+				sphinx.greenhouse_effect = true;
 				break;
 			case 'G':
 				catalog = &ilAqr_cat;
@@ -252,7 +252,7 @@ int main (int argc, char *argv[])
 				++c;
 				if ((toupper(*c) != 'X') && (*c != '\0'))
 					sys_no_arg = atoi(c) + 1;
-				skip = TRUE;
+				skip = true;
 				flags_arg |= fNoGenerate;
 				break;
 			case 'o':
@@ -266,7 +266,7 @@ int main (int argc, char *argv[])
 				if (*c != '\0')
 					strcpy(filename_arg, c);
 
-				skip = TRUE;
+				skip = true;
 				break;
 			case 't':	// display text
 				out_format = ffTEXT;
@@ -304,7 +304,7 @@ int main (int argc, char *argv[])
 				if (strcmp(path + strlen(path) - strlen(DIRSEP), DIRSEP) != 0)
 					strncat (path, DIRSEP, 80-strlen(path));
 					
-				skip = TRUE;
+				skip = true;
 				break;
 			case 'u':
 				if (*++c == '\0')
@@ -320,7 +320,7 @@ int main (int argc, char *argv[])
 				if (strcmp(url_path_arg + strlen(url_path_arg) - strlen("/"), "/") != 0)
 					strncat (url_path_arg, "/", 80-strlen(url_path_arg));
 				
-				skip = TRUE;
+				skip = true;
 				break;
 			case 'g':
 				flags_arg |= fDoGases;
@@ -329,7 +329,7 @@ int main (int argc, char *argv[])
 				if (isdigit(*(c+1)))
 				{
 					sscanf (++c, "%x", &flag_verbose);
-					skip = TRUE;
+					skip = true;
 					if (flag_verbose & 0x0001)
 						flags_arg |= fDoGases;
 				}
@@ -368,7 +368,7 @@ int main (int argc, char *argv[])
 				double ratio;
 				
 				sscanf (++c, "%lf", &ratio);
-				skip = TRUE;
+				skip = true;
 				
 				if (ratio > 0.0)
 					ratio_arg = ratio;
