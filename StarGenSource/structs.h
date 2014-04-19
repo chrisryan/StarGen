@@ -110,7 +110,7 @@ typedef struct star {
 typedef struct catalog {
 	int				count;
 	const char*		arg;
-	star			(*stars)[];
+	star			*stars;
 	} catalog;
 
 typedef	struct gen

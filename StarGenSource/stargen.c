@@ -257,9 +257,9 @@ star	various[] =
  {14800.,		8,				0,				0,		0,		 NULL,		"ALF Car",	 1, "Canopus"}
 };
 
-catalog	solstation	= {sizeof(web) / sizeof (star),		"w", 	&web};
-catalog	dole		= {sizeof(perdole) / sizeof (star), "d",	&perdole};
-catalog jimb	    = {sizeof(various) / sizeof (star), "F",	&various};
+catalog	solstation	= {sizeof(web) / sizeof (star),		"w", 	&web[0]};
+catalog	dole		= {sizeof(perdole) / sizeof (star), "d",	&perdole[0]};
+catalog jimb	    = {sizeof(various) / sizeof (star), "F",	&various[0]};
 
 ChemTable    gases[] =
 {
@@ -1338,9 +1338,9 @@ int stargen (actions		action,
 			{
 				fprintf (sgOut, "%3d: %-30.30s M: %4.2LG L: %4.2LG\n",
 						index,
-						(*(cat_arg->stars))[index].name,
-						(*(cat_arg->stars))[index].mass,
-						(*(cat_arg->stars))[index].luminosity);
+						cat_arg->stars[index].name,
+						cat_arg->stars[index].mass,
+						cat_arg->stars[index].luminosity);
 			}
 
 			return (1);
@@ -1353,7 +1353,7 @@ int stargen (actions		action,
 			{
 				fprintf (sgOut, "\t<option value=%d>%s</option>\n",
 						index,
-						(*(cat_arg->stars))[index].name);
+						cat_arg->stars[index].name);
 			}
 
 			return (1);
@@ -1567,12 +1567,12 @@ int stargen (actions		action,
 					sys_no = index;
 			}
 
-			if ((*(cat_arg->stars))[sys_no].known_planets != NULL)
+			if (cat_arg->stars[sys_no].known_planets != NULL)
 				has_known_planets = TRUE;
 
 			if (use_known_planets || no_generate)  
 			{
-				seed_planets = (*(cat_arg->stars))[sys_no].known_planets;
+				seed_planets = cat_arg->stars[sys_no].known_planets;
 				
 				use_seed_system	= no_generate;
 			}
@@ -1581,15 +1581,15 @@ int stargen (actions		action,
 				seed_planets = NULL;
 			}
 			
-			in_celestia = (*(cat_arg->stars))[sys_no].in_celestia;
+			in_celestia = cat_arg->stars[sys_no].in_celestia;
 			
-			sun.mass = (*(cat_arg->stars))[sys_no].mass;
-			sun.luminosity = (*(cat_arg->stars))[sys_no].luminosity;
+			sun.mass = cat_arg->stars[sys_no].mass;
+			sun.luminosity = cat_arg->stars[sys_no].luminosity;
 
 			if (do_catalog || sys_name_arg[0] == '\0')
 			{
-				sprintf (&system_name[0], "%s", (*(cat_arg->stars))[sys_no].name);
-				sprintf (&designation[0], "%s", (*(cat_arg->stars))[sys_no].desig);
+				sprintf (&system_name[0], "%s", cat_arg->stars[sys_no].name);
+				sprintf (&designation[0], "%s", cat_arg->stars[sys_no].desig);
 				
 			}
 			else
@@ -1600,7 +1600,7 @@ int stargen (actions		action,
 			
 			sprintf (&file_name[0], "%s-%ld", designation, flag_seed);
 			
-			if ((*(cat_arg->stars))[sys_no].m2 > .001)
+			if (cat_arg->stars[sys_no].m2 > .001)
 			{
 				/*
 				 *	The following is Holman & Wiegert's equation 1 from
@@ -1608,10 +1608,10 @@ int stargen (actions		action,
 				 *	The Astronomical Journal, 117:621-628, Jan 1999
 				 */
 				long double m1 = sun.mass;
-				long double m2 = (*(cat_arg->stars))[sys_no].m2;
+				long double m2 = cat_arg->stars[sys_no].m2;
 				long double mu = m2 / (m1 + m2);
-				long double e = (*(cat_arg->stars))[sys_no].e;
-				long double a = (*(cat_arg->stars))[sys_no].a;
+				long double e = cat_arg->stars[sys_no].e;
+				long double a = cat_arg->stars[sys_no].a;
 				
 				outer_limit = (0.464 + (-0.380 * mu) + (-0.631 * e) +
 							   (0.586 * mu * e) + (0.150 * pow2(e)) +

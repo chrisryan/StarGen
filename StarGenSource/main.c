@@ -44,7 +44,7 @@ star	manticores[] =
  {1.0,		1.00,	1.047,	0.05,	79.2,	 NULL,		"Manticore B",	 1, "Manticore B"},
 };
 
-catalog	manticore_cat	= {sizeof(manticores) / sizeof (star),	"B", &manticores};
+catalog	manticore_cat	= {sizeof(manticores) / sizeof (star),	"B", &manticores[0]};
 
 star	helios[] = 
 // L		Mass	Mass2	Eccen.	SMAxis	 Planets	Designation		Name
@@ -53,7 +53,7 @@ star	helios[] =
  {0.83,		0.87,	1.0,	0.45,	8.85,	 NULL,		"Helio B",	 1, "Helio B"},
 };
 
-catalog	helio		= {sizeof(helios) / sizeof (star), "?",	&helios};
+catalog	helio		= {sizeof(helios) / sizeof (star), "?",	&helios[0]};
 
 			     /*	No Orbit Eccen. Tilt   Mass    Gas Giant? Dust Mass   Gas */
 planets ilaqrb={1, 0.21, 0.1,   0,     EM(600.),TRUE,     0,   EM(600.), ZEROES,0,NULL, NULL};
@@ -66,7 +66,7 @@ star	ilAqrs[] =
 {0.0016,	0.32,	0,		0,		0,		 &ilaqrd,	"IL Aqr",	1, "IL Aquarii/Gliese 876"}	// 15.2
 };
 
-catalog	ilAqr_cat		= {sizeof(ilAqrs) / sizeof (star),	"G", &ilAqrs};
+catalog	ilAqr_cat		= {sizeof(ilAqrs) / sizeof (star),	"G", &ilAqrs[0]};
 void usage(char*);
 
 void usage(char *prognam)
