@@ -3,12 +3,16 @@
 #include	"const.h"
 #include	"utils.h"
 
+using namespace StarGen::Random;
+
+namespace StarGen {
+	namespace Random {
 /*----------------------------------------------------------------------*/
 /*	This function returns a random real number between the specified	*/
 /* inner and outer bounds.												*/
 /*----------------------------------------------------------------------*/
 
-long double random_number(long double inner, long double outer)
+long double number(long double inner, long double outer)
 {
 	long double range;
 
@@ -23,17 +27,20 @@ long double random_number(long double inner, long double outer)
 
 long double about(long double value, long double variation)
 {
-	return(value + (value * random_number(-variation,variation)));
+	return(value + (value * number(-variation,variation)));
 }
 
-long double random_eccentricity()
+long double eccentricity()
 {
 	long double	e;
 
-	e = 1.0 - pow(random_number(0.0, 1.0), ECCENTRICITY_COEFF);
+	e = 1.0 - pow(number(0.0, 1.0), ECCENTRICITY_COEFF);
 
 	if (e > .99)	// Note that this coresponds to a random
 		e = .99;	// number less than 10E-26
 					// It happens with GNU C for -S254 -W27
 	return(e);
+}
+
+	}
 }

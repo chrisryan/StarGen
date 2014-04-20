@@ -612,8 +612,8 @@ planet_pointer dist_planetary_masses(long double stell_mass_ratio,
 		}
 		else
 		{
-			a = random_number(planet_inner_bound,planet_outer_bound);
-			e = random_eccentricity( );
+			a = StarGen::Random::number(planet_inner_bound,planet_outer_bound);
+			e = StarGen::Random::eccentricity( );
 		}
 
 		mass      = PROTOPLANET_MASS;

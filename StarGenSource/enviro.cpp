@@ -263,7 +263,7 @@ int inclination(long double orb_radius)
 {
 	int temp;
 
-	temp = (int)(pow(orb_radius,0.2) * about(EARTH_AXIAL_TILT,0.4));
+	temp = (int)(pow(orb_radius,0.2) * StarGen::Random::about(EARTH_AXIAL_TILT,0.4));
 	return(temp % 360);
 }
 
@@ -364,7 +364,7 @@ long double vol_inventory(long double mass, long double escape_vel, long double 
 		}
 		earth_units = mass * SUN_MASS_IN_EARTH_MASSES;
 		temp1 = (proportion_const * earth_units) / stellar_mass;
-		temp2 = about(temp1,0.2);
+		temp2 = StarGen::Random::about(temp1,0.2);
 		temp2 = temp1;
 		if (greenhouse_effect || accreted_gas)
 			return(temp2);

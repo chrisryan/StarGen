@@ -333,7 +333,7 @@ void generate_stellar_system(Sun*			sun,
 	long double		outer_dust_limit;
 
 	if ((sun->mass < 0.2) || (sun->mass > 1.5))
-		sun->mass		 = random_number(0.7,1.4);
+		sun->mass		 = StarGen::Random::number(0.7, 1.4);
 
 	outer_dust_limit	 = stellar_dust_limit(sun->mass);
 
@@ -364,7 +364,7 @@ void generate_stellar_system(Sun*			sun,
 												 seed_system,
 												 do_moons);
 
-		sun->age = random_number(min_age, max_age);
+		sun->age = StarGen::Random::number(min_age, max_age);
 	}
 
 	generate_planets(sun,
@@ -644,7 +644,7 @@ void generate_planet(planet_pointer	planet,
 
 			planet->surf_temp				= INCREDIBLY_LARGE_NUMBER;
 			planet->greenhs_rise 			= 0;
-			planet->albedo 					= about(GAS_GIANT_ALBEDO,0.1);
+			planet->albedo 					= StarGen::Random::about(GAS_GIANT_ALBEDO,0.1);
 			planet->hydrosphere 			= 1.0;
 			planet->cloud_cover	 			= 1.0;
 			planet->ice_cover	 			= 0.0;
@@ -820,8 +820,8 @@ void generate_planet(planet_pointer	planet,
 
 						if ((roche_limit * 3.0) < hill_sphere)
 						{
-							ptr->moon_a = random_number(roche_limit * 1.5, hill_sphere / 2.0) / KM_PER_AU;
-							ptr->moon_e = random_eccentricity ();
+							ptr->moon_a = StarGen::Random::number(roche_limit * 1.5, hill_sphere / 2.0) / KM_PER_AU;
+							ptr->moon_e = StarGen::Random::eccentricity ();
 						}
 						else
 						{
