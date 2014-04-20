@@ -7,6 +7,7 @@
 #include	"display.h"
 #include	"enviro.h"
 #include	"stargen.h"
+#include "ChemTable.h"
 
 #define	MAX_EXP_DIGS	3
 #define	MAX_MAN_DIGS	20
@@ -245,18 +246,18 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
 			for (i = 0; i < planet->gases; i++)
 			{
 				int n;
-				int index = max_gas;
+				int index = StarGen::Gases::max_gas;
 				int	poisonous = false;
 
-				for (n = 0; n < max_gas; n++)
+				for (n = 0; n < StarGen::Gases::max_gas; n++)
 				{
-					if (gases[n].num == planet->atmosphere[i].num)
+					if (StarGen::Gases::gases[n].num == planet->atmosphere[i].num)
 						index = n;
 				}
 
 				if (inspired_partial_pressure (planet->surf_pressure,
 											   planet->atmosphere[i].surf_pressure)
-					> gases[index].max_ipp)
+					> StarGen::Gases::gases[index].max_ipp)
 					poisonous = true;
 
 				if (((planet->atmosphere[i].surf_pressure
@@ -264,7 +265,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
 				 || poisonous)
 				{
 					sprintf (ptr, "%s %.1Lf%% %.0Lfmb (ipp:%.0Lf)%s; ",
-									gases[index].symbol,
+									StarGen::Gases::gases[index].symbol,
 									100. * (planet->atmosphere[i].surf_pressure /
 											planet->surf_pressure),
 									planet->atmosphere[i].surf_pressure,
@@ -344,18 +345,18 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
 				for (i = 0; i < moon->gases; i++)
 				{
 					int n;
-					int index = max_gas;
+					int index = StarGen::Gases::max_gas;
 					int	poisonous = false;
 
-					for (n = 0; n < max_gas; n++)
+					for (n = 0; n < StarGen::Gases::max_gas; n++)
 					{
-						if (gases[n].num == moon->atmosphere[i].num)
+						if (StarGen::Gases::gases[n].num == moon->atmosphere[i].num)
 							index = n;
 					}
 
 					if (inspired_partial_pressure (moon->surf_pressure,
 												   moon->atmosphere[i].surf_pressure)
-						> gases[index].max_ipp)
+						> StarGen::Gases::gases[index].max_ipp)
 						poisonous = true;
 
 					if (((moon->atmosphere[i].surf_pressure
@@ -363,7 +364,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
 					 || poisonous)
 					{
 						sprintf (ptr, "%s %.1Lf%% %.0Lfmb (ipp:%.0Lf)%s; ",
-										gases[index].symbol,
+										StarGen::Gases::gases[index].symbol,
 										100. * (moon->atmosphere[i].surf_pressure /
 												moon->surf_pressure),
 										moon->atmosphere[i].surf_pressure,
@@ -854,18 +855,18 @@ void print_description(FILE*			file,
 			for (i = 0; i < planet->gases; i++)
 			{
 				int n;
-				int index = max_gas;
+				int index = StarGen::Gases::max_gas;
 
-				for (n = 0; n < max_gas; n++)
+				for (n = 0; n < StarGen::Gases::max_gas; n++)
 				{
-					if (gases[n].num == planet->atmosphere[i].num)
+					if (StarGen::Gases::gases[n].num == planet->atmosphere[i].num)
 						index = n;
 				}
 
 				if ((planet->atmosphere[i].surf_pressure / planet->surf_pressure)
 					> .01)
 				{
-					LPRINT (gases[index].html_symbol);
+					LPRINT (StarGen::Gases::gases[index].html_symbol);
 				}
 			}
 
@@ -1473,18 +1474,18 @@ void html_decribe_planet(planet_pointer planet,
 		for (i = 0; i < planet->gases; i++)
 		{
 			int n;
-			int index = max_gas;
+			int index = StarGen::Gases::max_gas;
 			int	poisonous = false;
 
-			for (n = 0; n < max_gas; n++)
+			for (n = 0; n < StarGen::Gases::max_gas; n++)
 			{
-				if (gases[n].num == planet->atmosphere[i].num)
+				if (StarGen::Gases::gases[n].num == planet->atmosphere[i].num)
 					index = n;
 			}
 
 			if (inspired_partial_pressure (planet->surf_pressure,
 										   planet->atmosphere[i].surf_pressure)
-				> gases[index].max_ipp)
+				> StarGen::Gases::gases[index].max_ipp)
 				poisonous = true;
 
 			if (((planet->atmosphere[i].surf_pressure
@@ -1496,7 +1497,7 @@ void html_decribe_planet(planet_pointer planet,
 							   "<td align=right>%5.0Lf mb&nbsp;</td>"
 							   "<td align=right>(ipp:%5.0Lf)</td>"
 							   "<td align=right>&nbsp;%s</td></tr>\n",
-								gases[index].name,
+								StarGen::Gases::gases[index].name,
 								100. * (planet->atmosphere[i].surf_pressure /
 										planet->surf_pressure),
 								planet->atmosphere[i].surf_pressure,

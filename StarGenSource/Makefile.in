@@ -92,7 +92,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_stargen_OBJECTS = accrete.$(OBJEXT) display.$(OBJEXT) \
 	enviro.$(OBJEXT) main.$(OBJEXT) stargen.$(OBJEXT) \
-	utils.$(OBJEXT)
+	utils.$(OBJEXT) ChemTable.$(OBJEXT)
 stargen_OBJECTS = $(am_stargen_OBJECTS)
 stargen_DEPENDENCIES =
 AM_V_P = $(am__v_P_@AM_V@)
@@ -235,7 +235,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-stargen_SOURCES = accrete.cpp display.cpp enviro.cpp main.cpp stargen.cpp utils.cpp
+stargen_SOURCES = accrete.cpp display.cpp enviro.cpp main.cpp stargen.cpp utils.cpp ChemTable.cpp
 stargen_LDADD = -lm
 all: all-am
 
@@ -324,6 +324,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ChemTable.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/accrete.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/display.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/enviro.Po@am__quote@

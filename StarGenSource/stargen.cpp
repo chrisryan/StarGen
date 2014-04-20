@@ -24,6 +24,7 @@
 #include	"display.h"
 #include	"stargen.h"
 #include	"utils.h"
+#include "ChemTable.h"
 
 const char * stargen_revision = "$Revision: 1.43 $";
 
@@ -258,51 +259,12 @@ catalog	solstation	= {sizeof(web) / sizeof (star),		"w", 	&web[0]};
 catalog	dole		= {sizeof(perdole) / sizeof (star), "d",	&perdole[0]};
 catalog jimb	    = {sizeof(various) / sizeof (star), "F",	&various[0]};
 
-ChemTable    gases[] =
-{
-//   An   sym   HTML symbol                      name                 Aw      melt    boil    dens       ABUNDe       ABUNDs         Rea	Max inspired pp
-  {AN_H,  "H",  "H<SUB><SMALL>2</SMALL></SUB>",	 "Hydrogen",         1.0079,  14.06,  20.40,  8.99e-05,  0.00125893,  27925.4,       1,		0.0},
-  {AN_HE, "He", "He",							 "Helium",           4.0026,   3.46,   4.20,  0.0001787, 7.94328e-09, 2722.7,        0,		MAX_HE_IPP},
-  {AN_N,  "N",  "N<SUB><SMALL>2</SMALL></SUB>",	 "Nitrogen",        14.0067,  63.34,  77.40,  0.0012506, 1.99526e-05, 3.13329,       0,		MAX_N2_IPP},
-  {AN_O,  "O",  "O<SUB><SMALL>2</SMALL></SUB>",	 "Oxygen",          15.9994,  54.80,  90.20,  0.001429,  0.501187,    23.8232,       10,	MAX_O2_IPP},
-  {AN_NE, "Ne", "Ne",							 "Neon",            20.1700,  24.53,  27.10,  0.0009,    5.01187e-09, 3.4435e-5,     0,		MAX_NE_IPP},
-  {AN_AR, "Ar", "Ar",							 "Argon",           39.9480,  84.00,  87.30,  0.0017824, 3.16228e-06, 0.100925,      0,		MAX_AR_IPP},
-  {AN_KR, "Kr", "Kr",							 "Krypton",         83.8000, 116.60, 119.70,  0.003708,  1e-10,       4.4978e-05,    0,		MAX_KR_IPP},
-  {AN_XE, "Xe", "Xe",							 "Xenon",          131.3000, 161.30, 165.00,  0.00588,   3.16228e-11, 4.69894e-06,   0,		MAX_XE_IPP},
-//                                                                     from here down, these columns were originally: 0.001,         0
-  {AN_NH3, "NH3", "NH<SUB><SMALL>3</SMALL></SUB>", "Ammonia",       17.0000, 195.46, 239.66,  0.001,     0.002,       0.0001,        1,		MAX_NH3_IPP},
-  {AN_H2O, "H2O", "H<SUB><SMALL>2</SMALL></SUB>O", "Water",         18.0000, 273.16, 373.16,  1.000,     0.03,        0.001,         0,		0.0},
-  {AN_CO2, "CO2", "CO<SUB><SMALL>2</SMALL></SUB>", "CarbonDioxide", 44.0000, 194.66, 194.66,  0.001,     0.01,        0.0005,        0,		MAX_CO2_IPP},
-  {AN_O3,   "O3", "O<SUB><SMALL>3</SMALL></SUB>",  "Ozone",         48.0000,  80.16, 161.16,  0.001,     0.001,       0.000001,      2,		MAX_O3_IPP},
-  {AN_CH4, "CH4", "CH<SUB><SMALL>4</SMALL></SUB>", "Methane",       16.0000,  90.16, 109.16,  0.010,     0.005,       0.0001,        1,		MAX_CH4_IPP},
-  { 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0}
-};
-
-/*
-  {AN_NH3, "NH3", "NH<SUB><SMALL>3</SMALL></SUB>", "Ammonia",       17.0000, 195.46, 239.66,  0.001,     0.002,       0.001,         0.001,	MAX_NH3_IPP},
-  {AN_H2O, "H2O", "H<SUB><SMALL>2</SMALL></SUB>O", "Water",         18.0000, 273.16, 373.16,  1.000,     0.03,        0.001,         0,		(9.9999E37)},
-  {AN_CO2, "CO2", "CO<SUB><SMALL>2</SMALL></SUB>", "CarbonDioxide", 44.0000, 194.66, 194.66,  0.001,     0.01,        0.001,         0,		MAX_CO2_IPP},
-  {AN_O3,   "O3", "O<SUB><SMALL>3</SMALL></SUB>",  "Ozone",         48.0000,  80.16, 161.16,  0.001,     0.001,       0.001,         0.001,	MAX_O3_IPP},
-  {AN_CH4, "CH4", "CH<SUB><SMALL>4</SMALL></SUB>", "Methane",       16.0000,  90.16, 109.16,  0.010,     0.005,       0.001,         0,		MAX_CH4_IPP},
-
-  {AN_F,  "F",  "F",							 "Fluorine",        18.9984,  53.58,  85.10,  0.001696,  0.000630957, 0.000843335,   50,	MAX_F_IPP},
-  {AN_CL, "Cl", "Cl",							 "Chlorine",        35.4530, 172.22, 239.20,  0.003214,  0.000125893, 0.005236,      40,	MAX_CL_IPP},
-
-  { 910, "H2", "H2",  2, 14.06, 20.40, 8.99e-05,  0.00125893, 27925.4  },
-  { 911, "N2", "N2", 28, 63.34, 77.40, 0.0012506, 1.99526e-05,3.13329  },
-  { 912, "O2", "O2", 32, 54.80, 90.20, 0.001429,  0.501187, 23.8232, 10},
-  {AN_CH3CH2OH,
-           "CH3CH2OH", "Ethanol",  46.0000, 159.06, 351.66,  0.895,     0.001,       0.001,         0},
-*/
-int max_gas = (sizeof(gases)/sizeof(ChemTable))-1;
-
 void init(void);
 void generate_stellar_system(Sun*, bool, planet_pointer, char, int, char *, long double, bool, bool);
 void calculate_gases(Sun*, planet_pointer, char*);
 void generate_planet(planet_pointer, int, Sun*, bool, char*, bool, bool, bool);
 void generate_planets(Sun*, bool, char, int, char *, bool, bool);
 void usage(char *);
-static int diminishing_abundance(const void *xp, const void *yp);
 static int diminishing_pressure(const void *xp, const void *yp);
 
 void init()
@@ -382,79 +344,79 @@ void calculate_gases(Sun*			sun,
 {
 	if (planet->surf_pressure > 0)
 	{
-		long double	*amount = (long double*)calloc((max_gas+1), sizeof(long double));
+		long double	*amount = (long double*)calloc((StarGen::Gases::max_gas + 1), sizeof(long double));
 		long double	totamount = 0;
 		long double pressure  = planet->surf_pressure/MILLIBARS_PER_BAR;
 		int			n         = 0;
 		int			i;
 
-		for (i = 0; i < max_gas; i++)
+		for (i = 0; i < StarGen::Gases::max_gas; i++)
 		{
-			long double yp = gases[i].boil /
+			long double yp = StarGen::Gases::gases[i].boil /
 							 (373. * ((log((pressure) + 0.001) / -5050.5) +
 									 (1.0 / 373.)));
 
 			if ((yp >= 0 && yp < planet->low_temp)
-			 && (gases[i].weight >= planet->molec_weight))
+			 && (StarGen::Gases::gases[i].weight >= planet->molec_weight))
 			{
-				long double	vrms	= rms_vel(gases[i].weight, planet->exospheric_temp);
+				long double	vrms	= rms_vel(StarGen::Gases::gases[i].weight, planet->exospheric_temp);
 				long double	pvrms	= pow(1 / (1 + vrms / planet->esc_velocity), sun->age / 1e9);
-				long double	abund	= gases[i].abunds; 				/* gases[i].abunde */
+				long double	abund	= StarGen::Gases::gases[i].abunds; 				/* gases[i].abunde */
 				long double react	= 1.0;
 				long double fract	= 1.0;
 				long double pres2	= 1.0;
 
-				if (strcmp(gases[i].symbol, "Ar") == 0)
+				if (strcmp(StarGen::Gases::gases[i].symbol, "Ar") == 0)
 				{
 					react = .15 * sun->age/4e9;
 				}
-				else if (strcmp(gases[i].symbol, "He") == 0)
+				else if (strcmp(StarGen::Gases::gases[i].symbol, "He") == 0)
 				{
 					abund = abund * (0.001 + (planet->gas_mass / planet->mass));
 					pres2 = (0.75 + pressure);
-					react = pow(1 / (1 + gases[i].reactivity),
+					react = pow(1 / (1 + StarGen::Gases::gases[i].reactivity),
 								sun->age/2e9 * pres2);
 				}
-				else if ((strcmp(gases[i].symbol, "O") == 0 ||
-						  strcmp(gases[i].symbol, "O2") == 0) &&
+				else if ((strcmp(StarGen::Gases::gases[i].symbol, "O") == 0 ||
+						  strcmp(StarGen::Gases::gases[i].symbol, "O2") == 0) &&
 						 sun->age > 2e9 &&
 						 planet->surf_temp > 270 && planet->surf_temp < 400)
 				{
 				/*	pres2 = (0.65 + pressure/2);			Breathable - M: .55-1.4 	*/
 					pres2 = (0.89 + pressure/4);		/*	Breathable - M: .6 -1.8 	*/
-					react = pow(1 / (1 + gases[i].reactivity),
+					react = pow(1 / (1 + StarGen::Gases::gases[i].reactivity),
 								pow(sun->age/2e9, 0.25) * pres2);
 				}
-				else if (strcmp(gases[i].symbol, "CO2") == 0 &&
+				else if (strcmp(StarGen::Gases::gases[i].symbol, "CO2") == 0 &&
 						 sun->age > 2e9 &&
 						 planet->surf_temp > 270 && planet->surf_temp < 400)
 				{
 					pres2 = (0.75 + pressure);
-					react = pow(1 / (1 + gases[i].reactivity),
+					react = pow(1 / (1 + StarGen::Gases::gases[i].reactivity),
 								pow(sun->age/2e9, 0.5) * pres2);
 					react *= 1.5;
 				}
 				else
 				{
 					pres2 = (0.75 + pressure);
-					react = pow(1 / (1 + gases[i].reactivity),
+					react = pow(1 / (1 + StarGen::Gases::gases[i].reactivity),
 								sun->age/2e9 * pres2);
 				}
 
-				fract = (1 - (planet->molec_weight / gases[i].weight));
+				fract = (1 - (planet->molec_weight / StarGen::Gases::gases[i].weight));
 
 				amount[i] = abund * pvrms * react * fract;
 
 				if ((flag_verbose & 0x4000) &&
-					(strcmp(gases[i].symbol, "O") == 0 ||
-					 strcmp(gases[i].symbol, "N") == 0 ||
-					 strcmp(gases[i].symbol, "Ar") == 0 ||
-					 strcmp(gases[i].symbol, "He") == 0 ||
-					 strcmp(gases[i].symbol, "CO2") == 0))
+					(strcmp(StarGen::Gases::gases[i].symbol, "O") == 0 ||
+					 strcmp(StarGen::Gases::gases[i].symbol, "N") == 0 ||
+					 strcmp(StarGen::Gases::gases[i].symbol, "Ar") == 0 ||
+					 strcmp(StarGen::Gases::gases[i].symbol, "He") == 0 ||
+					 strcmp(StarGen::Gases::gases[i].symbol, "CO2") == 0))
 				{
 					fprintf (stderr, "%-5.2Lf %-3.3s, %-5.2Lf = a %-5.2Lf * p %-5.2Lf * r %-5.2Lf * p2 %-5.2Lf * f %-5.2Lf\t(%.3Lf%%)\n",
 							  planet->mass * SUN_MASS_IN_EARTH_MASSES,
-							  gases[i].symbol,
+							  StarGen::Gases::gases[i].symbol,
 							  amount[i],
 							  abund,
 							  pvrms,
@@ -478,11 +440,11 @@ void calculate_gases(Sun*			sun,
 			planet->gases = n;
 			planet->atmosphere = (gas*)calloc(n, sizeof(gas));
 
-			for (i = 0, n = 0; i < max_gas; i++)
+			for (i = 0, n = 0; i < StarGen::Gases::max_gas; i++)
 			{
 				if (amount[i] > 0.0)
 				{
-					planet->atmosphere[n].num = gases[i].num;
+					planet->atmosphere[n].num = StarGen::Gases::gases[i].num;
 					planet->atmosphere[n].surf_pressure = planet->surf_pressure
 														* amount[i] / totamount;
 
@@ -491,7 +453,7 @@ void calculate_gases(Sun*			sun,
 						if ((planet->atmosphere[n].num == AN_O) &&
 							inspired_partial_pressure (planet->surf_pressure,
 													   planet->atmosphere[n].surf_pressure)
-							> gases[i].max_ipp)
+							> StarGen::Gases::gases[i].max_ipp)
 						{
 							fprintf (stderr, "%s\t Poisoned by O2\n",
 									 planet_id);
@@ -1159,22 +1121,6 @@ void generate_planets(Sun*			sun,
 }
 
 /*
- *  Sort a ChemTable by decreasing abundance.
- */
-
-static int diminishing_abundance(const void *xp, const void *yp)
-{
-	const ChemTable *x = (ChemTable *) xp;
-	const ChemTable *y = (ChemTable *) yp;
-	long double    xx = x->abunds * x->abunde;
-	long double    yy = y->abunds * y->abunde;
-
-	if (xx < yy)
-		return +1;
-	return (xx > yy ? -1 : 0);
-}
-
-/*
  *  Sort a ChemTable by decreasing pressure.
  */
 
@@ -1291,13 +1237,11 @@ int stargen (actions		action,
 		strncat (subdir, "/", 80-strlen(subdir));
 	}
 
-	for (index = 0; index < max_gas; index++)
-		if (gases[index].max_ipp == 0.0)
-			gases[index].max_ipp = INCREDIBLY_LARGE_NUMBER;
+	for (index = 0; index < StarGen::Gases::max_gas; index++)
+		if (StarGen::Gases::gases[index].max_ipp == 0.0)
+			StarGen::Gases::gases[index].max_ipp = INCREDIBLY_LARGE_NUMBER;
 
-	qsort(gases, (sizeof(gases) / sizeof(ChemTable)) - 1,
-				  sizeof(*gases),
-				  diminishing_abundance);
+	StarGen::Gases::initialize();
 
 	switch (action)
 	{
@@ -1308,18 +1252,18 @@ int stargen (actions		action,
 			if (sgOut == NULL)
 				sgOut = stdout;
 
-			for (index = 0; index < max_gas; index++)
+			for (index = 0; index < StarGen::Gases::max_gas; index++)
 			{
-				if (gases[index].weight >= AN_N
-				 && gases[index].max_ipp < 1E9)
-					total += gases[index].max_ipp;
+				if (StarGen::Gases::gases[index].weight >= AN_N
+				 && StarGen::Gases::gases[index].max_ipp < 1E9)
+					total += StarGen::Gases::gases[index].max_ipp;
 
 				fprintf (sgOut, " %2d: %4s - %-13s %3.0f mb - %5.0Lf mb\n",
 						index,
-						gases[index].symbol,
-						gases[index].name,
-						gases[index].num == AN_O ? MIN_O2_IPP : 0.0,
-						gases[index].max_ipp);
+						StarGen::Gases::gases[index].symbol,
+						StarGen::Gases::gases[index].name,
+						StarGen::Gases::gases[index].num == AN_O ? MIN_O2_IPP : 0.0,
+						StarGen::Gases::gases[index].max_ipp);
 			}
 			fprintf (sgOut, "Total Max ipp: %5.0Lf\n", total);
 			fprintf (sgOut, "Max pressure: %5.0f atm\n", MAX_HABITABLE_PRESSURE);

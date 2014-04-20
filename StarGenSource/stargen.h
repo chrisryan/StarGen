@@ -95,11 +95,6 @@ extern long double	max_breathable_temp;
 extern long double	min_breathable_p;
 extern long double	max_breathable_p;
 
-										// Experimental gas model variables
-										//  Likely to go away or be changed
-extern ChemTable    gases[];
-extern int max_gas;
-
 										// OS-specific constants for finding
 										// the default output directory and
 										// other dirs:

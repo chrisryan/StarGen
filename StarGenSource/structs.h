@@ -119,22 +119,3 @@ typedef	struct gen
 	planet_pointer	planets;
 	gen_pointer		next;
 } generation;
-
-// From Keris
-
-typedef struct ChemTableS
-{
-  int         	num;
-  const char	*symbol;
-  const char	*html_symbol;
-  const char	*name;
-  long double	weight;
-  long double	melt;
-  long double	boil;
-  long double	density;
-  long double	abunde;
-  long double	abunds;
-  long double	reactivity;
-  long double	max_ipp;	// Max inspired partial pressure im millibars
-} ChemTable;
-

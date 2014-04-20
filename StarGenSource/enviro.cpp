@@ -5,6 +5,7 @@
 #include	"enviro.h"
 #include	"stargen.h"
 #include	"utils.h"
+#include "ChemTable.h"
 
 const char* breathability_phrase[4] =
 	{
@@ -957,13 +958,13 @@ unsigned int breathability (planet_pointer planet)
 		long double ipp = inspired_partial_pressure (planet->surf_pressure,
 													 planet->atmosphere[index].surf_pressure);
 
-		for (n = 0; n < max_gas; n++)
+		for (n = 0; n < StarGen::Gases::max_gas; n++)
 		{
-			if (gases[n].num == planet->atmosphere[index].num)
+			if (StarGen::Gases::gases[n].num == planet->atmosphere[index].num)
 				gas_no = n;
 		}
 
-		if (ipp > gases[gas_no].max_ipp)
+		if (ipp > StarGen::Gases::gases[gas_no].max_ipp)
 			return POISONOUS;
 
 		if (planet->atmosphere[index].num == AN_O)

@@ -116,32 +116,6 @@
 #define KRYPTON					(83.8)	/* Kr  */
 #define XENON					(131.3) /* Xe  */
 
-//	And atomic numbers, for use in ChemTable indexes
-#define AN_H	1
-#define AN_HE	2
-#define AN_N	7
-#define AN_O	8
-#define AN_F	9
-#define AN_NE	10
-#define AN_P	15
-#define AN_CL	17
-#define AN_AR	18
-#define AN_BR	35
-#define AN_KR	36
-#define AN_I	53
-#define AN_XE	54
-#define AN_HG	80
-#define AN_AT	85
-#define AN_RN	86
-#define AN_FR	87
-
-#define AN_NH3	900
-#define AN_H2O	901
-#define AN_CO2	902
-#define AN_O3	903
-#define AN_CH4	904
-#define AN_CH3CH2OH	905
-
 /*	The following defines are used in the kothari_radius function in	*/
 /*	file enviro.c.														*/
 #define A1_20					(6.485E12)		/* All units are in cgs system.	 */
