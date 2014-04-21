@@ -260,10 +260,10 @@ catalog	dole		= {sizeof(perdole) / sizeof (star), "d",	&perdole[0]};
 catalog jimb	    = {sizeof(various) / sizeof (star), "F",	&various[0]};
 
 void init(void);
-void generate_stellar_system(Sun*, bool, planet_pointer, char, int, char *, long double, bool, bool);
-void calculate_gases(Sun*, planet_pointer, char*);
-void generate_planet(planet_pointer, int, Sun*, bool, char*, bool, bool, bool);
-void generate_planets(Sun*, bool, char, int, char *, bool, bool);
+void generate_stellar_system(StarGen::Sun*, bool, planet_pointer, char, int, char *, long double, bool, bool);
+void calculate_gases(StarGen::Sun*, planet_pointer, char*);
+void generate_planet(planet_pointer, int, StarGen::Sun*, bool, char*, bool, bool, bool);
+void generate_planets(StarGen::Sun*, bool, char, int, char *, bool, bool);
 void usage(char *);
 
 void init()
@@ -281,7 +281,7 @@ void init()
 	(void)srand(flag_seed);
 }
 
-void generate_stellar_system(Sun*			sun,
+void generate_stellar_system(StarGen::Sun* sun,
 							 bool 			use_seed_system,
 							 planet_pointer seed_system,
 							 char			flag_char,
@@ -337,7 +337,7 @@ void generate_stellar_system(Sun*			sun,
 					 do_moons);
 }
 
-void calculate_gases(Sun*			sun,
+void calculate_gases(StarGen::Sun* sun,
 					 planet_pointer	planet,
 					 char*			planet_id)
 {
@@ -491,7 +491,7 @@ void calculate_gases(Sun*			sun,
 
 void generate_planet(planet_pointer	planet,
 					 int			planet_no,
-					 Sun*			sun,
+					 StarGen::Sun* sun,
 					 bool 			random_tilt,
 					 char*			planet_id,
 					 bool			do_gases,
@@ -1070,7 +1070,7 @@ void check_planet(planet_pointer	planet,
 	}
 }
 
-void generate_planets(Sun*			sun,
+void generate_planets(StarGen::Sun* sun,
 					  bool 			random_tilt,
 					  char			flag_char,
 					  int			sys_no,
@@ -1143,7 +1143,7 @@ int stargen (actions		action,
 			 graphic_formats	graphic_format
 			 )
 {
-	Sun				sun					= {0.0, 0.0, 0.0, 0.0, 0.0, ""};
+	StarGen::Sun sun					= StarGen::Sun(0.0, 0.0, 0.0, 0.0, 0.0, "");
 	long double		min_mass 			= 0.4;
 	long double		inc_mass 			= 0.05;
 	long double		max_mass 			= 2.35;
