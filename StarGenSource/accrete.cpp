@@ -724,7 +724,7 @@ void free_atmosphere(planet_pointer head)
 	{
 		if (node->atmosphere != NULL)
 		{
-			free(node->atmosphere);
+			delete [] node->atmosphere;
 
 			node->atmosphere = NULL;
 		}

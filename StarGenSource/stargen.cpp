@@ -265,7 +265,6 @@ void calculate_gases(Sun*, planet_pointer, char*);
 void generate_planet(planet_pointer, int, Sun*, bool, char*, bool, bool, bool);
 void generate_planets(Sun*, bool, char, int, char *, bool, bool);
 void usage(char *);
-static int diminishing_pressure(const void *xp, const void *yp);
 
 void init()
 {
@@ -438,7 +437,7 @@ void calculate_gases(Sun*			sun,
 		if (n > 0)
 		{
 			planet->gases = n;
-			planet->atmosphere = (gas*)calloc(n, sizeof(gas));
+			planet->atmosphere = new StarGen::Gas[n];
 
 			for (i = 0, n = 0; i < StarGen::Gases::max_gas; i++)
 			{
@@ -466,8 +465,8 @@ void calculate_gases(Sun*			sun,
 
 			qsort(planet->atmosphere,
 				  planet->gases,
-				  sizeof(gas),
-				  diminishing_pressure);
+				  sizeof(StarGen::Gas),
+				  StarGen::Gas::diminishing_pressure);
 
 			if (flag_verbose & 0x0010)
 			{
@@ -1118,20 +1117,6 @@ void generate_planets(Sun*			sun,
 			check_planet(moon, moon_id, true);
 		}
 	}
-}
-
-/*
- *  Sort a ChemTable by decreasing pressure.
- */
-
-static int diminishing_pressure(const void *xp, const void *yp)
-{
-	const gas *x = (gas *) xp;
-	const gas *y = (gas *) yp;
-
-	if (x->surf_pressure < y->surf_pressure)
-		return +1;
-	return (x->surf_pressure > y->surf_pressure ? -1 : 0);
 }
 
 int stargen (actions		action,

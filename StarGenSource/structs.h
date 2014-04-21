@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Gas.h"
+
 typedef struct dust_record	*dust_pointer;
 typedef struct planets_record  *planet_pointer;
 typedef struct gen *gen_pointer;
@@ -18,11 +20,6 @@ typedef enum planet_type {
 	tAsteroids,
 	t1Face
 } planet_type;
-
-typedef struct gas {
-  	int         num;
-	long double	surf_pressure;		/* units of millibars (mb)			 */
-	} gas;
 
 typedef struct Sun {
 	long double	luminosity;
@@ -76,7 +73,7 @@ typedef struct planets_record {
 	long double	ice_cover;			/* fraction of surface covered		 */
 	Sun*		sun;
 	int			gases;				/* Count of gases in the atmosphere: */
-	gas*		atmosphere;
+	StarGen::Gas* atmosphere;
 	planet_type type;				/* Type code						 */
 									/*   ZEROES end here                 */
 	bool		minor_moons;
