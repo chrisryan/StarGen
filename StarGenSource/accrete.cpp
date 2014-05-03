@@ -14,6 +14,15 @@
 #include 	"stargen.h"
 #include 	"utils.h"
 
+typedef struct dust_record  *dust_pointer;
+typedef struct dust_record {
+    long double inner_edge;
+    long double outer_edge;
+    bool        dust_present;
+    bool        gas_present;
+    dust_pointer next_band;
+} dust_t;
+
 /* Now for some variables global to the accretion process:	    */
 bool			dust_left;
 long double		r_inner;
@@ -29,7 +38,7 @@ void set_initial_conditions(long double inner_limit_of_dust,
 {
 	free_generations();
 
-	dust_head = (dust *)malloc(sizeof(dust));
+	dust_head = (dust_record *)malloc(sizeof(dust_record));
 	dust_head->next_band = NULL;
 	dust_head->outer_edge = outer_limit_of_dust;
 	dust_head->inner_edge = inner_limit_of_dust;
@@ -100,12 +109,12 @@ void update_dust_lanes(long double min, long double max, long double mass,
 	{
 		if (((node1->inner_edge < min) && (node1->outer_edge > max)))
 		{
-			node2 = (dust *)malloc(sizeof(dust));
+			node2 = (dust_record *)malloc(sizeof(dust_record));
 			node2->inner_edge = min;
 			node2->outer_edge = max;
 			node2->gas_present = node1->gas_present && gas;
 			node2->dust_present = false;
-			node3 = (dust *)malloc(sizeof(dust));
+			node3 = (dust_record *)malloc(sizeof(dust_record));
 			node3->inner_edge = max;
 			node3->outer_edge = node1->outer_edge;
 			node3->gas_present = node1->gas_present;
@@ -119,7 +128,7 @@ void update_dust_lanes(long double min, long double max, long double mass,
 		else
 			if (((node1->inner_edge < max) && (node1->outer_edge > max)))
 			{
-				node2 = (dust *)malloc(sizeof(dust));
+				node2 = (dust_record *)malloc(sizeof(dust_record));
 				node2->next_band = node1->next_band;
 				node2->dust_present = node1->dust_present;
 				node2->gas_present = node1->gas_present;
@@ -134,7 +143,7 @@ void update_dust_lanes(long double min, long double max, long double mass,
 			else
 				if (((node1->inner_edge < min) && (node1->outer_edge > min)))
 				{
-					node2 = (dust *)malloc(sizeof(dust));
+					node2 = (dust_record *)malloc(sizeof(dust_record));
 					node2->next_band = node1->next_band;
 					node2->dust_present = false;
 					node2->gas_present = node1->gas_present && gas;

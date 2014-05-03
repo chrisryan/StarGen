@@ -3,7 +3,6 @@
 #include "Gas.h"
 #include "Sun.h"
 
-typedef struct dust_record	*dust_pointer;
 typedef struct planets_record  *planet_pointer;
 
 typedef enum planet_type {
@@ -74,14 +73,6 @@ typedef struct planets_record {
 
 /*	Define the solar system for comparisons, etc. */
 #define ZEROES 0,0,0,0,0,0,0,0,false,0,0,0,0,0,0,0,false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NULL,0,NULL,tUnknown
-
-typedef struct dust_record {
-	long double inner_edge;
-	long double outer_edge;
-	bool		dust_present;
-	bool		gas_present;
-	dust_pointer next_band;
-	 } dust;
 
 typedef struct star {
 	long double		luminosity;
