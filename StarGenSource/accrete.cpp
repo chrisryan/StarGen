@@ -15,7 +15,7 @@
 #include 	"utils.h"
 
 /* Now for some variables global to the accretion process:	    */
-int 			dust_left;
+bool			dust_left;
 long double		r_inner;
 long double		r_outer;
 long double		reduced_mass;
@@ -101,10 +101,7 @@ void update_dust_lanes(long double min, long double max, long double mass,
 	dust_pointer	node3;
 
 	dust_left = false;
-	if ((mass > crit_mass))
-		gas = false;
-	else
-		gas = true;
+	gas = mass <= crit_mass;
 	node1 = dust_head;
 	while ((node1 != NULL))
 	{
@@ -113,10 +110,7 @@ void update_dust_lanes(long double min, long double max, long double mass,
 			node2 = (dust *)malloc(sizeof(dust));
 			node2->inner_edge = min;
 			node2->outer_edge = max;
-			if ((node1->gas_present == true))
-				node2->gas_present = gas;
-			else
-				node2->gas_present = false;
+			node2->gas_present = node1->gas_present && gas;
 			node2->dust_present = false;
 			node3 = (dust *)malloc(sizeof(dust));
 			node3->inner_edge = max;
@@ -140,10 +134,7 @@ void update_dust_lanes(long double min, long double max, long double mass,
 				node2->inner_edge = max;
 				node1->next_band = node2;
 				node1->outer_edge = max;
-				if ((node1->gas_present == true))
-					node1->gas_present = gas;
-				else
-					node1->gas_present = false;
+				node1->gas_present = node1->gas_present && gas;
 				node1->dust_present = false;
 				node1 = node2->next_band;
 			}
@@ -153,10 +144,7 @@ void update_dust_lanes(long double min, long double max, long double mass,
 					node2 = (dust *)malloc(sizeof(dust));
 					node2->next_band = node1->next_band;
 					node2->dust_present = false;
-					if ((node1->gas_present == true))
-						node2->gas_present = gas;
-					else
-						node2->gas_present = false;
+					node2->gas_present = node1->gas_present && gas;
 					node2->outer_edge = node1->outer_edge;
 					node2->inner_edge = min;
 					node1->next_band = node2;
@@ -166,8 +154,7 @@ void update_dust_lanes(long double min, long double max, long double mass,
 				else
 					if (((node1->inner_edge >= min) && (node1->outer_edge <= max)))
 					{
-						if ((node1->gas_present == true))
-							node1->gas_present = gas;
+						node1->gas_present = node1->gas_present && gas;
 						node1->dust_present = false;
 						node1 = node1->next_band;
 					}
