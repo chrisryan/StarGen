@@ -23,20 +23,13 @@ long double		dust_density;
 long double		cloud_eccentricity;
 dust_pointer	dust_head	= NULL;
 planet_pointer	planet_head	= NULL;
-gen_pointer		hist_head	= NULL;
 
 void set_initial_conditions(long double inner_limit_of_dust,
 							long double outer_limit_of_dust)
 {
-    gen_pointer hist;
-    hist = (gen_pointer)malloc(sizeof(generation));
-    hist->dusts = dust_head;
-    hist->planets = planet_head;
-    hist->next = hist_head;
-    hist_head = hist;
+	free_generations();
 
 	dust_head = (dust *)malloc(sizeof(dust));
-	planet_head = NULL;
 	dust_head->next_band = NULL;
 	dust_head->outer_edge = outer_limit_of_dust;
 	dust_head->inner_edge = inner_limit_of_dust;
@@ -672,24 +665,6 @@ void free_planet (planet_pointer head)
 
 void free_generations()
 {
-	gen_pointer	node;
-	gen_pointer	next;
-
-	for(node = hist_head;
-		node != NULL;
-		node = next)
-	{
-		next = node->next;
-
-		if (node->dusts)
-			free_dust (node->dusts);
-
-		if (node->planets)
-			free_planet (node->planets);
-
-		free (node);
-	}
-
 	if (dust_head != NULL)
 		free_dust (dust_head);
 
@@ -698,7 +673,6 @@ void free_generations()
 
 	dust_head = NULL;
 	planet_head = NULL;
-	hist_head = NULL;
 }
 
 void free_atmosphere(planet_pointer head)

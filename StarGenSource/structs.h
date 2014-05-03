@@ -5,7 +5,6 @@
 
 typedef struct dust_record	*dust_pointer;
 typedef struct planets_record  *planet_pointer;
-typedef struct gen *gen_pointer;
 
 typedef enum planet_type {
 	tUnknown,
@@ -101,10 +100,3 @@ typedef struct catalog {
 	const char*		arg;
 	star			*stars;
 	} catalog;
-
-typedef	struct gen
-{
-	dust_pointer	dusts;
-	planet_pointer	planets;
-	gen_pointer		next;
-} generation;
