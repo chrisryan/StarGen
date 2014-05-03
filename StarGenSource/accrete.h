@@ -6,7 +6,6 @@ long double nearest_planet(long double);
 long double farthest_planet(long double);
 long double inner_effect_limit(long double, long double, long double );
 long double outer_effect_limit(long double, long double, long double );
-int dust_available(long double, long double );
 void update_dust_lanes(long double, long double, long double, long double, long double, long double );
 long double critical_limit(long double, long double, long double );
 void accrete_dust(long double *, long double *, long double *, long double, long double, long double, long double, long double );

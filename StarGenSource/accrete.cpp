@@ -73,18 +73,17 @@ long double outer_effect_limit(long double a, long double e, long double mass)
 	return (a * (1.0 + e) * (1.0 + mass) / (1.0 - cloud_eccentricity));
 }
 
-int dust_available(long double inside_range, long double outside_range)
+bool dust_available(long double inside_range, long double outside_range)
 {
 	dust_pointer current_dust_band;
-	int dust_here;
+	bool dust_here = false;
 
 	current_dust_band = dust_head;
 	while ((current_dust_band != NULL)
 		&& (current_dust_band->outer_edge < inside_range))
 		current_dust_band = current_dust_band->next_band;
-	if (current_dust_band == NULL)
-		dust_here = false;
-	else dust_here = current_dust_band->dust_present;
+	if (current_dust_band != NULL)
+		dust_here = current_dust_band->dust_present;
 	while ((current_dust_band != NULL)
 		&& (current_dust_band->inner_edge < outside_range)) {
 			dust_here = dust_here || current_dust_band->dust_present;
