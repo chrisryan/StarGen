@@ -104,9 +104,9 @@ void update_dust_lanes(long double min, long double max, long double mass,
 	dust_left = false;
 	gas = mass <= crit_mass;
 	node1 = dust_head;
-	while ((node1 != NULL))
+	while (node1 != NULL)
 	{
-		if (((node1->inner_edge < min) && (node1->outer_edge > max)))
+		if ((node1->inner_edge < min) && (node1->outer_edge > max))
 		{
 			node2 = (dust_record *)malloc(sizeof(dust_record));
 			node2->inner_edge = min;
@@ -124,7 +124,7 @@ void update_dust_lanes(long double min, long double max, long double mass,
 			node1->outer_edge = min;
 			node1 = node3->next_band;
 		}
-		else if (((node1->inner_edge < max) && (node1->outer_edge > max)))
+		else if ((node1->inner_edge < max) && (node1->outer_edge > max))
 		{
 			node2 = (dust_record *)malloc(sizeof(dust_record));
 			node2->next_band = node1->next_band;
@@ -138,7 +138,7 @@ void update_dust_lanes(long double min, long double max, long double mass,
 			node1->dust_present = false;
 			node1 = node2->next_band;
 		}
-		else if (((node1->inner_edge < min) && (node1->outer_edge > min)))
+		else if ((node1->inner_edge < min) && (node1->outer_edge > min))
 		{
 			node2 = (dust_record *)malloc(sizeof(dust_record));
 			node2->next_band = node1->next_band;
@@ -150,19 +150,19 @@ void update_dust_lanes(long double min, long double max, long double mass,
 			node1->outer_edge = min;
 			node1 = node2->next_band;
 		}
-		else if (((node1->inner_edge >= min) && (node1->outer_edge <= max)))
+		else if ((node1->inner_edge >= min) && (node1->outer_edge <= max))
 		{
 			node1->gas_present = node1->gas_present && gas;
 			node1->dust_present = false;
 			node1 = node1->next_band;
 		}
-		else if (((node1->outer_edge < min) || (node1->inner_edge > max)))
+		else if ((node1->outer_edge < min) || (node1->inner_edge > max))
 		{
 			node1 = node1->next_band;
 		}
 	}
 	node1 = dust_head;
-	while ((node1 != NULL))
+	while (node1 != NULL)
 	{
 		if (node1->dust_present && (node1->outer_edge >= body_inner_bound) && (node1->inner_edge <= body_outer_bound))
 			dust_left = true;
@@ -201,18 +201,18 @@ long double collect_dust(long double last_mass, long double *new_dust,
 	r_inner = inner_effect_limit(a, e, reduced_mass);
 	r_outer = outer_effect_limit(a, e, reduced_mass);
 
-	if ((r_inner < 0.0))
+	if (r_inner < 0.0)
 		r_inner = 0.0;
 
-	if ((dust_band == NULL))
+	if (dust_band == NULL)
 		return(0.0);
 
-	if ((dust_band->dust_present == false))
+	if (dust_band->dust_present == false)
 		temp_density = 0.0;
 	else
 		temp_density = dust_density;
 
-	if (((last_mass < crit_mass) || (dust_band->gas_present == false)))
+	if ((last_mass < crit_mass) || (dust_band->gas_present == false))
 		mass_density = temp_density;
 	else
 	{
@@ -221,14 +221,14 @@ long double collect_dust(long double last_mass, long double *new_dust,
 		gas_density = mass_density - temp_density;
 	}
 
-	if (((dust_band->outer_edge <= r_inner)
-	  || (dust_band->inner_edge >= r_outer)))
+	if ((dust_band->outer_edge <= r_inner)
+	  || (dust_band->inner_edge >= r_outer))
 	{
 		return(collect_dust(last_mass, new_dust, new_gas,
 							a,e,crit_mass, dust_band->next_band));
 	}
 
-	bandwidth = (r_outer - r_inner);
+	bandwidth = r_outer - r_inner;
 
 	temp1 = r_outer - dust_band->outer_edge;
 	if (temp1 < 0.0)
@@ -288,7 +288,7 @@ void accrete_dust(long double *seed_mass, long double *new_dust, long double *ne
 		new_mass = collect_dust(new_mass, new_dust, new_gas,
 								a,e,crit_mass, dust_head);
 	}
-	while (!(((new_mass - temp_mass) < (0.0001 * temp_mass))));
+	while (!((new_mass - temp_mass) < (0.0001 * temp_mass)));
 
 	(*seed_mass) = (*seed_mass) + new_mass;
 	update_dust_lanes(r_inner,r_outer,(*seed_mass),crit_mass,body_inner_bound,body_outer_bound);
@@ -320,7 +320,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 	{
 		diff = the_planet->a - a;
 
-		if ((diff > 0.0))
+		if (diff > 0.0)
 		{
 			dist1 = (a * (1.0 + e) * (1.0 + reduced_mass)) - a;
 			/* x aphelion	 */
@@ -337,7 +337,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 				- the_planet->a;
 		}
 
-		if (((fabs(diff) <= fabs(dist1)) || (fabs(diff) <= fabs(dist2))))
+		if ((fabs(diff) <= fabs(dist1)) || (fabs(diff) <= fabs(dist2)))
 		{
 			long double new_dust = 0;
 			long double	new_gas = 0;
@@ -348,7 +348,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 			temp = temp + (mass * sqrt(a) * sqrt(sqrt(1.0 - pow(e,2.0))));
 			temp = temp / ((the_planet->mass + mass) * sqrt(new_a));
 			temp = 1.0 - pow(temp,2.0);
-			if (((temp < 0.0) || (temp >= 1.0)))
+			if ((temp < 0.0) || (temp >= 1.0))
 				temp = 0.0;
 			e = sqrt(temp);
 
@@ -493,7 +493,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 		}
 	}
 
-	if (!(finished))			// Planetesimals didn't collide. Make it a planet.
+	if (!finished)			// Planetesimals didn't collide. Make it a planet.
 	{
 		the_planet = (planets *)malloc(sizeof(planets));
 
@@ -516,22 +516,22 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 		the_planet->greenhs_rise	= 0;
 		the_planet->minor_moons 	= false;
 
-		if ((mass >= crit_mass))
+		if (mass >= crit_mass)
 			the_planet->gas_giant = true;
 		else
 			the_planet->gas_giant = false;
 
-		if ((planet_head == NULL))
+		if (planet_head == NULL)
 		{
 			planet_head = the_planet;
 			the_planet->next_planet = NULL;
 		}
-		else if ((a < planet_head->a))
+		else if (a < planet_head->a)
 		{
 			the_planet->next_planet = planet_head;
 			planet_head = the_planet;
 		}
-		else if ((planet_head->next_planet == NULL))
+		else if (planet_head->next_planet == NULL)
 		{
 			planet_head->next_planet = the_planet;
 			the_planet->next_planet = NULL;
@@ -539,7 +539,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 		else
 		{
 			next_planet = planet_head;
-			while (((next_planet != NULL) && (next_planet->a < a)))
+			while ((next_planet != NULL) && (next_planet->a < a))
 			{
 				prev_planet = next_planet;
 				next_planet = next_planet->next_planet;
