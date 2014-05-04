@@ -164,20 +164,14 @@ void update_dust_lanes(long double min, long double max, long double mass,
 	node1 = dust_head;
 	while ((node1 != NULL))
 	{
-		if (((node1->dust_present)
-			&& (((node1->outer_edge >= body_inner_bound)
-				&& (node1->inner_edge <= body_outer_bound)))))
+		if (node1->dust_present && (node1->outer_edge >= body_inner_bound) && (node1->inner_edge <= body_outer_bound))
 			dust_left = true;
 		node2 = node1->next_band;
-		if ((node2 != NULL))
+		if ((node2 != NULL) && (node1->dust_present == node2->dust_present) && (node1->gas_present == node2->gas_present))
 		{
-			if (((node1->dust_present == node2->dust_present)
-				&& (node1->gas_present == node2->gas_present)))
-			{
-				node1->outer_edge = node2->outer_edge;
-				node1->next_band = node2->next_band;
-				free(node2);
-			}
+			node1->outer_edge = node2->outer_edge;
+			node1->next_band = node2->next_band;
+			free(node2);
 		}
 		node1 = node1->next_band;
 	}
