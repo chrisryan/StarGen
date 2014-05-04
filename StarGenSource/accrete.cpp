@@ -124,44 +124,42 @@ void update_dust_lanes(long double min, long double max, long double mass,
 			node1->outer_edge = min;
 			node1 = node3->next_band;
 		}
-		else
-			if (((node1->inner_edge < max) && (node1->outer_edge > max)))
-			{
-				node2 = (dust_record *)malloc(sizeof(dust_record));
-				node2->next_band = node1->next_band;
-				node2->dust_present = node1->dust_present;
-				node2->gas_present = node1->gas_present;
-				node2->outer_edge = node1->outer_edge;
-				node2->inner_edge = max;
-				node1->next_band = node2;
-				node1->outer_edge = max;
-				node1->gas_present = node1->gas_present && gas;
-				node1->dust_present = false;
-				node1 = node2->next_band;
-			}
-			else
-				if (((node1->inner_edge < min) && (node1->outer_edge > min)))
-				{
-					node2 = (dust_record *)malloc(sizeof(dust_record));
-					node2->next_band = node1->next_band;
-					node2->dust_present = false;
-					node2->gas_present = node1->gas_present && gas;
-					node2->outer_edge = node1->outer_edge;
-					node2->inner_edge = min;
-					node1->next_band = node2;
-					node1->outer_edge = min;
-					node1 = node2->next_band;
-				}
-				else
-					if (((node1->inner_edge >= min) && (node1->outer_edge <= max)))
-					{
-						node1->gas_present = node1->gas_present && gas;
-						node1->dust_present = false;
-						node1 = node1->next_band;
-					}
-					else
-						if (((node1->outer_edge < min) || (node1->inner_edge > max)))
-							node1 = node1->next_band;
+		else if (((node1->inner_edge < max) && (node1->outer_edge > max)))
+		{
+			node2 = (dust_record *)malloc(sizeof(dust_record));
+			node2->next_band = node1->next_band;
+			node2->dust_present = node1->dust_present;
+			node2->gas_present = node1->gas_present;
+			node2->outer_edge = node1->outer_edge;
+			node2->inner_edge = max;
+			node1->next_band = node2;
+			node1->outer_edge = max;
+			node1->gas_present = node1->gas_present && gas;
+			node1->dust_present = false;
+			node1 = node2->next_band;
+		}
+		else if (((node1->inner_edge < min) && (node1->outer_edge > min)))
+		{
+			node2 = (dust_record *)malloc(sizeof(dust_record));
+			node2->next_band = node1->next_band;
+			node2->dust_present = false;
+			node2->gas_present = node1->gas_present && gas;
+			node2->outer_edge = node1->outer_edge;
+			node2->inner_edge = min;
+			node1->next_band = node2;
+			node1->outer_edge = min;
+			node1 = node2->next_band;
+		}
+		else if (((node1->inner_edge >= min) && (node1->outer_edge <= max)))
+		{
+			node1->gas_present = node1->gas_present && gas;
+			node1->dust_present = false;
+			node1 = node1->next_band;
+		}
+		else if (((node1->outer_edge < min) || (node1->inner_edge > max)))
+		{
+			node1 = node1->next_band;
+		}
 	}
 	node1 = dust_head;
 	while ((node1 != NULL))
@@ -439,17 +437,16 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 									mass * SUN_MASS_IN_EARTH_MASSES
 									);
 					}
-					else
+					else if (flag_verbose & 0x0100)
 					{
-						if (flag_verbose & 0x0100)
-							fprintf (stderr, "Moon Escapes... "
-									 "%5.3Lf AU (%.2LfEM)%s %.2LfEM%s\n",
-									the_planet->a, the_planet->mass * SUN_MASS_IN_EARTH_MASSES,
-									existing_mass < (the_planet->mass * .05) ? "" : " (big moons)",
-									mass * SUN_MASS_IN_EARTH_MASSES,
-									(mass * SUN_MASS_IN_EARTH_MASSES) >= 2.5 ? ", too big" :
-									  (mass * SUN_MASS_IN_EARTH_MASSES) <= .0001 ? ", too small" : ""
-									);
+						fprintf (stderr, "Moon Escapes... "
+								 "%5.3Lf AU (%.2LfEM)%s %.2LfEM%s\n",
+								the_planet->a, the_planet->mass * SUN_MASS_IN_EARTH_MASSES,
+								existing_mass < (the_planet->mass * .05) ? "" : " (big moons)",
+								mass * SUN_MASS_IN_EARTH_MASSES,
+								(mass * SUN_MASS_IN_EARTH_MASSES) >= 2.5 ? ", too big" :
+								  (mass * SUN_MASS_IN_EARTH_MASSES) <= .0001 ? ", too small" : ""
+								);
 					}
 				}
 			}
