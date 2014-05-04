@@ -214,59 +214,55 @@ long double collect_dust(long double last_mass, long double *new_dust,
 
 	if ((dust_band == NULL))
 		return(0.0);
+
+	if ((dust_band->dust_present == false))
+		temp_density = 0.0;
+	else
+		temp_density = dust_density;
+
+	if (((last_mass < crit_mass) || (dust_band->gas_present == false)))
+		mass_density = temp_density;
 	else
 	{
-		if ((dust_band->dust_present == false))
-			temp_density = 0.0;
-		else
-			temp_density = dust_density;
-
-		if (((last_mass < crit_mass) || (dust_band->gas_present == false)))
-			mass_density = temp_density;
-		else
-		{
-			mass_density = K * temp_density / (1.0 + sqrt(crit_mass / last_mass)
-										* (K - 1.0));
-			gas_density = mass_density - temp_density;
-		}
-
-		if (((dust_band->outer_edge <= r_inner)
-		  || (dust_band->inner_edge >= r_outer)))
-		{
-			return(collect_dust(last_mass, new_dust, new_gas,
-								a,e,crit_mass, dust_band->next_band));
-		}
-		else
-		{
-			bandwidth = (r_outer - r_inner);
-
-			temp1 = r_outer - dust_band->outer_edge;
-			if (temp1 < 0.0)
-				temp1 = 0.0;
-			width = bandwidth - temp1;
-
-			temp2 = dust_band->inner_edge - r_inner;
-			if (temp2 < 0.0)
-				temp2 = 0.0;
-			width = width - temp2;
-
-			temp = 4.0 * PI * pow(a,2.0) * reduced_mass
-				* (1.0 - e * (temp1 - temp2) / bandwidth);
-			volume = temp * width;
-
-			new_mass  = volume * mass_density;
-			*new_gas  = volume * gas_density;
-			*new_dust = new_mass - *new_gas;
-
-			next_mass = collect_dust(last_mass, &next_dust, &next_gas,
-									 a,e,crit_mass, dust_band->next_band);
-
-			*new_gas  = *new_gas + next_gas;
-			*new_dust = *new_dust + next_dust;
-
-			return(new_mass + next_mass);
-		}
+		mass_density = K * temp_density / (1.0 + sqrt(crit_mass / last_mass)
+									* (K - 1.0));
+		gas_density = mass_density - temp_density;
 	}
+
+	if (((dust_band->outer_edge <= r_inner)
+	  || (dust_band->inner_edge >= r_outer)))
+	{
+		return(collect_dust(last_mass, new_dust, new_gas,
+							a,e,crit_mass, dust_band->next_band));
+	}
+
+	bandwidth = (r_outer - r_inner);
+
+	temp1 = r_outer - dust_band->outer_edge;
+	if (temp1 < 0.0)
+		temp1 = 0.0;
+	width = bandwidth - temp1;
+
+	temp2 = dust_band->inner_edge - r_inner;
+	if (temp2 < 0.0)
+		temp2 = 0.0;
+	width = width - temp2;
+
+	temp = 4.0 * PI * pow(a,2.0) * reduced_mass
+		* (1.0 - e * (temp1 - temp2) / bandwidth);
+	volume = temp * width;
+
+	new_mass  = volume * mass_density;
+	*new_gas  = volume * gas_density;
+	*new_dust = new_mass - *new_gas;
+
+	next_mass = collect_dust(last_mass, &next_dust, &next_gas,
+							 a,e,crit_mass, dust_band->next_band);
+
+	*new_gas  = *new_gas + next_gas;
+	*new_dust = *new_dust + next_dust;
+
+	return(new_mass + next_mass);
 }
 
 /*--------------------------------------------------------------------------*/
