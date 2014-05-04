@@ -198,11 +198,8 @@ long double collect_dust(long double last_mass, long double *new_dust,
 
 	temp = last_mass / (1.0 + last_mass);
 	reduced_mass = pow(temp,(1.0 / 4.0));
-	r_inner = inner_effect_limit(a, e, reduced_mass);
+	r_inner = fmaxl(0.0, inner_effect_limit(a, e, reduced_mass));
 	r_outer = outer_effect_limit(a, e, reduced_mass);
-
-	if (r_inner < 0.0)
-		r_inner = 0.0;
 
 	if (dust_band == NULL)
 		return(0.0);
@@ -230,14 +227,10 @@ long double collect_dust(long double last_mass, long double *new_dust,
 
 	bandwidth = r_outer - r_inner;
 
-	temp1 = r_outer - dust_band->outer_edge;
-	if (temp1 < 0.0)
-		temp1 = 0.0;
+	temp1 = fmaxl(0.0, r_outer - dust_band->outer_edge);
 	width = bandwidth - temp1;
 
-	temp2 = dust_band->inner_edge - r_inner;
-	if (temp2 < 0.0)
-		temp2 = 0.0;
+	temp2 = fmaxl(0.0, dust_band->inner_edge - r_inner);
 	width = width - temp2;
 
 	temp = 4.0 * PI * pow(a,2.0) * reduced_mass
@@ -347,8 +340,8 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 			temp = the_planet->mass * sqrt(the_planet->a) * sqrt(1.0 - pow(the_planet->e,2.0));
 			temp = temp + (mass * sqrt(a) * sqrt(sqrt(1.0 - pow(e,2.0))));
 			temp = temp / ((the_planet->mass + mass) * sqrt(new_a));
-			temp = 1.0 - pow(temp,2.0);
-			if ((temp < 0.0) || (temp >= 1.0))
+			temp = fmaxl(0.0, 1.0 - pow(temp,2.0));
+			if (temp >= 1.0)
 				temp = 0.0;
 			e = sqrt(temp);
 
