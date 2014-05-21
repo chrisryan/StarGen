@@ -7,6 +7,8 @@
 #include	"utils.h"
 #include "ChemTable.h"
 
+void set_temp_range(planet_pointer planet);
+
 const char* breathability_phrase[4] =
 	{
 		"none",
