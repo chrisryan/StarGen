@@ -68,14 +68,6 @@ int stargen (actions		action,			// One of the above
 #define fOnlyJovianHabitable	0x0400
 #define fOnlyEarthlike			0x0800
 
-										// The two predefined star catalogs.
-extern catalog	solstation;
-extern catalog	dole;
-extern catalog  jimb;
-										// You can roll your own (see main.c)
-
-extern planets mercury;					// For building private catalogs
-
 extern int          flag_verbose;		// Likely to move into stargen() args.
 
 										// Various statistics that are kept:

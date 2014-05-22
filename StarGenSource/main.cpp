@@ -12,61 +12,13 @@
 #include	<stdio.h>
 #include	<stdlib.h>
 #include	<string.h>
-#include	<math.h>
 #include	<time.h>
 #include	<ctype.h>
 
-#pragma warning (disable: 4048) // Hush compiler - don't complain about storing specific arrays in generic pointers
-
-#include	"const.h"
 #include	"structs.h"
 #include	"stargen.h"
 
-/*
- *		StarGen supports private catalogs. The two here are ones I am using
- *		for debuggery. They may go away.
- */
-
-#define EM(x)		(x)/SUN_MASS_IN_EARTH_MASSES
-#define AVE(x,y)	((x+y)/2.)
-
-				/*  No 	Orbit	Eccen. 	Tilt	Mass		Giant?	Dust Mass	Gas */
-planets sphinx3   ={ 4,	3.0,	0.046,	10.5,	EM(2.35),	false,	EM(2.35),	0, 	ZEROES,0,NULL, NULL};
-planets sphinx2   ={ 3,	2.25,	0.02,	10.5,	EM(2.35),	false,	EM(2.35),	0, 	ZEROES,0,NULL, &sphinx3};
-planets sphinx    ={ 2,	1.6,	0.02,	10.5,	EM(2.2),	false,	EM(2.2),	0, 	ZEROES,0,NULL, &sphinx2};
-planets manticore ={ 1,	1.115,	0.017,	23.5,	EM(1.01),	false,	EM(1.01),	0, 	ZEROES,0,NULL, &sphinx};
-
-star	manticores[] =
-// L		Mass	Mass2	Eccen.	SMAxis	 Planets	Designation			Name
-{{1.00,		1.00,	0,		0,		0,		 &mercury,	"Sol",		 	 1, "The Solar System"},
- {1.24,		1.047,	1.0,	0.05,	79.2,	 &manticore,"Manticore A",	 1, "Manticore A"},
- {1.0,		1.00,	1.047,	0.05,	79.2,	 NULL,		"Manticore B",	 1, "Manticore B"},
-};
-
-catalog	manticore_cat	= {sizeof(manticores) / sizeof (star),	"B", &manticores[0]};
-
-star	helios[] =
-// L		Mass	Mass2	Eccen.	SMAxis	 Planets	Designation		Name
-{{1.00,		1.00,	0,		0,		0,		 &mercury,	"Sol",		 1, "The Solar System"},
- {1.08,		1.0,	0.87,	0.45,	8.85,	 NULL,		"Helio A",	 1, "Helio A"},
- {0.83,		0.87,	1.0,	0.45,	8.85,	 NULL,		"Helio B",	 1, "Helio B"},
-};
-
-catalog	helio		= {sizeof(helios) / sizeof (star), "?",	&helios[0]};
-
-			     /*	No Orbit Eccen. Tilt   Mass    Gas Giant? Dust Mass   Gas */
-planets ilaqrb={1, 0.21, 0.1,   0,     EM(600.),true,     0,   EM(600.), ZEROES,0,NULL, NULL};
-planets ilaqrc={2, 0.13, 0.27,  0,     EM(178.),true,     0,   EM(178.), ZEROES,0,NULL, &ilaqrb};
-planets ilaqrd={3, 0.021,0.22,  0,     EM(5.9), false,    EM(5.9),    0, ZEROES,0,NULL, &ilaqrc};	// EM(5.9) or 7.53 +/- 0.70 Earth-masses
-
-star	ilAqrs[] =
-// L		Mass	Mass2	Eccen.	SMAxis	 Planets	Designation	Celes	Name
-{{1.00,		1.00,	0,		0,		0,		 &mercury,	"Sol",		1, "The Solar System"},
-{0.0016,	0.32,	0,		0,		0,		 &ilaqrd,	"IL Aqr",	1, "IL Aquarii/Gliese 876"}	// 15.2
-};
-
-catalog	ilAqr_cat		= {sizeof(ilAqrs) / sizeof (star),	"G", &ilAqrs[0]};
-void usage(char*);
+#include "Catalogs.h"
 
 void usage(char *prognam)
 {
