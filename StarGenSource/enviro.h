@@ -25,11 +25,12 @@ void iterate_surface_temp(planet_pointer);
 
 long double inspired_partial_pressure (long double, long double);
 
-unsigned int breathability (planet_pointer);
+enum Breathability {
+	None,
+	Breathable,
+	Unbreathable,
+	Poisonous
+};
 
-#define	NONE			0
-#define	BREATHABLE		1
-#define	UNBREATHABLE	2
-#define	POISONOUS		3
-
-extern const char* breathability_phrase[4];
+Breathability breathability(planet_pointer);
+const char* breathabilityToText(Breathability type);

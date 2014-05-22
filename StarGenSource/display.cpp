@@ -866,7 +866,6 @@ void print_description(FILE*			file,
 		{
 			int	i;
 			int	first = true;
-			unsigned int temp;
 
 			fprintf (file, " (");
 
@@ -888,9 +887,7 @@ void print_description(FILE*			file,
 				}
 			}
 
-			if ((temp = breathability (planet)) != NONE)
-				fprintf (file, " - %s)",
-					 breathability_phrase[temp]);
+			fprintf(file, " - %s)", breathabilityToText(breathability(planet)));
 		}
 
 		if ((int)planet->day == (int)(planet->orb_period * 24.0)
@@ -1057,7 +1054,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 
 			if ((planet->type == tTerrestrial)
 			 || (planet->type == tWater)
-			 || (breathability (planet) == BREATHABLE)
+			 || (breathability(planet) == Breathable)
 			 || ((planet->surf_pressure > 0.001)
 			  && (planet->surf_temp > FREEZING_POINT_OF_WATER - 15)
 			  && (planet->surf_temp < EARTH_AVERAGE_KELVIN + 15)))
@@ -1099,7 +1096,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 
 				if ((moon->type == tTerrestrial)
 				 || (moon->type == tWater)
-				 || (breathability (moon) == BREATHABLE)
+				 || (breathability(moon) == Breathable)
 				 || ((moon->surf_pressure > 0.001)
 				  && (moon->surf_temp > FREEZING_POINT_OF_WATER - 15)
 				  && (moon->surf_temp < EARTH_AVERAGE_KELVIN + 15)))
@@ -1138,7 +1135,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 			planet != NULL;
 			planet=planet->next_planet, counter++)
 		{
-			if (((breathability (planet) == BREATHABLE) ||
+			if (((breathability(planet) == Breathable) ||
 			     ((planet->max_temp >= FREEZING_POINT_OF_WATER) &&
 				  (planet->min_temp <= planet->boil_point))) &&
 				(planet->type != tSubSubGasGiant))
@@ -1160,7 +1157,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 				moon != NULL;
 				moon=moon->next_planet, moons++)
 			{
-				if (((breathability (moon) == BREATHABLE) ||
+				if (((breathability(moon) == Breathable) ||
 					 ((moon->max_temp >= FREEZING_POINT_OF_WATER) &&
 					  (moon->min_temp <= moon->boil_point))) &&
 					(moon->type != tSubSubGasGiant))

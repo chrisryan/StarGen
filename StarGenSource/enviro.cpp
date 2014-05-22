@@ -9,14 +9,6 @@
 
 void set_temp_range(planet_pointer planet);
 
-const char* breathability_phrase[4] =
-	{
-		"none",
-		"breathable",
-		"unbreathable",
-		"poisonous"
-	};
-
 long double luminosity(long double mass_ratio)
 {
 	long double n;
@@ -944,13 +936,14 @@ long double inspired_partial_pressure (long double surf_pressure,
 /*   of the planet's atmosphere.                                       JLB  */
 /*--------------------------------------------------------------------------*/
 
-unsigned int breathability (planet_pointer planet)
+Breathability breathability (planet_pointer planet)
 {
 	bool oxygen_ok	= false;
 	int index;
 
-	if (planet->gases == 0)
-		return NONE;
+	if (planet->gases == 0) {
+		return None;
+	}
 
 	for (index = 0; index < planet->gases; index++)
 	{
@@ -967,17 +960,37 @@ unsigned int breathability (planet_pointer planet)
 		}
 
 		if (ipp > StarGen::Gases::gases[gas_no].max_ipp)
-			return POISONOUS;
+			return Poisonous;
 
 		if (planet->atmosphere[index].num == AN_O)
 			oxygen_ok = ((ipp >= MIN_O2_IPP) && (ipp <= MAX_O2_IPP));
 	}
 
-	if (oxygen_ok)
-		return BREATHABLE;
-	else
-		return UNBREATHABLE;
+	if (oxygen_ok) {
+		return Breathable;
+	}
+
+	return Unbreathable;
 }
+
+const char* breathabilityToText(Breathability type)
+{
+	switch(type) {
+		None:
+			return "none";
+
+		Breathable:
+			return "breathable";
+
+		Unbreathable:
+			return "unbreathable";
+
+		Poisonous:
+			return "poisonous";
+	}
+
+	return "unknown";
+};
 
 /* function for 'soft limiting' temperatures */
 

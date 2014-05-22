@@ -853,9 +853,9 @@ void check_planet(planet_pointer	planet,
 	/* Check for and list planets with breathable atmospheres */
 
 	{
-		unsigned int breathe = breathability (planet);
+		Breathability breathe = breathability(planet);
 
-		if ((breathe == BREATHABLE) &&
+		if ((breathe == Breathable) &&
 			(!planet->resonant_period) &&		// Option needed?
 			((int)planet->day != (int)(planet->orb_period * 24.0)))
 		{
@@ -1024,7 +1024,7 @@ void check_planet(planet_pointer	planet,
 								   EARTH_SURF_PRES_IN_MILLIBARS);
 		long double	 ice        = (planet->ice_cover * 100.0);
 		long double	 gravity    = planet->surf_grav;
-		unsigned int breathe    = breathability (planet);
+		Breathability breathe = breathability(planet);
 
 		if ((gravity 	>= .8) &&
 			(gravity 	<= 1.2) &&
@@ -1038,7 +1038,7 @@ void check_planet(planet_pointer	planet,
 			(seas 		>= 50.) &&
 			(seas 		<= 80.) &&
 			(planet->type != tWater) &&
-			(breathe    == BREATHABLE))
+			(breathe == Breathable))
 		{
 			earthlike++;
 
@@ -1052,7 +1052,7 @@ void check_planet(planet_pointer	planet,
 								habitable,
 								planet_id);
 		} else if ((flag_verbose & 0x0008) &&
-				 (breathe   == BREATHABLE) &&
+				 (breathe == Breathable) &&
 				 (gravity	 > 1.3) &&
 				 (habitable	 > 1) &&
 				 ((rel_temp  < -2.0) ||
