@@ -14,13 +14,13 @@ namespace StarGen {
 	// helper functions to output the various information
 	void ListGases();
 	void ListVerbosity();
+	void SizeCheck();
 };
 
 typedef	enum actions {						// Callable StarGen can:
 	aGenerate,								//	- Generate randon system(s)
 	aListCatalog,							//	- List the stars in a catalog
 	aListCatalogAsHTML,						//  - For creating a <FORM>
-	aSizeCheck,								//  - List sizes of various types
 } actions;
 
 typedef enum {

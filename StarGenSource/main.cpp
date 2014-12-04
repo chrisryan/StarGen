@@ -305,7 +305,8 @@ int main (int argc, char *argv[]) {
 					action = aListCatalogAsHTML;
 					break;
 				case 'z':
-					action = aSizeCheck;
+					StarGen::SizeCheck();
+					return 1;
 					break;
 				case 'Z':
 					StarGen::ListGases();

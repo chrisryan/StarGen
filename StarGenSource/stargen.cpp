@@ -87,6 +87,19 @@ namespace StarGen {
 				"\t20000\tTrace Surface temp interations\n"
 		);
 	}
+
+	void SizeCheck()
+	{
+		long double	temp = est_temp(1.0, 1.0,  EARTH_ALBEDO);
+
+		fprintf(stdout, "Size of float: %u\n", sizeof(float));
+		fprintf(stdout, "Size of doubles: %u\n", sizeof(double));
+		fprintf(stdout, "Size of long doubles: %u\n\n", sizeof(long double));
+		fprintf(stdout, "Earth Eff Temp: %5.1Lf K, %5.1Lf C, Earth rel: %5.1Lf C\n\n",
+				temp,
+				temp - FREEZING_POINT_OF_WATER,
+				temp - EARTH_AVERAGE_KELVIN);
+	}
 };
 
 /*  These are the global variables used during accretion:  */
@@ -1133,27 +1146,6 @@ int stargen (actions		action,
 			}
 
 			return (1);
-
-		case aSizeCheck:
-		{
-			long double	temp = est_temp(1.0, 1.0,  EARTH_ALBEDO);
-
-			if (sgOut == NULL)
-				sgOut = stdout;
-
-			fprintf (sgOut, "Size of float: %u\n",
-					 sizeof(float));
-			fprintf (sgOut, "Size of doubles: %u\n",
-					 sizeof(double));
-			fprintf (sgOut, "Size of long doubles: %u\n\n",
-					 sizeof(long double));
-			fprintf (sgOut, "Earth Eff Temp: %5.1Lf K, %5.1Lf C, Earth rel: %5.1Lf C\n\n",
-					 temp,
-					 temp - FREEZING_POINT_OF_WATER,
-					 temp - EARTH_AVERAGE_KELVIN);
-
-			return (1);
-		}
 
 		case aGenerate:
 
