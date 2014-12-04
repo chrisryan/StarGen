@@ -7,6 +7,8 @@ namespace StarGen {
 	class Stargen {
 		public:
 			static const char * version;
+
+			Stargen();
 	};
 };
 

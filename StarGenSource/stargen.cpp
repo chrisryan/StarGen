@@ -27,6 +27,11 @@
 
 namespace StarGen {
 	const char * Stargen::version = "1.43";
+
+	Stargen::Stargen()
+	{
+		StarGen::Gases::initialize();
+	}
 };
 
 /*  These are the global variables used during accretion:  */
@@ -1042,7 +1047,7 @@ int stargen (actions		action,
 		strncat (subdir, "/", 80-strlen(subdir));
 	}
 
-	StarGen::Gases::initialize();
+	StarGen::Stargen *oStargen = new StarGen::Stargen();
 
 	switch (action)
 	{
