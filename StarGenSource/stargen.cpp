@@ -1042,10 +1042,6 @@ int stargen (actions		action,
 		strncat (subdir, "/", 80-strlen(subdir));
 	}
 
-	for (index = 0; index < StarGen::Gases::max_gas; index++)
-		if (StarGen::Gases::gases[index].max_ipp == 0.0)
-			StarGen::Gases::gases[index].max_ipp = INCREDIBLY_LARGE_NUMBER;
-
 	StarGen::Gases::initialize();
 
 	switch (action)
