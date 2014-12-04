@@ -10,11 +10,13 @@ namespace StarGen {
 
 			Stargen();
 	};
+
+	// helper function to output the gases list
+	void ListGases(void);
 };
 
 typedef	enum actions {						// Callable StarGen can:
 	aGenerate,								//	- Generate randon system(s)
-	aListGases,								//	- List the gas table
 	aListCatalog,							//	- List the stars in a catalog
 	aListCatalogAsHTML,						//  - For creating a <FORM>
 	aSizeCheck,								//  - List sizes of various types

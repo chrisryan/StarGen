@@ -307,7 +307,8 @@ int main (int argc, char *argv[]) {
 					action = aSizeCheck;
 					break;
 				case 'Z':
-					action = aListGases;
+					StarGen::ListGases();
+					return 1;
 					break;
 				case 'M':
 					flags_arg |= fDoMoons;

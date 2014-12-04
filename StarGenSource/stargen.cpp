@@ -32,6 +32,33 @@ namespace StarGen {
 	{
 		StarGen::Gases::initialize();
 	}
+
+	void ListGases(void)
+	{
+		long double total = 0.0;
+
+		StarGen::Gases::initialize();
+
+		for (int index = 0; index < StarGen::Gases::max_gas; index++)
+		{
+			if (StarGen::Gases::gases[index].weight >= AN_N && StarGen::Gases::gases[index].max_ipp < 1E9)
+			{
+				total += StarGen::Gases::gases[index].max_ipp;
+			}
+
+			fprintf(stdout,
+					" %2d: %4s - %-13s %3.0f mb - %5.0Lf mb\n",
+					index,
+					StarGen::Gases::gases[index].symbol,
+					StarGen::Gases::gases[index].name,
+					StarGen::Gases::gases[index].num == AN_O ? MIN_O2_IPP : 0.0,
+					StarGen::Gases::gases[index].max_ipp
+			);
+		}
+
+		fprintf (stdout, "Total Max ipp: %5.0Lf\n", total);
+		fprintf (stdout, "Max pressure: %5.0f atm\n", MAX_HABITABLE_PRESSURE);
+	}
 };
 
 /*  These are the global variables used during accretion:  */
@@ -1051,31 +1078,6 @@ int stargen (actions		action,
 
 	switch (action)
 	{
-		case aListGases:
-		{
-			long double	total = 0.0;
-
-			if (sgOut == NULL)
-				sgOut = stdout;
-
-			for (index = 0; index < StarGen::Gases::max_gas; index++)
-			{
-				if (StarGen::Gases::gases[index].weight >= AN_N
-				 && StarGen::Gases::gases[index].max_ipp < 1E9)
-					total += StarGen::Gases::gases[index].max_ipp;
-
-				fprintf (sgOut, " %2d: %4s - %-13s %3.0f mb - %5.0Lf mb\n",
-						index,
-						StarGen::Gases::gases[index].symbol,
-						StarGen::Gases::gases[index].name,
-						StarGen::Gases::gases[index].num == AN_O ? MIN_O2_IPP : 0.0,
-						StarGen::Gases::gases[index].max_ipp);
-			}
-			fprintf (sgOut, "Total Max ipp: %5.0Lf\n", total);
-			fprintf (sgOut, "Max pressure: %5.0f atm\n", MAX_HABITABLE_PRESSURE);
-
-			return (1);
-		}
 		case aListCatalog:
 			if (sgOut == NULL)
 				sgOut = stdout;
