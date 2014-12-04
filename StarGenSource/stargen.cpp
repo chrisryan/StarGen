@@ -25,7 +25,9 @@
 #include "ChemTable.h"
 #include "Catalogs.h"
 
-const char * stargen_revision = "$Revision: 1.43 $";
+namespace StarGen {
+	const char * Stargen::version = "1.43";
+};
 
 /*  These are the global variables used during accretion:  */
 planet_pointer	innermost_planet;

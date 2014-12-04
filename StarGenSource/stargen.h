@@ -3,6 +3,13 @@
  *	StarGen main API
  */
 
+namespace StarGen {
+	class Stargen {
+		public:
+			static const char * version;
+	};
+};
+
 typedef	enum actions {						// Callable StarGen can:
 	aGenerate,								//	- Generate randon system(s)
 	aListGases,								//	- List the gas table
@@ -97,5 +104,3 @@ extern long double	max_breathable_p;
 #define	SUBDIR	"html/"
 #define DIRSEP	"/"
 #endif
-
-extern const char *stargen_revision;		// RCS revision of stargen.c

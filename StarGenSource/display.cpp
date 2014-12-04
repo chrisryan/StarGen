@@ -92,7 +92,7 @@ void text_describe_system(planet_pointer innermost_planet, bool do_gases, long i
 	StarGen::Sun* sun = innermost_planet->sun;
 	int 			counter;
 
-	printf("Stargen - V%s; seed=%ld\n", stargen_revision, seed);
+	printf("Stargen - V%s; seed=%ld\n", StarGen::Stargen::version, seed);
 	printf("                          SYSTEM  CHARACTERISTICS\n");
 	printf("Stellar mass: %4.2Lf solar masses\n", sun->mass);
 	printf("Stellar luminosity: %4.2Lf\n",sun->luminosity);
@@ -601,7 +601,7 @@ void create_svg_file (FILE				*file_arg,
 					 margin, margin,
 					 max_x + (margin * 2.), max_y + (margin * 2.),
 					 (innermost_planet->sun)->name,
-					 prognam, stargen_revision,
+					 prognam, StarGen::Stargen::version,
 					 (offset+mult)+(min_log*mult), max_y - margin,
 					 (offset+mult)+(max_log*mult), max_y - margin
 					);
@@ -774,7 +774,7 @@ FILE *open_html_file (const char *system_name,
 				seed,
 				noname ? "" : " - ",
 				noname ? "" : system_name,
-				prognam, stargen_revision,
+				prognam, StarGen::Stargen::version,
 				url_path
 				);
 	}

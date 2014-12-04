@@ -61,7 +61,7 @@ void usage(char *prognam) {
 		"\n",
 		dole.count - 1,
 		solstation.count - 1,
-		stargen_revision
+		StarGen::Stargen::version
 	);
 }
 
