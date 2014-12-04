@@ -33,7 +33,7 @@ namespace StarGen {
 		StarGen::Gases::initialize();
 	}
 
-	void ListGases(void)
+	void ListGases()
 	{
 		long double total = 0.0;
 
@@ -58,6 +58,34 @@ namespace StarGen {
 
 		fprintf (stdout, "Total Max ipp: %5.0Lf\n", total);
 		fprintf (stdout, "Max pressure: %5.0f atm\n", MAX_HABITABLE_PRESSURE);
+	}
+
+	void ListVerbosity()
+	{
+		fprintf(stdout,
+				"Verbosity flags are hexidecimal numbers:\n"
+				"\t0001\tEarthlike count\n"
+				"\t0002\tTrace Min/Max\n"
+				"\t0004\tList Earthlike\n"
+				"\t\n"
+				"\t0010\tList Gases\n"
+				"\t0020\tTrace temp iterations\n"
+				"\t0040\tGas lifetimes\n"
+				"\t0080\tList loss of accreted gas mass\n"
+				"\t\n"
+				"\t0100\tInjecting, collision\n"
+				"\t0200\tChecking..., Failed...\n"
+				"\t0400\tList binary info\n"
+				"\t0800\tList accreted atmospheres\n"
+				"\t\n"
+				"\t1000\tMoons (experimental)\n"
+				"\t2000\tOxygen poisoned (experimental)\n"
+				"\t4000\tTrace gas percentages\n"
+				"\t8000\tList Jovians in the ecosphere\n"
+				"\t\n"
+				"\t10000\tList type diversity\n"
+				"\t20000\tTrace Surface temp interations\n"
+		);
 	}
 };
 
@@ -1127,35 +1155,6 @@ int stargen (actions		action,
 			return (1);
 		}
 
-		case aListVerbosity:
-			if (sgOut == NULL)
-				sgOut = stdout;
-
-			fprintf (sgOut,
-					"Verbosity flags are hexidecimal numbers:\n"
-					"\t0001\tEarthlike count\n"
-					"\t0002\tTrace Min/Max\n"
-					"\t0004\tList Earthlike\n"
-					"\t\n"
-					"\t0010\tList Gases\n"
-					"\t0020\tTrace temp iterations\n"
-					"\t0040\tGas lifetimes\n"
-					"\t0080\tList loss of accreted gas mass\n"
-					"\t\n"
-					"\t0100\tInjecting, collision\n"
-					"\t0200\tChecking..., Failed...\n"
-					"\t0400\tList binary info\n"
-					"\t0800\tList accreted atmospheres\n"
-					"\t\n"
-					"\t1000\tMoons (experimental)\n"
-					"\t2000\tOxygen poisoned (experimental)\n"
-					"\t4000\tTrace gas percentages\n"
-					"\t8000\tList Jovians in the ecosphere\n"
-					"\t\n"
-					"\t10000\tList type diversity\n"
-					"\t20000\tTrace Surface temp interations\n"
-					);
-			return (1);
 		case aGenerate:
 
 			break;

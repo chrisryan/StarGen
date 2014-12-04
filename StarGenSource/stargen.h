@@ -11,8 +11,9 @@ namespace StarGen {
 			Stargen();
 	};
 
-	// helper function to output the gases list
-	void ListGases(void);
+	// helper functions to output the various information
+	void ListGases();
+	void ListVerbosity();
 };
 
 typedef	enum actions {						// Callable StarGen can:
@@ -20,7 +21,6 @@ typedef	enum actions {						// Callable StarGen can:
 	aListCatalog,							//	- List the stars in a catalog
 	aListCatalogAsHTML,						//  - For creating a <FORM>
 	aSizeCheck,								//  - List sizes of various types
-	aListVerbosity,							//  - List values of the -v option
 } actions;
 
 typedef enum {

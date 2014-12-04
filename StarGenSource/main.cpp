@@ -293,7 +293,8 @@ int main (int argc, char *argv[]) {
 							flags_arg |= fDoGases;
 						}
 					} else {
-						action = aListVerbosity;
+						StarGen::ListVerbosity();
+						return 1;
 					}
 
 					break;
