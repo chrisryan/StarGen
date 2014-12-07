@@ -4,12 +4,19 @@
  */
 
 namespace StarGen {
+
 	class Stargen {
 		public:
 			static const char * version;
 
 			Stargen();
+
+			static void setVerbosity(int value);
+			static bool isVerbose(int value);
+		private:
+			static int flag_verbose;
 	};
+
 
 	// helper functions to output the various information
 	void ListGases();
@@ -78,8 +85,6 @@ int stargen (actions		action,			// One of the above
 #define fOnlyMultiHabitable		0x0200
 #define fOnlyJovianHabitable	0x0400
 #define fOnlyEarthlike			0x0800
-
-extern int          flag_verbose;		// Likely to move into stargen() args.
 
 										// Various statistics that are kept:
 extern int 		    total_earthlike;

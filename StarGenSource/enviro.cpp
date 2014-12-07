@@ -660,7 +660,7 @@ long double gas_life(long double molecular_weight,
 //	long double t2 = ((k * pow3(v) * r) / pow4(ve)) * exp((3.0 * pow2(ve)) / (2.0 * pow2(v)));
 //	long double years2 = t2 / (SECONDS_PER_HOUR * 24.0 * DAYS_IN_A_YEAR);
 
-//	if (flag_verbose & 0x0040)
+//	if (StarGen::Stargen::isVerbose(0x0040))
 //		fprintf (stderr, "gas_life: %LGs, V ratio: %Lf\n",
 //				years, ve / v);
 
@@ -767,7 +767,7 @@ void calculate_surface_temp(planet_pointer 	planet,
 	if (planet->greenhouse_effect
 	 && planet->max_temp < planet->boil_point)
 	{
-		if (flag_verbose & 0x0010)
+		if (StarGen::Stargen::isVerbose(0x0010))
 			fprintf (stderr, "Deluge: %s %d max (%Lf) < boil (%Lf)\n",
 					planet->sun->name,
 					planet->planet_no,
@@ -847,7 +847,7 @@ void calculate_surface_temp(planet_pointer 	planet,
 
 	set_temp_range(planet);
 
-	if (flag_verbose & 0x0020)
+	if (StarGen::Stargen::isVerbose(0x0020))
 		fprintf (stderr, "%5.1Lf AU: %5.1Lf = %5.1Lf ef + %5.1Lf gh%c "
 				"(W: %4.2Lf (%4.2Lf) C: %4.2Lf (%4.2Lf) I: %4.2Lf A: (%4.2Lf))\n",
 				planet->a,
@@ -871,14 +871,14 @@ void iterate_surface_temp(planet_pointer planet)
 	long double n2_life  = gas_life (MOL_NITROGEN,    planet);
 	long double n_life   = gas_life (ATOMIC_NITROGEN, planet);
 
-	if (flag_verbose & 0x20000)
+	if (StarGen::Stargen::isVerbose(0x20000))
 		fprintf (stderr, "%d:                     %5.1Lf it [%5.1Lf re %5.1Lf a %5.1Lf alb]\n",
 				planet->planet_no,
 				initial_temp,
 				planet->sun->r_ecosphere, planet->a, planet->albedo
 				);
 
-	if (flag_verbose & 0x0040)
+	if (StarGen::Stargen::isVerbose(0x0040))
 		fprintf (stderr, "\nGas lifetimes: H2 - %Lf, H2O - %Lf, N - %Lf, N2 - %Lf\n",
 				h2_life, h2o_life, n_life, n2_life);
 
@@ -904,7 +904,7 @@ void iterate_surface_temp(planet_pointer planet)
 
 	planet->greenhs_rise = planet->surf_temp - initial_temp;
 
-	if (flag_verbose & 0x20000)
+	if (StarGen::Stargen::isVerbose(0x20000))
 		fprintf (stderr, "%d: %5.1Lf gh = %5.1Lf (%5.1Lf C) st - %5.1Lf it [%5.1Lf re %5.1Lf a %5.1Lf alb]\n",
 				planet->planet_no,
 				planet->greenhs_rise,

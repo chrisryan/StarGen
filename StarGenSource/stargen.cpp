@@ -33,6 +33,43 @@ namespace StarGen {
 		StarGen::Gases::initialize();
 	}
 
+ 	/*
+	 * 0x0001 Earthlike count
+ 	 * 0x0002 Trace Min/max
+ 	 * 0x0004 List habitable
+ 	 * 0x0008 List Earth-like (and Sphinx-line)
+ 	 *
+ 	 * 0x0010 List Gases
+ 	 * 0x0020 Trace temp iterations
+ 	 * 0x0040 Gas lifetimes
+ 	 * 0x0080 List loss of accreted gas mass
+ 	 *
+ 	 * 0x0100 Injecting, collision
+ 	 * 0x0200 Checking..., Failed...
+ 	 * 0x0400 List binary info
+ 	 * 0x0800 List Gas Dwarfs etc.
+ 	 *
+ 	 * 0x1000 Moons
+ 	 * 0x2000 Oxygen poisoned
+ 	 * 0x4000 Trace gas %ages (whoops)
+ 	 * 0x8000 Jovians in habitable zone
+ 	 *
+ 	 * 0x10000 List type diversity
+ 	 * 0x20000 Trace Surface temp interations
+ 	 * 0x40000 Lunar orbits
+	 */
+	int Stargen::flag_verbose = 0;
+
+	void Stargen::setVerbosity(int value)
+	{
+		Stargen::flag_verbose = value;
+	}
+
+    bool Stargen::isVerbose(int value)
+	{
+		return (Stargen::flag_verbose & value);
+	}
+
 	void ListGases()
 	{
 		long double total = 0.0;
@@ -106,30 +143,6 @@ namespace StarGen {
 planet_pointer	innermost_planet;
 long double		dust_density_coeff = DUST_DENSITY_COEFF;
 
-int flag_verbose = 0;
-// 0x0001			Earthlike count
-// 0x0002			Trace Min/max
-// 0x0004			List habitable
-// 0x0008			List Earth-like (and Sphinx-line)
-
-// 0x0010			List Gases
-// 0x0020			Trace temp iterations
-// 0x0040			Gas lifetimes
-// 0x0080			List loss of accreted gas mass
-
-// 0x0100			Injecting, collision
-// 0x0200			Checking..., Failed...
-// 0x0400			List binary info
-// 0x0800			List Gas Dwarfs etc.
-
-// 0x1000			Moons
-// 0x2000			Oxygen poisoned
-// 0x4000			Trace gas %ages (whoops)
-// 0x8000			Jovians in habitable zone
-
-// 0x10000			List type diversity
-// 0x20000			Trace Surface temp interations
-// 0x40000			Lunar orbits
 
 long flag_seed		 = 0;
 
@@ -299,7 +312,7 @@ void calculate_gases(StarGen::Sun* sun,
 
 				amount[i] = abund * pvrms * react * fract;
 
-				if ((flag_verbose & 0x4000) &&
+				if (StarGen::Stargen::isVerbose(0x4000) &&
 					(strcmp(StarGen::Gases::gases[i].symbol, "O") == 0 ||
 					 strcmp(StarGen::Gases::gases[i].symbol, "N") == 0 ||
 					 strcmp(StarGen::Gases::gases[i].symbol, "Ar") == 0 ||
@@ -340,7 +353,7 @@ void calculate_gases(StarGen::Sun* sun,
 					planet->atmosphere[n].surf_pressure = planet->surf_pressure
 														* amount[i] / totamount;
 
-					if (flag_verbose & 0x2000)
+					if (StarGen::Stargen::isVerbose(0x2000))
 					{
 						if ((planet->atmosphere[n].num == AN_O) &&
 							inspired_partial_pressure (planet->surf_pressure,
@@ -361,7 +374,7 @@ void calculate_gases(StarGen::Sun* sun,
 				  sizeof(StarGen::Gas),
 				  StarGen::Gas::diminishing_pressure);
 
-			if (flag_verbose & 0x0010)
+			if (StarGen::Stargen::isVerbose(0x0010))
 			{
 				fprintf (stderr, "\n%s (%5.1Lf AU) gases:\n",
 						planet_id, planet->a);
@@ -476,7 +489,7 @@ void generate_planet(planet_pointer	planet,
 					planet->surf_grav 	= gravity(planet->surf_accel);
 				}
 
-				if (((h2_loss + he_loss) > .000001) && (flag_verbose & 0x0080))
+				if (((h2_loss + he_loss) > .000001) && (StarGen::Stargen::isVerbose(0x0080)))
 					fprintf (stderr, "%s\tLosing gas: H2: %5.3Lf EM, He: %5.3Lf EM\n",
 							 planet_id,
 							 h2_loss * SUN_MASS_IN_EARTH_MASSES, he_loss * SUN_MASS_IN_EARTH_MASSES);
@@ -517,7 +530,7 @@ void generate_planet(planet_pointer	planet,
 				{
 					habitable_jovians++;
 
-					if (flag_verbose & 0x8000)
+					if (StarGen::Stargen::isVerbose(0x8000))
 					{
 						fprintf (stderr, "%s\t%s (%4.2LfEM %5.3Lf By)%s with earth-like temperature (%.1Lf C, %.1Lf F, %+.1Lf C Earth).\n",
 								 planet_id,
@@ -622,7 +635,7 @@ void generate_planet(planet_pointer	planet,
 				{
 					planet->type = tUnknown;
 
-					if (flag_verbose & 0x0001)
+					if (StarGen::Stargen::isVerbose(0x0001))
 						fprintf (stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\t%s\t Unknown %s\n",
 										type_string (planet->type),
 										planet->surf_pressure,
@@ -683,7 +696,7 @@ void generate_planet(planet_pointer	planet,
 							ptr->moon_e = 0;
 						}
 
-						if (flag_verbose & 0x40000)
+						if (StarGen::Stargen::isVerbose(0x40000))
 						{
 							fprintf (stderr,
 										"   Roche limit: R = %4.2Lg, rM = %4.2Lg, rm = %4.2Lg -> %.0Lf km\n"
@@ -698,7 +711,7 @@ void generate_planet(planet_pointer	planet,
 									);
 						}
 
-						if (flag_verbose & 0x1000)
+						if (StarGen::Stargen::isVerbose(0x1000))
 						{
 							fprintf (stderr, "  %s: (%7.2LfEM) %d %4.2LgEM\n",
 								planet_id,
@@ -762,7 +775,7 @@ void check_planet(planet_pointer	planet,
 			{
 				min_breathable_temp = planet->surf_temp;
 
-				if (flag_verbose & 0x0002)
+				if (StarGen::Stargen::isVerbose(0x0002))
 					list_it = true;
 			}
 
@@ -770,7 +783,7 @@ void check_planet(planet_pointer	planet,
 			{
 				max_breathable_temp = planet->surf_temp;
 
-				if (flag_verbose & 0x0002)
+				if (StarGen::Stargen::isVerbose(0x0002))
 					list_it = true;
 			}
 
@@ -778,7 +791,7 @@ void check_planet(planet_pointer	planet,
 			{
 				min_breathable_g = planet->surf_grav;
 
-				if (flag_verbose & 0x0002)
+				if (StarGen::Stargen::isVerbose(0x0002))
 					list_it = true;
 			}
 
@@ -786,7 +799,7 @@ void check_planet(planet_pointer	planet,
 			{
 				max_breathable_g = planet->surf_grav;
 
-				if (flag_verbose & 0x0002)
+				if (StarGen::Stargen::isVerbose(0x0002))
 					list_it = true;
 			}
 
@@ -794,7 +807,7 @@ void check_planet(planet_pointer	planet,
 			{
 				min_breathable_l = illumination;
 
-				if (flag_verbose & 0x0002)
+				if (StarGen::Stargen::isVerbose(0x0002))
 					list_it = true;
 			}
 
@@ -802,7 +815,7 @@ void check_planet(planet_pointer	planet,
 			{
 				max_breathable_l = illumination;
 
-				if (flag_verbose & 0x0002)
+				if (StarGen::Stargen::isVerbose(0x0002))
 					list_it = true;
 			}
 
@@ -812,7 +825,7 @@ void check_planet(planet_pointer	planet,
 				{
 					min_breathable_terrestrial_g = planet->surf_grav;
 
-					if (flag_verbose & 0x0002)
+					if (StarGen::Stargen::isVerbose(0x0002))
 						list_it = true;
 				}
 
@@ -820,7 +833,7 @@ void check_planet(planet_pointer	planet,
 				{
 					max_breathable_terrestrial_g = planet->surf_grav;
 
-					if (flag_verbose & 0x0002)
+					if (StarGen::Stargen::isVerbose(0x0002))
 						list_it = true;
 				}
 
@@ -828,7 +841,7 @@ void check_planet(planet_pointer	planet,
 				{
 					min_breathable_terrestrial_l = illumination;
 
-					if (flag_verbose & 0x0002)
+					if (StarGen::Stargen::isVerbose(0x0002))
 						list_it = true;
 				}
 
@@ -836,7 +849,7 @@ void check_planet(planet_pointer	planet,
 				{
 					max_breathable_terrestrial_l = illumination;
 
-					if (flag_verbose & 0x0002)
+					if (StarGen::Stargen::isVerbose(0x0002))
 						list_it = true;
 				}
 			}
@@ -845,7 +858,7 @@ void check_planet(planet_pointer	planet,
 			{
 				min_breathable_p = planet->surf_pressure;
 
-				if (flag_verbose & 0x0002)
+				if (StarGen::Stargen::isVerbose(0x0002))
 					list_it = true;
 			}
 
@@ -853,11 +866,11 @@ void check_planet(planet_pointer	planet,
 			{
 				max_breathable_p = planet->surf_pressure;
 
-				if (flag_verbose & 0x0002)
+				if (StarGen::Stargen::isVerbose(0x0002))
 					list_it = true;
 			}
 
-			if (flag_verbose & 0x0004)
+			if (StarGen::Stargen::isVerbose(0x0004))
 				list_it = true;
 
 			if (list_it)
@@ -877,7 +890,7 @@ void check_planet(planet_pointer	planet,
 	{
 		max_moon_mass = planet->mass;
 
-		if (flag_verbose & 0x0002)
+		if (StarGen::Stargen::isVerbose(0x0002))
 			fprintf (stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\t%s Moon Mass\n",
 					type_string (planet->type),
 					planet->surf_pressure,
@@ -887,7 +900,7 @@ void check_planet(planet_pointer	planet,
 					planet_id);
 	}
 
-	if ((flag_verbose & 0x0800)
+	if (StarGen::Stargen::isVerbose(0x0800)
 	 && (planet->dust_mass * SUN_MASS_IN_EARTH_MASSES >= 0.0006)
 	 && (planet->gas_mass * SUN_MASS_IN_EARTH_MASSES >= 0.0006)
 	 && (planet->type != tGasGiant)
@@ -935,7 +948,7 @@ void check_planet(planet_pointer	planet,
 		{
 			earthlike++;
 
-			if (flag_verbose & 0x0008)
+			if (StarGen::Stargen::isVerbose(0x0008))
 				fprintf (stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\t%d %s\tEarth-like\n",
 								type_string (planet->type),
 								planet->surf_pressure,
@@ -944,7 +957,7 @@ void check_planet(planet_pointer	planet,
 								planet->surf_temp  - EARTH_AVERAGE_KELVIN,
 								habitable,
 								planet_id);
-		} else if ((flag_verbose & 0x0008) &&
+		} else if (StarGen::Stargen::isVerbose(0x0008) &&
 				 (breathe == Breathable) &&
 				 (gravity	 > 1.3) &&
 				 (habitable	 > 1) &&
@@ -1386,7 +1399,7 @@ int stargen (actions		action,
 
 		sun.name = system_name;
 
-		if ((flag_verbose & 0x0400) && (outer_limit > 0.0))
+		if (StarGen::Stargen::isVerbose(0x0400) && (outer_limit > 0.0))
 		{
 			fprintf (sgErr, "%s, Outer Limit: %LG\n", system_name, outer_limit);
 		}
@@ -1474,7 +1487,7 @@ int stargen (actions		action,
 			{
 				max_type_count = norm_type_count;
 
-				if (flag_verbose & 0x10000)
+				if (StarGen::Stargen::isVerbose(0x10000))
 					fprintf (sgErr, "System %ld - %s (-s%ld -%c%d) has %d types out of %d planets. [%d]\n",
 							flag_seed,
 							system_name,
@@ -1611,7 +1624,7 @@ int stargen (actions		action,
 				break;
 			}
 			if ((habitable > 1) &&
-				(flag_verbose & 0x0001))
+				StarGen::Stargen::isVerbose(0x0001))
 				fprintf (sgErr, "System %ld - %s (-s%ld -%c%d) has %d planets with breathable atmospheres.\n",
 						flag_seed,
 						system_name,
@@ -1633,7 +1646,7 @@ int stargen (actions		action,
 		free_generations ();
 	}
 
-	if ((flag_verbose & 0x0001) || (flag_verbose & 0x0002))
+	if (StarGen::Stargen::isVerbose(0x0001) || StarGen::Stargen::isVerbose(0x0002))
 	{
 		fprintf (sgErr, "Earthlike planets: %d\n", total_earthlike);
 		fprintf (sgErr, "Breathable atmospheres: %d\n", total_habitable);

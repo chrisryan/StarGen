@@ -287,9 +287,11 @@ int main (int argc, char *argv[]) {
 					break;
 				case 'v':		 // verbosity
 					if (isdigit(*(c+1))) {
+						int flag_verbose;
 						sscanf (++c, "%x", &flag_verbose);
 						skip = true;
-						if (flag_verbose & 0x0001) {
+						StarGen::Stargen::setVerbosity(flag_verbose);
+						if (StarGen::Stargen::isVerbose(0x0001)) {
 							flags_arg |= fDoGases;
 						}
 					} else {

@@ -417,14 +417,14 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 
 						finished = true;
 
-						if (flag_verbose & 0x0100)
+						if (StarGen::Stargen::isVerbose(0x0100))
 							fprintf (stderr, "Moon Captured... "
 									 "%5.3Lf AU (%.2LfEM) <- %.2LfEM\n",
 									the_planet->a, the_planet->mass * SUN_MASS_IN_EARTH_MASSES,
 									mass * SUN_MASS_IN_EARTH_MASSES
 									);
 					}
-					else if (flag_verbose & 0x0100)
+					else if (StarGen::Stargen::isVerbose(0x0100))
 					{
 						fprintf (stderr, "Moon Escapes... "
 								 "%5.3Lf AU (%.2LfEM)%s %.2LfEM%s\n",
@@ -440,7 +440,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
 
 			if (!finished)
 			{
-				if (flag_verbose & 0x0100)
+				if (StarGen::Stargen::isVerbose(0x0100))
 						fprintf (stderr, "Collision between two planetesimals! "
 								"%4.2Lf AU (%.2LfEM) + %4.2Lf AU (%.2LfEM = %.2LfEMd + %.2LfEMg [%.3LfEM])-> %5.3Lf AU (%5.3Lf)\n",
 								the_planet->a, the_planet->mass * SUN_MASS_IN_EARTH_MASSES,
@@ -588,13 +588,13 @@ planet_pointer dist_planetary_masses(long double stell_mass_ratio,
 		dust_mass = 0;
 		gas_mass  = 0;
 
-		if (flag_verbose & 0x0200)
+		if (StarGen::Stargen::isVerbose(0x0200))
 			fprintf (stderr, "Checking %Lg AU.\n",a);
 
 		if (dust_available(inner_effect_limit(a, e, mass),
 						   outer_effect_limit(a, e, mass)))
 		{
-			if (flag_verbose & 0x0100)
+			if (StarGen::Stargen::isVerbose(0x0100))
 				fprintf (stderr, "Injecting protoplanet at %Lg AU.\n", a);
 
 			dust_density = dust_density_coeff * sqrt(stell_mass_ratio)
@@ -613,10 +613,10 @@ planet_pointer dist_planetary_masses(long double stell_mass_ratio,
 									   stell_luminosity_ratio,
 									   planet_inner_bound,planet_outer_bound,
 									   do_moons);
-			else if (flag_verbose & 0x0100)
+			else if (StarGen::Stargen::isVerbose(0x0100))
 				fprintf (stderr, ".. failed due to large neighbor.\n");
 		}
-		else if (flag_verbose & 0x0200)
+		else if (StarGen::Stargen::isVerbose(0x0200))
 			fprintf (stderr, ".. failed.\n");
 	}
 	return(planet_head);
