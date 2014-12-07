@@ -66,7 +66,6 @@ void usage(char *prognam) {
 }
 
 int main (int argc, char *argv[]) {
-	actions     action                  = aGenerate;
 	char        flag_char               = '?';
 	char        path[300]               = SUBDIR;
 	char        url_path_arg[300]       = "";
@@ -377,8 +376,8 @@ int main (int argc, char *argv[]) {
 		return 1;
 	}
 
+	StarGen::Stargen *oStargen = new StarGen::Stargen();
 	stargen(
-		action,
 		flag_char,
 		path,
 		url_path_arg,

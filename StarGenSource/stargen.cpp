@@ -1053,7 +1053,7 @@ void generate_planets(StarGen::Sun* sun,
 	}
 }
 
-int stargen (actions		action,
+int stargen (
 			 char			flag_char,
 			 char *			path,
 			 char *			url_path_arg,
@@ -1157,13 +1157,6 @@ int stargen (actions		action,
 	}
 
 	StarGen::Stargen *oStargen = new StarGen::Stargen();
-
-	switch (action)
-	{
-		case aGenerate:
-
-			break;
-	}
 
 	flag_seed		= seed_arg;
 	sun.mass 		= mass_arg;

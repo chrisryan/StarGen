@@ -13,6 +13,7 @@ namespace StarGen {
 
 			static void setVerbosity(int value);
 			static bool isVerbose(int value);
+
 		private:
 			static int flag_verbose;
 	};
@@ -25,10 +26,6 @@ namespace StarGen {
 	void ListCatalog(catalog * cat);
 	void ListCatalogHTML(catalog * cat);
 };
-
-typedef	enum actions {						// Callable StarGen can:
-	aGenerate,								//	- Generate randon system(s)
-} actions;
 
 typedef enum {
 	ffHTML,
@@ -44,7 +41,7 @@ typedef enum {
 	gfSVG
 } graphic_formats;
 
-int stargen (actions		action,			// One of the above
+int stargen (
 			 char			flag_char,
 			 char *			path,			// OS path to where to write files
 			 char *			url_path_arg,	// HTML path to parent of both the
