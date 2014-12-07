@@ -22,12 +22,12 @@ namespace StarGen {
 	void ListGases();
 	void ListVerbosity();
 	void SizeCheck();
+	void ListCatalog(catalog * cat);
+	void ListCatalogHTML(catalog * cat);
 };
 
 typedef	enum actions {						// Callable StarGen can:
 	aGenerate,								//	- Generate randon system(s)
-	aListCatalog,							//	- List the stars in a catalog
-	aListCatalogAsHTML,						//  - For creating a <FORM>
 } actions;
 
 typedef enum {

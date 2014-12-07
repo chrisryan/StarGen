@@ -92,6 +92,9 @@ int main (int argc, char *argv[]) {
 	bool        skip                    = false;
 	int         index                   = 0;
 
+	bool listCatalog = false;
+	bool listCatalogAsHTML = false;
+
 	prognam = argv[0];
 
 	if ((c = strrchr(prognam, DIRSEP[0])) != NULL) {
@@ -301,10 +304,10 @@ int main (int argc, char *argv[]) {
 
 					break;
 				case 'l':
-					action = aListCatalog;
+					listCatalog = true;
 					break;
 				case 'L':
-					action = aListCatalogAsHTML;
+					listCatalogAsHTML = true;
 					break;
 				case 'z':
 					StarGen::SizeCheck();
@@ -361,6 +364,17 @@ int main (int argc, char *argv[]) {
 
 			strcpy(arg_name+strlen(arg_name), argv[index]);
 		}
+	}
+
+	if (listCatalog)
+	{
+		StarGen::ListCatalog(catalog);
+		return 1;
+	}
+	else if (listCatalogAsHTML)
+	{
+		StarGen::ListCatalogHTML(catalog);
+		return 1;
 	}
 
 	stargen(
