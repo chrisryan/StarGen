@@ -5,17 +5,70 @@
 
 namespace StarGen {
 
+	/*
+	 * Output file formats
+	 */
+	typedef enum {
+		HTML,
+		TEXT,
+		CELESTIA,
+		CSV,
+		CSVdl,
+		fSVG
+	} OutputFormats;
+
+	/*
+	 * Graphics output formats
+	 */
+	typedef enum {
+		GIF,
+		SVG
+	} GraphicFormats;
+
 	class Stargen {
 		public:
 			static const char * version;
 
+
 			Stargen();
+
+			void setOutputFormat(OutputFormats of);
+			void setGraphicFormat(GraphicFormats gf);
+
+			int generate(
+				char flag_char,
+			 	char *path,			// OS path to where to write files
+			 	char *url_path_arg,	// HTML path to parent of both the
+ 									//  directory named in 'path' and
+ 									//  the ref directory with images
+			 	char *filename_arg,	// Output file name (optional)
+			 	char *sys_name_arg,	// Human readble System name (opt.)
+
+			 	FILE *sgOut,		// Main stream to write to
+			 						//	Thumbnails will be written there
+			 						//  for HTML format
+			 	FILE *sgErr,		// Stream to write errors to (opt.)
+			 	const char *prognam, // Name of program (opt.)
+			 	long double	mass_arg, // Mass of star (not used with catalog)
+			 	long seed_arg,		// Random number seed
+			 	int count_arg,		// Number of systems (or cats) to do
+			 	int incr_arg,		// Amount to increment seed by
+			 	catalog *cat_arg,	// A star catalog (see below)
+			 	int sys_no_arg,		// Star within a catalog (0 = all)
+
+			 	long double ratio_arg, // Change dust density (experimental)
+
+			 	int flags_arg		// Options (see below)
+			);
 
 			static void setVerbosity(int value);
 			static bool isVerbose(int value);
 
 		private:
 			static int flag_verbose;
+
+			OutputFormats out_format;
+			GraphicFormats graphic_format;
 	};
 
 
@@ -26,48 +79,6 @@ namespace StarGen {
 	void ListCatalog(catalog * cat);
 	void ListCatalogHTML(catalog * cat);
 };
-
-typedef enum {
-	ffHTML,
-	ffTEXT,
-	ffCELESTIA,
-	ffCSV,
-	ffCSVdl,
-	ffSVG
-} out_formats;
-
-typedef enum {
-	gfGIF,
-	gfSVG
-} graphic_formats;
-
-int stargen (
-			 char			flag_char,
-			 char *			path,			// OS path to where to write files
-			 char *			url_path_arg,	// HTML path to parent of both the
-			 								//  directory named in 'path' and
-			 								//  the ref directory with images
-			 char *			filename_arg,	// Output file name (optional)
-			 char *			sys_name_arg,	// Human readble System name (opt.)
-
-			 FILE *			sgOut,			// Main stream to write to
-			 								//	Thumbnails will be written there
-			 								//  for HTML format
-			 FILE *			sgErr,			// Stream to write errors to (opt.)
-			 const char *	prognam,		// Name of program (opt.)
-			 long double	mass_arg,		// Mass of star (not used with catalog)
-			 long			seed_arg,		// Random number seed
-			 int			count_arg,		// Number of systems (or cats) to do
-			 int			incr_arg,		// Amount to increment seed by
-			 catalog *		cat_arg,		// A star catalog (see below)
-			 int			sys_no_arg,		// Star within a catalog (0 = all)
-
-			 long double	ratio_arg,		// Change dust density (experimental)
-
-			 int			flags_arg,		// Options (see below)
-			 out_formats	out_format,		// Output file formats (see below)
-			 graphic_formats	graphic_format	// Graphic file formats (see below)
-			 );
 
 										// Values of flags_arg:
 #define	fUseSolarsystem			0x0001

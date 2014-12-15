@@ -953,7 +953,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 					 bool	terrestrials,
 					 bool	int_link,
 					 bool	do_moons,
-					 int	graphic_format)
+					 bool output_svg)
 {
 	planet_pointer 	planet;
 	StarGen::Sun* sun = innermost_planet->sun;
@@ -986,7 +986,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 				"<tr bgcolor='" BGTABLE "'><td colspan=2>\n"
 	        );
 
-	if (graphic_format == gfSVG)
+	if (output_svg)
 	{
 		fprintf (file,
 				 "<object data='%s' type='image/svg+xml'\n"
@@ -1113,7 +1113,7 @@ void html_thumbnails(planet_pointer innermost_planet,
 				 url_path);
 	}
 
-	if (graphic_format == gfSVG)
+	if (output_svg)
 	{
 		fprintf (file,
 				 "</object>\n"

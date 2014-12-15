@@ -84,8 +84,6 @@ int main (int argc, char *argv[]) {
 	long double ratio_arg               = 0.0;
 
 	int         flags_arg               = 0;
-	out_formats     out_format          = ffHTML;
-	graphic_formats graphic_format      = gfGIF;
 
 	char *      c                       = NULL;
 	bool        skip                    = false;
@@ -104,6 +102,8 @@ int main (int argc, char *argv[]) {
 		usage(prognam);
 		return(1);
 	}
+
+	StarGen::Stargen *oStargen = new StarGen::Stargen();
 
 	while (--argc > 0 && (*++argv)[0] == '-') {
 		for (c = argv[0]+1, skip=false; (*c != '\0') && (!(skip)); c++) {
@@ -227,23 +227,23 @@ int main (int argc, char *argv[]) {
 					skip = true;
 					break;
 				case 't':		 // display text
-					out_format = ffTEXT;
+					oStargen->setOutputFormat(StarGen::TEXT);
 					break;
 				case 'e':
-					out_format = ffCSV;
+					oStargen->setOutputFormat(StarGen::CSV);
 					break;
 				case 'C':
-					out_format = ffCSVdl;
+					oStargen->setOutputFormat(StarGen::CSVdl);
 					break;
 				case 'c':
-					out_format = ffCELESTIA;
+					oStargen->setOutputFormat(StarGen::CELESTIA);
 					break;
 				case 'V':
-					graphic_format = gfSVG;
+					oStargen->setGraphicFormat(StarGen::GIF);
 					break;
 				case 'S':
-					graphic_format = gfSVG;
-					out_format = ffSVG;
+					oStargen->setGraphicFormat(StarGen::SVG);
+					oStargen->setOutputFormat(StarGen::fSVG);
 					break;
 				case 'k':
 					flags_arg |= fUseKnownPlanets;
@@ -376,8 +376,7 @@ int main (int argc, char *argv[]) {
 		return 1;
 	}
 
-	StarGen::Stargen *oStargen = new StarGen::Stargen();
-	stargen(
+	oStargen->generate(
 		flag_char,
 		path,
 		url_path_arg,
@@ -396,9 +395,7 @@ int main (int argc, char *argv[]) {
 
 		ratio_arg,
 
-		flags_arg,
-		out_format,
-		graphic_format
+		flags_arg
 	);
 
 	return 0;

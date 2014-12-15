@@ -30,7 +30,20 @@ namespace StarGen {
 
 	Stargen::Stargen()
 	{
+		this->out_format = HTML;
+		this->graphic_format = GIF;
+
 		StarGen::Gases::initialize();
+	}
+
+	void Stargen::setOutputFormat(OutputFormats of)
+	{
+		this->out_format = of;
+	}
+
+	void Stargen::setGraphicFormat(GraphicFormats gf)
+	{
+		this->graphic_format = gf;
 	}
 
  	/*
@@ -1053,7 +1066,8 @@ void generate_planets(StarGen::Sun* sun,
 	}
 }
 
-int stargen (
+namespace StarGen {
+int Stargen::generate(
 			 char			flag_char,
 			 char *			path,
 			 char *			url_path_arg,
@@ -1072,9 +1086,7 @@ int stargen (
 
 			 long double	ratio_arg,
 
-			 int			flags_arg,
-			 out_formats	out_format,
-			 graphic_formats	graphic_format
+			 int			flags_arg
 			 )
 {
 	StarGen::Sun sun					= StarGen::Sun(0.0, 0.0, 0.0, 0.0, 0.0, "");
@@ -1187,7 +1199,7 @@ int stargen (
 	}
 
 	if ((system_count > 1)
-	 && !(out_format == ffCSVdl))
+	 && !(this->out_format == CSVdl))
 	{
 		if (strlen(filename_arg) > 0)
 			strcpy(thumbnail_file, filename_arg);
@@ -1202,7 +1214,7 @@ int stargen (
 		}
 	}
 
-	if ((out_format == ffCSV) || (out_format == ffCSVdl))
+	if ((this->out_format == CSV) || (this->out_format == CSVdl))
 	{
 		char	csv_url[300]	= "";
 
@@ -1213,7 +1225,7 @@ int stargen (
 			if (!do_catalog)
 				sprintf(&sys_no[0], "%d", sys_no_arg-1);
 
-			if (out_format == ffCSVdl)
+			if (this->out_format == CSVdl)
 				csv_file = sgOut;
 
 			sprintf (&csv_url[0],
@@ -1231,7 +1243,7 @@ int stargen (
 					 incr_arg,
 					 (do_gases)					? "on" : "off",	// one of ("on", "off")
 					 (do_moons)					? "on" : "off",	// one of ("on", "off")
-					 (graphic_format == gfSVG)	? "on" : "off"	// one of ("on", "off")
+					 (this->graphic_format == SVG)	? "on" : "off"	// one of ("on", "off")
 					);
 		}
 		else
@@ -1275,7 +1287,7 @@ int stargen (
 		}
 
 		if ((csv_file == NULL) &&
-			!((out_format == ffCSV) && (sgOut != NULL)))
+			!((this->out_format == CSV) && (sgOut != NULL)))
 		{
 			fprintf(sgErr, "Could not open file %s%s\n",
 				path, csv_file_name);
@@ -1534,7 +1546,7 @@ int stargen (
 						 flag_seed,
 						 (do_gases)					? "on" : "off",	// one of ("on", "off")
 						 (do_moons)					? "on" : "off",	// one of ("on", "off")
-						 (graphic_format == gfSVG)	? "on" : "off"	// one of ("on", "off")
+						 (this->graphic_format == SVG)	? "on" : "off"	// one of ("on", "off")
 						);
 
 				sprintf (svg_url,
@@ -1546,18 +1558,18 @@ int stargen (
 						 flag_seed,
 						 (do_gases)					? "on" : "off",	// one of ("on", "off")
 						 (do_moons)					? "on" : "off",	// one of ("on", "off")
-						 (graphic_format == gfSVG)	? "on" : "off"	// one of ("on", "off")
+						 (this->graphic_format == SVG)	? "on" : "off"	// one of ("on", "off")
 						);
 			}
 
-			switch (out_format)
+			switch (this->out_format)
 			{
-				case ffSVG:
+				case fSVG:
 					create_svg_file (sgOut, innermost_planet, path, file_name, ".svg", prognam);
 				break;
 
-				case ffHTML:
-					if ((graphic_format == gfSVG) && (sgOut == NULL))
+				case HTML:
+					if ((this->graphic_format == SVG) && (sgOut == NULL))
 					{
 						create_svg_file (NULL, innermost_planet, path, file_name, ".svg", prognam);
 					}
@@ -1566,7 +1578,7 @@ int stargen (
 						html_thumbnails(innermost_planet, thumbnails,
 										system_name,
 										url_path, system_url, svg_url, file_name,
-										false, true, false, do_moons, graphic_format);
+										false, true, false, do_moons, (this->graphic_format == SVG));
 
  					if ((system_count == 1) || (sgOut == NULL))
  					{
@@ -1582,7 +1594,7 @@ int stargen (
 							html_thumbnails(innermost_planet, html_file,
 											system_name,
 											url_path, system_url, svg_url, file_name,
-											true, false, true, do_moons, graphic_format);
+											true, false, true, do_moons, (this->graphic_format == SVG));
 							html_describe_system(innermost_planet, do_gases, url_path, html_file);
 							close_html_file(html_file);
 						}
@@ -1595,17 +1607,17 @@ int stargen (
 					}
 				break;
 
-				case ffTEXT:
+				case TEXT:
 					text_describe_system(innermost_planet, do_gases, flag_seed);
 				break;
 
-				case ffCSV:
-				case ffCSVdl:
+				case CSV:
+				case CSVdl:
 					if (csv_file != NULL)
 						csv_describe_system(csv_file, innermost_planet, do_gases, flag_seed);
 				break;
 
-				case ffCELESTIA:
+				case CELESTIA:
 					if (in_celestia != false)
 					{
 						if (has_known_planets && !use_known_planets)
@@ -1680,3 +1692,4 @@ int stargen (
 
 	return(0);
 }
+} // End StarGen namespace
