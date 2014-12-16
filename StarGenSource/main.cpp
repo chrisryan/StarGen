@@ -76,7 +76,6 @@ int main (int argc, char *argv[]) {
 	char *      prognam;
 	long double mass_arg                = 0.0;
 	long        seed_arg                = 0;
-	int         count_arg               = 1;
 	catalog *   catalog                 = NULL;
 
 	char *      c                       = NULL;
@@ -120,7 +119,7 @@ int main (int argc, char *argv[]) {
 					break;
 				}
 				case 'n':		 // number of systems
-					count_arg = atoi(&(*++c));
+					oStargen->setCount(atoi(&(*++c)));
 					skip = true;
 					break;
 				case 'i':		 // number of systems
@@ -386,7 +385,6 @@ int main (int argc, char *argv[]) {
 		prognam,
 		mass_arg,
 		seed_arg,
-		count_arg,
 		catalog
 	);
 

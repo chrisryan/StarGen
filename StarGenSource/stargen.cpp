@@ -36,6 +36,7 @@ namespace StarGen {
         this->ratio_arg = 0.0;
         this->sys_no_arg = 0;
         this->incr_arg = 1;
+        this->count_arg = 1;
 
 		StarGen::Gases::initialize();
 	}
@@ -73,6 +74,11 @@ namespace StarGen {
     void Stargen::setIncrement(int n)
     {
         this->incr_arg = n;
+    }
+
+    void Stargen::setCount(int n)
+    {
+        this->count_arg = n;
     }
 
  	/*
@@ -1108,7 +1114,6 @@ int Stargen::generate(
 			 const char *	prognam,
 			 long double	mass_arg,
 			 long			seed_arg,
-			 int			count_arg,
 			 catalog *		cat_arg
 			 )
 {
@@ -1193,7 +1198,7 @@ int Stargen::generate(
 
 	flag_seed		= seed_arg;
 	sun.mass 		= mass_arg;
-	system_count	= count_arg;
+	system_count	= this->count_arg;
 	seed_increment	= this->incr_arg;
 
 	if (this->ratio_arg > 0.0)
@@ -1260,7 +1265,7 @@ int Stargen::generate(
 					 : (only_habitable) ? "H"
 					 : "all",
 					 flag_seed,
-					 count_arg,
+					 this->count_arg,
 					 this->incr_arg,
 					 (do_gases)					? "on" : "off",	// one of ("on", "off")
 					 (do_moons)					? "on" : "off",	// one of ("on", "off")
