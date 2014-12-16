@@ -33,6 +33,7 @@ namespace StarGen {
 		this->out_format = HTML;
 		this->graphic_format = GIF;
 		this->flags_arg = 0;
+        this->ratio_arg = 0.0;
 
 		StarGen::Gases::initialize();
 	}
@@ -55,6 +56,11 @@ namespace StarGen {
     void Stargen::addFlag(int f)
     {
         this->flags_arg |= f;
+    }
+
+    void Stargen::setRatio(long double r)
+    {
+        this->ratio_arg = r;
     }
 
  	/*
@@ -1093,9 +1099,7 @@ int Stargen::generate(
 			 int			count_arg,
 			 int			incr_arg,
 			 catalog *		cat_arg,
-			 int			sys_no_arg,
-
-			 long double	ratio_arg
+			 int			sys_no_arg
 			 )
 {
 	StarGen::Sun sun					= StarGen::Sun(0.0, 0.0, 0.0, 0.0, 0.0, "");
@@ -1182,8 +1186,8 @@ int Stargen::generate(
 	system_count	= count_arg;
 	seed_increment	= incr_arg;
 
-	if (ratio_arg > 0.0)
-		dust_density_coeff *= ratio_arg;
+	if (this->ratio_arg > 0.0)
+		dust_density_coeff *= this->ratio_arg;
 
 	if (reuse_solar_system)
 	{

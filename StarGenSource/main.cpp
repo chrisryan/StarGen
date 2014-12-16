@@ -81,8 +81,6 @@ int main (int argc, char *argv[]) {
 	catalog *   catalog                 = NULL;
 	int         sys_no_arg              = 0;
 
-	long double ratio_arg               = 0.0;
-
 	char *      c                       = NULL;
 	bool        skip                    = false;
 	int         index                   = 0;
@@ -341,7 +339,7 @@ int main (int argc, char *argv[]) {
 					skip = true;
 
 					if (ratio > 0.0) {
-						ratio_arg = ratio;
+						oStargen->setRatio(ratio);
 					}
 
 					break;
@@ -393,9 +391,7 @@ int main (int argc, char *argv[]) {
 		count_arg,
 		increment_arg,
 		catalog,
-		sys_no_arg,
-
-		ratio_arg
+		sys_no_arg
 	);
 
 	return 0;
