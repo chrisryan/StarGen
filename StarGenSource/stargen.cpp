@@ -1177,8 +1177,6 @@ int Stargen::generate(
 		strncat (subdir, "/", 80-strlen(subdir));
 	}
 
-	StarGen::Stargen *oStargen = new StarGen::Stargen();
-
 	flag_seed		= seed_arg;
 	sun.mass 		= mass_arg;
 	system_count	= count_arg;
