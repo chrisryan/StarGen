@@ -79,7 +79,6 @@ int main (int argc, char *argv[]) {
 	int         count_arg               = 1;
 	int         increment_arg           = 1;
 	catalog *   catalog                 = NULL;
-	int         sys_no_arg              = 0;
 
 	char *      c                       = NULL;
 	bool        skip                    = false;
@@ -144,7 +143,7 @@ int main (int argc, char *argv[]) {
 					flag_char = toupper(*c);
 					++c;
 					if ((toupper(*c) != 'X') && (*c != '\0')) {
-						sys_no_arg = atoi(c) + 1;
+						oStargen->setSystemNumber(atoi(c) + 1);
 					}
 
 					skip = true;
@@ -154,7 +153,7 @@ int main (int argc, char *argv[]) {
 					flag_char = toupper(*c);
 					++c;
 					if ((toupper(*c) != 'X') && (*c != '\0')) {
-						sys_no_arg = atoi(c) + 1;
+						oStargen->setSystemNumber(atoi(c) + 1);
 					}
 
 					skip = true;
@@ -164,7 +163,7 @@ int main (int argc, char *argv[]) {
 					flag_char = toupper(*c);
 					++c;
 					if ((toupper(*c) != 'X') && (*c != '\0')) {
-						sys_no_arg = atoi(c) + 1;
+						oStargen->setSystemNumber(atoi(c) + 1);
 					}
 
 					skip = true;
@@ -190,7 +189,7 @@ int main (int argc, char *argv[]) {
 					flag_char = toupper(*c);
 					++c;
 					if ((toupper(*c) != 'X') && (*c != '\0')) {
-						sys_no_arg = atoi(c) + 1;
+						oStargen->setSystemNumber(atoi(c) + 1);
 					}
 
 					skip = true;
@@ -202,7 +201,7 @@ int main (int argc, char *argv[]) {
 					flag_char = toupper(*c);
 					++c;
 					if ((toupper(*c) != 'X') && (*c != '\0')) {
-						sys_no_arg = atoi(c) + 1;
+						oStargen->setSystemNumber(atoi(c) + 1);
 					}
 
 					skip = true;
@@ -390,8 +389,7 @@ int main (int argc, char *argv[]) {
 		seed_arg,
 		count_arg,
 		increment_arg,
-		catalog,
-		sys_no_arg
+		catalog
 	);
 
 	return 0;

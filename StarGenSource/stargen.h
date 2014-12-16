@@ -41,6 +41,9 @@ namespace StarGen {
             // Change dust density (experimental)
             void setRatio(long double r);
 
+		    // Star within a catalog (0 = all)
+            void setSystemNumber(int n);
+
 			int generate(
 				char flag_char,
 			 	char *path,			// OS path to where to write files
@@ -59,8 +62,7 @@ namespace StarGen {
 			 	long seed_arg,		// Random number seed
 			 	int count_arg,		// Number of systems (or cats) to do
 			 	int incr_arg,		// Amount to increment seed by
-			 	catalog *cat_arg,	// A star catalog (see below)
-			 	int sys_no_arg		// Star within a catalog (0 = all)
+			 	catalog *cat_arg	// A star catalog (see below)
 			);
 
 			static void setVerbosity(int value);
@@ -73,6 +75,7 @@ namespace StarGen {
 			GraphicFormats graphic_format;
             int flags_arg;
             long double ratio_arg;
+            int sys_no_arg;
 	};
 
 

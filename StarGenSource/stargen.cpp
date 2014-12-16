@@ -34,6 +34,7 @@ namespace StarGen {
 		this->graphic_format = GIF;
 		this->flags_arg = 0;
         this->ratio_arg = 0.0;
+        this->sys_no_arg = 0;
 
 		StarGen::Gases::initialize();
 	}
@@ -61,6 +62,11 @@ namespace StarGen {
     void Stargen::setRatio(long double r)
     {
         this->ratio_arg = r;
+    }
+
+    void Stargen::setSystemNumber(int n)
+    {
+        this->sys_no_arg = n;
     }
 
  	/*
@@ -1098,8 +1104,7 @@ int Stargen::generate(
 			 long			seed_arg,
 			 int			count_arg,
 			 int			incr_arg,
-			 catalog *		cat_arg,
-			 int			sys_no_arg
+			 catalog *		cat_arg
 			 )
 {
 	StarGen::Sun sun					= StarGen::Sun(0.0, 0.0, 0.0, 0.0, 0.0, "");
@@ -1122,7 +1127,7 @@ int Stargen::generate(
 	FILE			*csv_file			= NULL;
 
 	int  			index				= 0;
-	int				do_catalog			= ((cat_arg != NULL) && (sys_no_arg == 0));
+	int				do_catalog			= ((cat_arg != NULL) && (this->sys_no_arg == 0));
 	int				catalog_count		= 0;
 	bool			do_gases			= (this->flags_arg & fDoGases) != 0;
 	bool			use_solar_system	= (this->flags_arg & fUseSolarsystem) != 0;
@@ -1234,7 +1239,7 @@ int Stargen::generate(
 			char sys_no[10] = "x";
 
 			if (!do_catalog)
-				sprintf(&sys_no[0], "%d", sys_no_arg-1);
+				sprintf(&sys_no[0], "%d", this->sys_no_arg-1);
 
 			if (this->out_format == CSVdl)
 				csv_file = sgOut;
@@ -1323,10 +1328,10 @@ int Stargen::generate(
 
 		init();
 
-		if (do_catalog || sys_no_arg)
+		if (do_catalog || this->sys_no_arg)
 		{
-			if (sys_no_arg)
-				sys_no = sys_no_arg - 1;
+			if (this->sys_no_arg)
+				sys_no = this->sys_no_arg - 1;
 			else
 			{
 				if (index >= catalog_count)
