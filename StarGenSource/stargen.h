@@ -69,7 +69,6 @@ namespace StarGen {
 			 	FILE *sgOut,		// Main stream to write to
 			 						//	Thumbnails will be written there
 			 						//  for HTML format
-			 	FILE *sgErr,		// Stream to write errors to (opt.)
 			 	const char *prognam, // Name of program (opt.)
 			 	catalog *cat_arg	// A star catalog (see below)
 			);

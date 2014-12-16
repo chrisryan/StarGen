@@ -1127,7 +1127,6 @@ int Stargen::generate(
 			 char *			sys_name_arg,
 
 			 FILE *			sgOut,
-			 FILE *			sgErr,
 			 const char *	prognam,
 			 catalog *		cat_arg
 			 )
@@ -1173,9 +1172,6 @@ int Stargen::generate(
 
 	if (only_habitable && only_earthlike)
 		only_habitable = false;
-
-	if (sgErr == NULL)
-		sgErr = stderr;
 
 	if ((prognam == NULL) || (prognam[0] == '\0'))
 		prognam = "StarGen";
@@ -1249,7 +1245,7 @@ int Stargen::generate(
 									 prognam, sgOut);
 		if (thumbnails == NULL)
 		{
-			fprintf(sgErr, "Could not open file %s%s\n",
+			fprintf(stderr, "Could not open file %s%s\n",
 					path, thumbnail_file);
 			exit(0);
 		}
@@ -1330,7 +1326,7 @@ int Stargen::generate(
 		if ((csv_file == NULL) &&
 			!((this->out_format == CSV) && (sgOut != NULL)))
 		{
-			fprintf(sgErr, "Could not open file %s%s\n",
+			fprintf(stderr, "Could not open file %s%s\n",
 				path, csv_file_name);
 			exit(0);
 		}
@@ -1447,7 +1443,7 @@ int Stargen::generate(
 
 		if (StarGen::Stargen::isVerbose(0x0400) && (outer_limit > 0.0))
 		{
-			fprintf (sgErr, "%s, Outer Limit: %LG\n", system_name, outer_limit);
+			fprintf (stderr, "%s, Outer Limit: %LG\n", system_name, outer_limit);
 		}
 
 		if ((system_count == 1) && (strlen(filename_arg) > 0))
@@ -1534,7 +1530,7 @@ int Stargen::generate(
 				max_type_count = norm_type_count;
 
 				if (StarGen::Stargen::isVerbose(0x10000))
-					fprintf (sgErr, "System %ld - %s (-s%ld -%c%d) has %d types out of %d planets. [%d]\n",
+					fprintf (stderr, "System %ld - %s (-s%ld -%c%d) has %d types out of %d planets. [%d]\n",
 							flag_seed,
 							system_name,
 							flag_seed,
@@ -1641,7 +1637,7 @@ int Stargen::generate(
 						}
 						else
 						{
-							fprintf(sgErr, "Could not open file %s%s%s\n",
+							fprintf(stderr, "Could not open file %s%s%s\n",
 									path, file_name, ".html");
 							exit(0);
 						}
@@ -1662,7 +1658,7 @@ int Stargen::generate(
 					if (in_celestia != false)
 					{
 						if (has_known_planets && !use_known_planets)
-							fprintf (sgErr, "Skipping %s -- Has planets in Celestia already\n",
+							fprintf (stderr, "Skipping %s -- Has planets in Celestia already\n",
 									designation);
 						else
 							celestia_describe_system(innermost_planet, designation);
@@ -1671,7 +1667,7 @@ int Stargen::generate(
 			}
 			if ((habitable > 1) &&
 				StarGen::Stargen::isVerbose(0x0001))
-				fprintf (sgErr, "System %ld - %s (-s%ld -%c%d) has %d planets with breathable atmospheres.\n",
+				fprintf (stderr, "System %ld - %s (-s%ld -%c%d) has %d planets with breathable atmospheres.\n",
 						flag_seed,
 						system_name,
 						flag_seed,
@@ -1694,27 +1690,27 @@ int Stargen::generate(
 
 	if (StarGen::Stargen::isVerbose(0x0001) || StarGen::Stargen::isVerbose(0x0002))
 	{
-		fprintf (sgErr, "Earthlike planets: %d\n", total_earthlike);
-		fprintf (sgErr, "Breathable atmospheres: %d\n", total_habitable);
-		fprintf (sgErr, "Breathable g range: %4.2Lf -  %4.2Lf\n",
+		fprintf (stderr, "Earthlike planets: %d\n", total_earthlike);
+		fprintf (stderr, "Breathable atmospheres: %d\n", total_habitable);
+		fprintf (stderr, "Breathable g range: %4.2Lf -  %4.2Lf\n",
 				 min_breathable_g,
 				 max_breathable_g);
-		fprintf (sgErr, "Terrestrial g range: %4.2Lf -  %4.2Lf\n",
+		fprintf (stderr, "Terrestrial g range: %4.2Lf -  %4.2Lf\n",
 				 min_breathable_terrestrial_g,
 				 max_breathable_terrestrial_g);
-		fprintf (sgErr, "Breathable pressure range: %4.2Lf -  %4.2Lf\n",
+		fprintf (stderr, "Breathable pressure range: %4.2Lf -  %4.2Lf\n",
 				 min_breathable_p,
 				 max_breathable_p);
-		fprintf (sgErr, "Breathable temp range: %+.1Lf C -  %+.1Lf C\n",
+		fprintf (stderr, "Breathable temp range: %+.1Lf C -  %+.1Lf C\n",
 				 min_breathable_temp - EARTH_AVERAGE_KELVIN,
 				 max_breathable_temp - EARTH_AVERAGE_KELVIN);
-		fprintf (sgErr, "Breathable illumination range: %4.2Lf -  %4.2Lf\n",
+		fprintf (stderr, "Breathable illumination range: %4.2Lf -  %4.2Lf\n",
 				 min_breathable_l,
 				 max_breathable_l);
-		fprintf (sgErr, "Terrestrial illumination range: %4.2Lf -  %4.2Lf\n",
+		fprintf (stderr, "Terrestrial illumination range: %4.2Lf -  %4.2Lf\n",
 				 min_breathable_terrestrial_l,
 				 max_breathable_terrestrial_l);
-		fprintf (sgErr, "Max moon mass: %4.2Lf\n",
+		fprintf (stderr, "Max moon mass: %4.2Lf\n",
 				 max_moon_mass * SUN_MASS_IN_EARTH_MASSES);
 	}
 

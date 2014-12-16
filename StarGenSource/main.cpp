@@ -379,7 +379,6 @@ int main (int argc, char *argv[]) {
 		arg_name,
 
 		use_stdout ? stdout : NULL,
-		stderr,
 		prognam,
 		catalog
 	);
