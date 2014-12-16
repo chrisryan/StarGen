@@ -35,6 +35,7 @@ namespace StarGen {
 		this->flags_arg = 0;
         this->ratio_arg = 0.0;
         this->sys_no_arg = 0;
+        this->incr_arg = 1;
 
 		StarGen::Gases::initialize();
 	}
@@ -67,6 +68,11 @@ namespace StarGen {
     void Stargen::setSystemNumber(int n)
     {
         this->sys_no_arg = n;
+    }
+
+    void Stargen::setIncrement(int n)
+    {
+        this->incr_arg = n;
     }
 
  	/*
@@ -1103,7 +1109,6 @@ int Stargen::generate(
 			 long double	mass_arg,
 			 long			seed_arg,
 			 int			count_arg,
-			 int			incr_arg,
 			 catalog *		cat_arg
 			 )
 {
@@ -1189,7 +1194,7 @@ int Stargen::generate(
 	flag_seed		= seed_arg;
 	sun.mass 		= mass_arg;
 	system_count	= count_arg;
-	seed_increment	= incr_arg;
+	seed_increment	= this->incr_arg;
 
 	if (this->ratio_arg > 0.0)
 		dust_density_coeff *= this->ratio_arg;
@@ -1256,7 +1261,7 @@ int Stargen::generate(
 					 : "all",
 					 flag_seed,
 					 count_arg,
-					 incr_arg,
+					 this->incr_arg,
 					 (do_gases)					? "on" : "off",	// one of ("on", "off")
 					 (do_moons)					? "on" : "off",	// one of ("on", "off")
 					 (this->graphic_format == SVG)	? "on" : "off"	// one of ("on", "off")

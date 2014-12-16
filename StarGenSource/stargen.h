@@ -44,6 +44,9 @@ namespace StarGen {
 		    // Star within a catalog (0 = all)
             void setSystemNumber(int n);
 
+		 	// Amount to increment seed by
+            void setIncrement(int n);
+
 			int generate(
 				char flag_char,
 			 	char *path,			// OS path to where to write files
@@ -61,7 +64,6 @@ namespace StarGen {
 			 	long double	mass_arg, // Mass of star (not used with catalog)
 			 	long seed_arg,		// Random number seed
 			 	int count_arg,		// Number of systems (or cats) to do
-			 	int incr_arg,		// Amount to increment seed by
 			 	catalog *cat_arg	// A star catalog (see below)
 			);
 
@@ -76,6 +78,7 @@ namespace StarGen {
             int flags_arg;
             long double ratio_arg;
             int sys_no_arg;
+            int incr_arg;
 	};
 
 

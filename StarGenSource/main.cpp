@@ -77,7 +77,6 @@ int main (int argc, char *argv[]) {
 	long double mass_arg                = 0.0;
 	long        seed_arg                = 0;
 	int         count_arg               = 1;
-	int         increment_arg           = 1;
 	catalog *   catalog                 = NULL;
 
 	char *      c                       = NULL;
@@ -125,7 +124,7 @@ int main (int argc, char *argv[]) {
 					skip = true;
 					break;
 				case 'i':		 // number of systems
-					increment_arg = atoi(&(*++c));
+					oStargen->setIncrement(atoi(&(*++c)));
 					skip = true;
 					break;
 				case 'x':		 // Use the solar system
@@ -388,7 +387,6 @@ int main (int argc, char *argv[]) {
 		mass_arg,
 		seed_arg,
 		count_arg,
-		increment_arg,
 		catalog
 	);
 
