@@ -32,6 +32,7 @@ namespace StarGen {
 	{
 		this->out_format = HTML;
 		this->graphic_format = GIF;
+		this->flags_arg = 0;
 
 		StarGen::Gases::initialize();
 	}
@@ -45,6 +46,16 @@ namespace StarGen {
 	{
 		this->graphic_format = gf;
 	}
+
+    void Stargen::setFlags(int f)
+    {
+        this->flags_arg = f;
+    }
+
+    void Stargen::addFlag(int f)
+    {
+        this->flags_arg |= f;
+    }
 
  	/*
 	 * 0x0001 Earthlike count
@@ -1084,9 +1095,7 @@ int Stargen::generate(
 			 catalog *		cat_arg,
 			 int			sys_no_arg,
 
-			 long double	ratio_arg,
-
-			 int			flags_arg
+			 long double	ratio_arg
 			 )
 {
 	StarGen::Sun sun					= StarGen::Sun(0.0, 0.0, 0.0, 0.0, 0.0, "");
@@ -1111,16 +1120,16 @@ int Stargen::generate(
 	int  			index				= 0;
 	int				do_catalog			= ((cat_arg != NULL) && (sys_no_arg == 0));
 	int				catalog_count		= 0;
-	bool			do_gases			= (flags_arg & fDoGases) != 0;
-	bool			use_solar_system	= (flags_arg & fUseSolarsystem) != 0;
-	bool			reuse_solar_system	= (flags_arg & fReuseSolarsystem) != 0;
-	bool			use_known_planets	= (flags_arg & fUseKnownPlanets) != 0;
-	bool			no_generate			= (flags_arg & fNoGenerate) != 0;
-	bool			do_moons			= (flags_arg & fDoMoons) != 0;
-	bool			only_habitable		= (flags_arg & fOnlyHabitable) != 0;
-	bool			only_multi_habitable= (flags_arg & fOnlyMultiHabitable) != 0;
-	bool			only_jovian_habitable=(flags_arg & fOnlyJovianHabitable) != 0;
-	bool			only_earthlike		= (flags_arg & fOnlyEarthlike) != 0;
+	bool			do_gases			= (this->flags_arg & fDoGases) != 0;
+	bool			use_solar_system	= (this->flags_arg & fUseSolarsystem) != 0;
+	bool			reuse_solar_system	= (this->flags_arg & fReuseSolarsystem) != 0;
+	bool			use_known_planets	= (this->flags_arg & fUseKnownPlanets) != 0;
+	bool			no_generate			= (this->flags_arg & fNoGenerate) != 0;
+	bool			do_moons			= (this->flags_arg & fDoMoons) != 0;
+	bool			only_habitable		= (this->flags_arg & fOnlyHabitable) != 0;
+	bool			only_multi_habitable= (this->flags_arg & fOnlyMultiHabitable) != 0;
+	bool			only_jovian_habitable=(this->flags_arg & fOnlyJovianHabitable) != 0;
+	bool			only_earthlike		= (this->flags_arg & fOnlyEarthlike) != 0;
 
 	if (do_catalog)
 		catalog_count = cat_arg->count;

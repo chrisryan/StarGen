@@ -35,6 +35,9 @@ namespace StarGen {
 			void setOutputFormat(OutputFormats of);
 			void setGraphicFormat(GraphicFormats gf);
 
+            void setFlags(int f);
+            void addFlag(int f);
+
 			int generate(
 				char flag_char,
 			 	char *path,			// OS path to where to write files
@@ -56,9 +59,7 @@ namespace StarGen {
 			 	catalog *cat_arg,	// A star catalog (see below)
 			 	int sys_no_arg,		// Star within a catalog (0 = all)
 
-			 	long double ratio_arg, // Change dust density (experimental)
-
-			 	int flags_arg		// Options (see below)
+			 	long double ratio_arg // Change dust density (experimental)
 			);
 
 			static void setVerbosity(int value);
@@ -69,6 +70,7 @@ namespace StarGen {
 
 			OutputFormats out_format;
 			GraphicFormats graphic_format;
+            int flags_arg;
 	};
 
 
@@ -80,7 +82,9 @@ namespace StarGen {
 	void ListCatalogHTML(catalog * cat);
 };
 
-										// Values of flags_arg:
+/*
+ * Values for Stargen::setFlags() and Stargen::addFlag()
+ */
 #define	fUseSolarsystem			0x0001
 #define	fReuseSolarsystem		0x0002
 #define	fUseKnownPlanets		0x0004

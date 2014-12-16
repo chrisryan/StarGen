@@ -83,8 +83,6 @@ int main (int argc, char *argv[]) {
 
 	long double ratio_arg               = 0.0;
 
-	int         flags_arg               = 0;
-
 	char *      c                       = NULL;
 	bool        skip                    = false;
 	int         index                   = 0;
@@ -135,13 +133,13 @@ int main (int argc, char *argv[]) {
 					break;
 				case 'x':		 // Use the solar system
 					flag_char = *c;
-					flags_arg |= fUseSolarsystem;
+					oStargen->addFlag(fUseSolarsystem);
 					if (mass_arg == 0.0)
 						mass_arg = 1.0;
 					break;
 				case 'a':		 // Use the solar system varying earth
 					flag_char = *c;
-					flags_arg |= fReuseSolarsystem;
+					oStargen->addFlag(fReuseSolarsystem);
 					break;
 				case 'D':
 					catalog = &dole;
@@ -198,7 +196,7 @@ int main (int argc, char *argv[]) {
 					}
 
 					skip = true;
-					flags_arg |= fNoGenerate;
+					oStargen->addFlag(fNoGenerate);
 					sphinx.greenhouse_effect = true;
 					break;
 				case 'G':
@@ -210,7 +208,7 @@ int main (int argc, char *argv[]) {
 					}
 
 					skip = true;
-					flags_arg |= fNoGenerate;
+					oStargen->addFlag(fNoGenerate);
 					break;
 				case 'o':
 					if (*++c == '\0') {
@@ -246,7 +244,7 @@ int main (int argc, char *argv[]) {
 					oStargen->setOutputFormat(StarGen::fSVG);
 					break;
 				case 'k':
-					flags_arg |= fUseKnownPlanets;
+					oStargen->addFlag(fUseKnownPlanets);
 					break;
 				case 'p':
 					if (*++c == '\0') {
@@ -285,7 +283,7 @@ int main (int argc, char *argv[]) {
 					skip = true;
 					break;
 				case 'g':
-					flags_arg |= fDoGases;
+					oStargen->addFlag(fDoGases);
 					break;
 				case 'v':		 // verbosity
 					if (isdigit(*(c+1))) {
@@ -294,7 +292,7 @@ int main (int argc, char *argv[]) {
 						skip = true;
 						StarGen::Stargen::setVerbosity(flag_verbose);
 						if (StarGen::Stargen::isVerbose(0x0001)) {
-							flags_arg |= fDoGases;
+							oStargen->addFlag(fDoGases);
 						}
 					} else {
 						StarGen::ListVerbosity();
@@ -317,19 +315,23 @@ int main (int argc, char *argv[]) {
 					return 1;
 					break;
 				case 'M':
-					flags_arg |= fDoMoons;
+					oStargen->addFlag(fDoMoons);
 					break;
 				case 'H':
-					flags_arg |= fDoGases | fOnlyHabitable;
+					oStargen->addFlag(fDoGases);
+					oStargen->addFlag(fOnlyHabitable);
 					break;
 				case '2':
-					flags_arg |= fDoGases | fOnlyMultiHabitable;
+					oStargen->addFlag(fDoGases);
+					oStargen->addFlag(fOnlyMultiHabitable);
 					break;
 				case 'J':
-					flags_arg |= fDoGases | fOnlyJovianHabitable;
+					oStargen->addFlag(fDoGases);
+					oStargen->addFlag(fOnlyJovianHabitable);
 					break;
 				case 'E':
-					flags_arg |= fDoGases | fOnlyEarthlike;
+					oStargen->addFlag(fDoGases);
+					oStargen->addFlag(fOnlyEarthlike);
 					break;
 				case 'A':
 				{
@@ -393,9 +395,7 @@ int main (int argc, char *argv[]) {
 		catalog,
 		sys_no_arg,
 
-		ratio_arg,
-
-		flags_arg
+		ratio_arg
 	);
 
 	return 0;
