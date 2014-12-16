@@ -74,7 +74,6 @@ int main (int argc, char *argv[]) {
 
 	bool        use_stdout              = false;
 	char *      prognam;
-	long double mass_arg                = 0.0;
 	catalog *   catalog                 = NULL;
 
 	char *      c                       = NULL;
@@ -112,7 +111,7 @@ int main (int argc, char *argv[]) {
 					double m;	 // gnu C doesn't like to scanf long doubles
 
 					sscanf (++c, "%lf", &m);
-					mass_arg = m;
+					oStargen->setMass(m);
 
 					skip = true;
 					break;
@@ -128,8 +127,8 @@ int main (int argc, char *argv[]) {
 				case 'x':		 // Use the solar system
 					flag_char = *c;
 					oStargen->addFlag(fUseSolarsystem);
-					if (mass_arg == 0.0)
-						mass_arg = 1.0;
+					if (oStargen->getMass() == 0.0)
+						oStargen->setMass(1.0);
 					break;
 				case 'a':		 // Use the solar system varying earth
 					flag_char = *c;
@@ -382,7 +381,6 @@ int main (int argc, char *argv[]) {
 		use_stdout ? stdout : NULL,
 		stderr,
 		prognam,
-		mass_arg,
 		catalog
 	);
 

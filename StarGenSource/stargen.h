@@ -52,6 +52,11 @@ namespace StarGen {
 
             void setSeed(long s);
 
+			// Mass of star (not used with catalog)
+            void setMass(long double m);
+
+            long double getMass();
+
 			int generate(
 				char flag_char,
 			 	char *path,			// OS path to where to write files
@@ -66,7 +71,6 @@ namespace StarGen {
 			 						//  for HTML format
 			 	FILE *sgErr,		// Stream to write errors to (opt.)
 			 	const char *prognam, // Name of program (opt.)
-			 	long double	mass_arg, // Mass of star (not used with catalog)
 			 	catalog *cat_arg	// A star catalog (see below)
 			);
 
@@ -84,6 +88,7 @@ namespace StarGen {
             int incr_arg;
 		 	int count_arg;
 			long seed_arg;
+			long double	mass_arg;
 	};
 
 
