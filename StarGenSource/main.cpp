@@ -75,7 +75,6 @@ int main (int argc, char *argv[]) {
 	bool        use_stdout              = false;
 	char *      prognam;
 	long double mass_arg                = 0.0;
-	long        seed_arg                = 0;
 	catalog *   catalog                 = NULL;
 
 	char *      c                       = NULL;
@@ -105,7 +104,7 @@ int main (int argc, char *argv[]) {
 					use_stdout = true;
 					break;
 				case 's':		 // set random seed
-					seed_arg = atol(&(*++c));
+					oStargen->setSeed(atol(&(*++c)));
 					skip = true;
 					break;
 				case 'm':		 // set mass of star
@@ -384,7 +383,6 @@ int main (int argc, char *argv[]) {
 		stderr,
 		prognam,
 		mass_arg,
-		seed_arg,
 		catalog
 	);
 

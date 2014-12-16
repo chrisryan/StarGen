@@ -37,6 +37,7 @@ namespace StarGen {
         this->sys_no_arg = 0;
         this->incr_arg = 1;
         this->count_arg = 1;
+        this->seed_arg = 0;
 
 		StarGen::Gases::initialize();
 	}
@@ -79,6 +80,11 @@ namespace StarGen {
     void Stargen::setCount(int n)
     {
         this->count_arg = n;
+    }
+
+    void Stargen::setSeed(long s)
+    {
+        this->seed_arg = s;
     }
 
  	/*
@@ -1113,7 +1119,6 @@ int Stargen::generate(
 			 FILE *			sgErr,
 			 const char *	prognam,
 			 long double	mass_arg,
-			 long			seed_arg,
 			 catalog *		cat_arg
 			 )
 {
@@ -1196,7 +1201,7 @@ int Stargen::generate(
 		strncat (subdir, "/", 80-strlen(subdir));
 	}
 
-	flag_seed		= seed_arg;
+	flag_seed		= this->seed_arg;
 	sun.mass 		= mass_arg;
 	system_count	= this->count_arg;
 	seed_increment	= this->incr_arg;

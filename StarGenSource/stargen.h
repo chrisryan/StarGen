@@ -50,6 +50,8 @@ namespace StarGen {
 			// Number of systems (or cats) to do
             void setCount(int n);
 
+            void setSeed(long s);
+
 			int generate(
 				char flag_char,
 			 	char *path,			// OS path to where to write files
@@ -65,7 +67,6 @@ namespace StarGen {
 			 	FILE *sgErr,		// Stream to write errors to (opt.)
 			 	const char *prognam, // Name of program (opt.)
 			 	long double	mass_arg, // Mass of star (not used with catalog)
-			 	long seed_arg,		// Random number seed
 			 	catalog *cat_arg	// A star catalog (see below)
 			);
 
@@ -82,6 +83,7 @@ namespace StarGen {
             int sys_no_arg;
             int incr_arg;
 		 	int count_arg;
+			long seed_arg;
 	};
 
 
