@@ -57,6 +57,8 @@ namespace StarGen {
 
             long double getMass();
 
+            void setProgramName(const char *name);
+
 			int generate(
 				char flag_char,
 			 	char *path,			// OS path to where to write files
@@ -69,7 +71,6 @@ namespace StarGen {
 			 	FILE *sgOut,		// Main stream to write to
 			 						//	Thumbnails will be written there
 			 						//  for HTML format
-			 	const char *prognam, // Name of program (opt.)
 			 	catalog *cat_arg	// A star catalog (see below)
 			);
 
@@ -88,6 +89,7 @@ namespace StarGen {
 		 	int count_arg;
 			long seed_arg;
 			long double	mass_arg;
+            const char * progname;
 	};
 
 

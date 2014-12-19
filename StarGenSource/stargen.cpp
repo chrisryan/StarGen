@@ -43,6 +43,7 @@ namespace StarGen {
         this->count_arg = 1;
         this->seed_arg = 0;
         this->mass_arg = 0.0;
+        setProgramName(NULL);
 
 		StarGen::Gases::initialize();
 	}
@@ -100,6 +101,15 @@ namespace StarGen {
     long double Stargen::getMass()
     {
         return this->mass_arg;
+    }
+
+    void Stargen::setProgramName(const char *name)
+    {
+        this->progname = name;
+	    if ((this->progname == NULL) || (this->progname[0] == '\0'))
+        {
+            this->progname = "StarGen";
+        }
     }
 
  	/*
@@ -1131,7 +1141,6 @@ int Stargen::generate(
 			 char *			sys_name_arg,
 
 			 FILE *			sgOut,
-			 const char *	prognam,
 			 catalog *		cat_arg
 			 )
 {
@@ -1170,9 +1179,6 @@ int Stargen::generate(
 
 	if (only_habitable && only_earthlike)
 		only_habitable = false;
-
-	if ((prognam == NULL) || (prognam[0] == '\0'))
-		prognam = "StarGen";
 
 	if ((path == NULL) || (path[0] == '\0'))
 		path 		= default_path;
@@ -1240,7 +1246,7 @@ int Stargen::generate(
 			strcpy(thumbnail_file, filename_arg);
 
 		thumbnails = open_html_file ("Thumbnails", flag_seed, path, url_path, thumbnail_file, ".html",
-									 prognam, sgOut);
+									 this->progname, sgOut);
 		if (thumbnails == NULL)
 		{
 			fprintf(stderr, "Could not open file %s%s\n",
@@ -1429,8 +1435,8 @@ int Stargen::generate(
 			}
 			else
 			{
-				sprintf (&system_name[0], "%s %ld-%LG", prognam, flag_seed, sun.mass);
-				sprintf (&designation[0], "%s", prognam);
+				sprintf (&system_name[0], "%s %ld-%LG", this->progname, flag_seed, sun.mass);
+				sprintf (&designation[0], "%s", this->progname);
 			}
 
 			sprintf (&file_name[0], "%s-%ld-%LG", designation, flag_seed, sun.mass);
@@ -1601,13 +1607,13 @@ int Stargen::generate(
 			switch (this->out_format)
 			{
 				case fSVG:
-					create_svg_file (sgOut, innermost_planet, path, file_name, ".svg", prognam);
+					create_svg_file (sgOut, innermost_planet, path, file_name, ".svg", this->progname);
 				break;
 
 				case HTML:
 					if ((this->graphic_format == SVG) && (sgOut == NULL))
 					{
-						create_svg_file (NULL, innermost_planet, path, file_name, ".svg", prognam);
+						create_svg_file (NULL, innermost_planet, path, file_name, ".svg", this->progname);
 					}
 
 					if (thumbnails != NULL)
@@ -1620,10 +1626,10 @@ int Stargen::generate(
  					{
 						if ((system_count == 1) && (sgOut != NULL))
 							html_file = open_html_file (system_name, flag_seed, path, url_path, file_name, ".html",
-														prognam, sgOut);
+														this->progname, sgOut);
 						else
 							html_file = open_html_file (system_name, flag_seed, path, url_path, file_name, ".html",
-														prognam, NULL);
+														this->progname, NULL);
 
 						if (NULL != html_file)
 						{

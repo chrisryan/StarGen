@@ -78,7 +78,6 @@ int main (int argc, char *argv[]) {
 
 	char *      c                       = NULL;
 	bool        skip                    = false;
-	int         index                   = 0;
 
 	bool listCatalog = false;
 	bool listCatalogAsHTML = false;
@@ -95,6 +94,7 @@ int main (int argc, char *argv[]) {
 	}
 
 	StarGen::Stargen *oStargen = new StarGen::Stargen();
+    oStargen->setProgramName(prognam);
 
 	while (--argc > 0 && (*++argv)[0] == '-') {
 		for (c = argv[0]+1, skip=false; (*c != '\0') && (!(skip)); c++) {
@@ -350,7 +350,7 @@ int main (int argc, char *argv[]) {
 		}
 	}
 
-	for (index = 0; index < argc; index++) {
+	for (int index = 0; index < argc; index++) {
 		if ((strlen(argv[index]) + strlen(arg_name)) < sizeof(arg_name)) {
 			if (strlen(arg_name)) {
 				strcpy(arg_name+strlen(arg_name), " ");
@@ -379,7 +379,6 @@ int main (int argc, char *argv[]) {
 		arg_name,
 
 		use_stdout ? stdout : NULL,
-		prognam,
 		catalog
 	);
 
