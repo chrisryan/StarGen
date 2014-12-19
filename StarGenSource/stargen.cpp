@@ -25,6 +25,10 @@
 #include "ChemTable.h"
 #include "Catalogs.h"
 
+#define MIN_MASS 0.4
+#define INCREMENT_MASS 0.05
+#define MAX_MASS 2.35
+
 namespace StarGen {
 	const char * Stargen::version = "1.43";
 
@@ -1132,11 +1136,7 @@ int Stargen::generate(
 			 )
 {
 	StarGen::Sun sun					= StarGen::Sun(0.0, 0.0, 0.0, 0.0, 0.0, "");
-	long double		min_mass 			= 0.4;
-	long double		inc_mass 			= 0.05;
-	long double		max_mass 			= 2.35;
 	int				system_count		= 1;
-	int				seed_increment		= 1;
 
 	char			default_path[]		= SUBDIR;			/* OS specific */
 	char 			default_url_path[]	= "../";
@@ -1146,11 +1146,9 @@ int Stargen::generate(
 	char			subdir[300]			= "";
 	char			csv_file_name[300]	= "StarGen.csv";
 
-	FILE 			*html_file			= NULL;
 	FILE 			*thumbnails			= NULL;
 	FILE			*csv_file			= NULL;
 
-	int  			index				= 0;
 	int				do_catalog			= ((cat_arg != NULL) && (this->sys_no_arg == 0));
 	int				catalog_count		= 0;
 	bool			do_gases			= (this->flags_arg & fDoGases) != 0;
@@ -1210,16 +1208,16 @@ int Stargen::generate(
 	flag_seed		= this->seed_arg;
 	sun.mass 		= this->mass_arg;
 	system_count	= this->count_arg;
-	seed_increment	= this->incr_arg;
+	int seed_increment	= this->incr_arg;
 
 	if (this->ratio_arg > 0.0)
 		dust_density_coeff *= this->ratio_arg;
 
 	if (reuse_solar_system)
 	{
-		system_count = 1 + (int) ((max_mass - min_mass) / inc_mass);
+		system_count = 1 + (int) ((MAX_MASS - MIN_MASS) / INCREMENT_MASS);
 
-		earth.mass = (EM(min_mass));
+		earth.mass = (EM(MIN_MASS));
 
 		sun.luminosity 	= 1.0;
 		sun.mass 		= 1.0;
@@ -1335,7 +1333,7 @@ int Stargen::generate(
 			csv_thumbnails(thumbnails, url_path, subdir, csv_file_name, csv_url);
 	}
 
-	for (index = 0; index < system_count; index++)
+	for (int index = 0; index < system_count; index++)
 	{
 		char			system_name[80];
 		char			designation[80];
@@ -1599,6 +1597,7 @@ int Stargen::generate(
 						);
 			}
 
+            FILE *html_file = NULL;
 			switch (this->out_format)
 			{
 				case fSVG:
@@ -1680,7 +1679,7 @@ int Stargen::generate(
 			flag_seed += seed_increment;
 
 		if (reuse_solar_system)
-			earth.mass += (EM(inc_mass));
+			earth.mass += (EM(INCREMENT_MASS));
 
 		free_atmosphere (innermost_planet);
 
