@@ -41,7 +41,7 @@ namespace StarGen {
         this->sys_no_arg = 0;
         this->incr_arg = 1;
         this->count_arg = 1;
-        this->seed_arg = 0;
+        this->flag_seed = 0;
         this->mass_arg = 0.0;
         setProgramName(NULL);
 
@@ -90,7 +90,7 @@ namespace StarGen {
 
     void Stargen::setSeed(long s)
     {
-        this->seed_arg = s;
+        this->flag_seed = s;
     }
 
     void Stargen::setMass(long double m)
@@ -251,8 +251,6 @@ planet_pointer	innermost_planet;
 long double		dust_density_coeff = DUST_DENSITY_COEFF;
 
 
-long flag_seed		 = 0;
-
 int earthlike		 = 0;
 int total_earthlike	 = 0;
 int habitable		 = 0;
@@ -277,24 +275,24 @@ int type_counts[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
 int	type_count = 0;
 int max_type_count = 0;
 
-void generate_planets(StarGen::Sun*, bool, char, int, char *, bool, bool);
+namespace StarGen {
 
-void init()
+void Stargen::initRandomGenerator()
 {
-	if (!flag_seed)
+	if (!this->flag_seed)
 	{
 		time_t		temp_time;
 		unsigned	seed = (unsigned)(time(&temp_time));
 
 		(void)srand(seed);
 
-		flag_seed = rand();
+		this->flag_seed = rand();
 	}
 
-	(void)srand(flag_seed);
+	(void)srand(this->flag_seed);
 }
 
-void generate_stellar_system(StarGen::Sun* sun,
+void Stargen::generate_stellar_system(StarGen::Sun* sun,
 							 bool 			use_seed_system,
 							 planet_pointer seed_system,
 							 char			flag_char,
@@ -350,9 +348,7 @@ void generate_stellar_system(StarGen::Sun* sun,
 					 do_moons);
 }
 
-void calculate_gases(StarGen::Sun* sun,
-					 planet_pointer	planet,
-					 char*			planet_id)
+void Stargen::calculate_gases(StarGen::Sun* sun, planet_pointer planet, char* planet_id)
 {
 	if (planet->surf_pressure > 0)
 	{
@@ -502,7 +498,7 @@ void calculate_gases(StarGen::Sun* sun,
 	}
 }
 
-void generate_planet(planet_pointer	planet,
+void Stargen::generate_planet(planet_pointer planet,
 					 int			planet_no,
 					 StarGen::Sun* sun,
 					 bool 			random_tilt,
@@ -833,9 +829,7 @@ void generate_planet(planet_pointer	planet,
 
 }
 
-void check_planet(planet_pointer	planet,
-				  char*				planet_id,
-				  int				is_moon)
+void Stargen::check_planet(planet_pointer planet, char* planet_id, int is_moon)
 {
 	{
 		int tIndex = 0;
@@ -1083,7 +1077,7 @@ void check_planet(planet_pointer	planet,
 	}
 }
 
-void generate_planets(StarGen::Sun* sun,
+void Stargen::generate_planets(StarGen::Sun* sun,
 					  bool 			random_tilt,
 					  char			flag_char,
 					  int			sys_no,
@@ -1104,7 +1098,7 @@ void generate_planets(StarGen::Sun* sun,
 
 		sprintf(planet_id,
 				"%s (-s%ld -%c%d) %d",
-				system_name, flag_seed, flag_char, sys_no, planet_no);
+				system_name, this->flag_seed, flag_char, sys_no, planet_no);
 
 		generate_planet(planet, planet_no,
 						sun, random_tilt,
@@ -1132,7 +1126,6 @@ void generate_planets(StarGen::Sun* sun,
 	}
 }
 
-namespace StarGen {
 int Stargen::generate(
 			 char			flag_char,
 			 char *			path,
@@ -1211,7 +1204,6 @@ int Stargen::generate(
 		strncat (subdir, "/", 80-strlen(subdir));
 	}
 
-	flag_seed		= this->seed_arg;
 	sun.mass 		= this->mass_arg;
 	system_count	= this->count_arg;
 	int seed_increment	= this->incr_arg;
@@ -1245,7 +1237,7 @@ int Stargen::generate(
 		if (strlen(filename_arg) > 0)
 			strcpy(thumbnail_file, filename_arg);
 
-		thumbnails = open_html_file ("Thumbnails", flag_seed, path, url_path, thumbnail_file, ".html",
+		thumbnails = open_html_file ("Thumbnails", this->flag_seed, path, url_path, thumbnail_file, ".html",
 									 this->progname, sgOut);
 		if (thumbnails == NULL)
 		{
@@ -1279,7 +1271,7 @@ int Stargen::generate(
 					 : (only_multi_habitable) ? "2"
 					 : (only_habitable) ? "H"
 					 : "all",
-					 flag_seed,
+					 this->flag_seed,
 					 this->count_arg,
 					 this->incr_arg,
 					 (do_gases)					? "on" : "off",	// one of ("on", "off")
@@ -1309,7 +1301,7 @@ int Stargen::generate(
 				sprintf (&csv_file_name[0],
 						 "%s-%ld.csv",
 						 cleaned_arg,
-						 flag_seed);
+						 this->flag_seed);
 			}
 			else
 			{
@@ -1351,7 +1343,7 @@ int Stargen::generate(
 		bool			use_seed_system		= false;
 		bool			in_celestia 		= false;
 
-		init();
+		initRandomGenerator();
 
 		if (do_catalog || this->sys_no_arg)
 		{
@@ -1396,7 +1388,7 @@ int Stargen::generate(
 				sprintf (&designation[0], "%s", sys_name_arg);
 			}
 
-			sprintf (&file_name[0], "%s-%ld", designation, flag_seed);
+			sprintf (&file_name[0], "%s-%ld", designation, this->flag_seed);
 
 			if (cat_arg->stars[sys_no].m2 > .001)
 			{
@@ -1435,11 +1427,11 @@ int Stargen::generate(
 			}
 			else
 			{
-				sprintf (&system_name[0], "%s %ld-%LG", this->progname, flag_seed, sun.mass);
+				sprintf (&system_name[0], "%s %ld-%LG", this->progname, this->flag_seed, sun.mass);
 				sprintf (&designation[0], "%s", this->progname);
 			}
 
-			sprintf (&file_name[0], "%s-%ld-%LG", designation, flag_seed, sun.mass);
+			sprintf (&file_name[0], "%s-%ld-%LG", designation, this->flag_seed, sun.mass);
 			outer_limit = 0;
 		}
 
@@ -1535,9 +1527,9 @@ int Stargen::generate(
 
 				if (StarGen::Stargen::isVerbose(0x10000))
 					fprintf (stderr, "System %ld - %s (-s%ld -%c%d) has %d types out of %d planets. [%d]\n",
-							flag_seed,
+							this->flag_seed,
 							system_name,
-							flag_seed,
+							this->flag_seed,
 							flag_char,
 							sys_no,
 							type_count,
@@ -1584,7 +1576,7 @@ int Stargen::generate(
 						 sys_no,
 						 sys_no,
 						 sun.mass,
-						 flag_seed,
+						 this->flag_seed,
 						 (do_gases)					? "on" : "off",	// one of ("on", "off")
 						 (do_moons)					? "on" : "off",	// one of ("on", "off")
 						 (this->graphic_format == SVG)	? "on" : "off"	// one of ("on", "off")
@@ -1596,7 +1588,7 @@ int Stargen::generate(
 						 sys_no,
 						 sys_no,
 						 sun.mass,
-						 flag_seed,
+						 this->flag_seed,
 						 (do_gases)					? "on" : "off",	// one of ("on", "off")
 						 (do_moons)					? "on" : "off",	// one of ("on", "off")
 						 (this->graphic_format == SVG)	? "on" : "off"	// one of ("on", "off")
@@ -1625,10 +1617,10 @@ int Stargen::generate(
  					if ((system_count == 1) || (sgOut == NULL))
  					{
 						if ((system_count == 1) && (sgOut != NULL))
-							html_file = open_html_file (system_name, flag_seed, path, url_path, file_name, ".html",
+							html_file = open_html_file (system_name, this->flag_seed, path, url_path, file_name, ".html",
 														this->progname, sgOut);
 						else
-							html_file = open_html_file (system_name, flag_seed, path, url_path, file_name, ".html",
+							html_file = open_html_file (system_name, this->flag_seed, path, url_path, file_name, ".html",
 														this->progname, NULL);
 
 						if (NULL != html_file)
@@ -1650,13 +1642,13 @@ int Stargen::generate(
 				break;
 
 				case TEXT:
-					text_describe_system(innermost_planet, do_gases, flag_seed);
+					text_describe_system(innermost_planet, do_gases, this->flag_seed);
 				break;
 
 				case CSV:
 				case CSVdl:
 					if (csv_file != NULL)
-						csv_describe_system(csv_file, innermost_planet, do_gases, flag_seed);
+						csv_describe_system(csv_file, innermost_planet, do_gases, this->flag_seed);
 				break;
 
 				case CELESTIA:
@@ -1673,16 +1665,16 @@ int Stargen::generate(
 			if ((habitable > 1) &&
 				StarGen::Stargen::isVerbose(0x0001))
 				fprintf (stderr, "System %ld - %s (-s%ld -%c%d) has %d planets with breathable atmospheres.\n",
-						flag_seed,
+						this->flag_seed,
 						system_name,
-						flag_seed,
+						this->flag_seed,
 						flag_char,
 						sys_no,
 						habitable);
 		}
 
 		if (! ((use_solar_system) && (index == 0)))
-			flag_seed += seed_increment;
+			this->flag_seed += seed_increment;
 
 		if (reuse_solar_system)
 			earth.mass += (EM(INCREMENT_MASS));

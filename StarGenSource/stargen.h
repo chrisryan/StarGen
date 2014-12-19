@@ -88,8 +88,48 @@ namespace StarGen {
             int incr_arg;
 		 	int count_arg;
 			long seed_arg;
+            long flag_seed;
 			long double	mass_arg;
             const char * progname;
+
+            void initRandomGenerator();
+
+            void generate_stellar_system(
+                StarGen::Sun* sun,
+                bool use_seed_system,
+                planet_pointer seed_system,
+                char flag_char,
+                int sys_no,
+                char *system_name,
+                long double outer_planet_limit,
+                bool do_gases,
+                bool do_moons
+            );
+
+            void calculate_gases(StarGen::Sun* sun, planet_pointer planet, char* planet_id);
+
+            void generate_planets(
+                StarGen::Sun* sun,
+                bool random_tilt,
+                char flag_char,
+                int sys_no,
+                char *system_name,
+                bool do_gases,
+                bool do_moons
+            );
+
+            void generate_planet(
+                planet_pointer planet,
+                int planet_no,
+                StarGen::Sun *sun,
+                bool random_tilt,
+                char *planet_id,
+                bool do_gases,
+                bool do_moons,
+                bool is_moon
+            );
+
+            void check_planet(planet_pointer planet, char *planet_id, int is_moon);
 	};
 
 
