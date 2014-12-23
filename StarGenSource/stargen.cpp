@@ -37,12 +37,12 @@ namespace StarGen {
 		this->out_format = HTML;
 		this->graphic_format = GIF;
 		this->flags_arg = 0;
-        this->ratio_arg = 0.0;
         this->sys_no_arg = 0;
         this->incr_arg = 1;
         this->count_arg = 1;
         this->flag_seed = 0;
         this->mass_arg = 0.0;
+        setRatio(0.0);
         setProgramName(NULL);
 
 		StarGen::Gases::initialize();
@@ -75,7 +75,11 @@ namespace StarGen {
 
     void Stargen::setRatio(long double r)
     {
-        this->ratio_arg = r;
+		this->dust_density_coeff = DUST_DENSITY_COEFF;
+	    if (r > 0.0)
+        {
+		    this->dust_density_coeff *= r;
+        }
     }
 
     void Stargen::setSystemNumber(int n)
@@ -228,7 +232,6 @@ namespace StarGen {
 
 /*  These are the global variables used during accretion:  */
 planet_pointer	innermost_planet;
-long double		dust_density_coeff = DUST_DENSITY_COEFF;
 
 
 int earthlike		 = 0;
@@ -310,7 +313,7 @@ void Stargen::generate_stellar_system(StarGen::Sun* sun,
 												 sun->luminosity,
 												 0.0,outer_dust_limit,
 												 outer_planet_limit,
-												 dust_density_coeff,
+												 this->dust_density_coeff,
 												 seed_system,
 												 this->isFlag(fDoMoons));
 
@@ -1108,8 +1111,6 @@ int Stargen::generate(
 			 catalog *		cat_arg
 			 )
 {
-	StarGen::Sun sun					= StarGen::Sun(0.0, 0.0, 0.0, 0.0, 0.0, "");
-	int				system_count		= 1;
 
 	char			default_path[]		= SUBDIR;			/* OS specific */
 	char 			default_url_path[]	= "../";
@@ -1124,22 +1125,15 @@ int Stargen::generate(
 
 	int				do_catalog			= ((cat_arg != NULL) && (this->sys_no_arg == 0));
 	int				catalog_count		= 0;
-	bool			use_solar_system	= (this->flags_arg & fUseSolarsystem) != 0;
-	bool			reuse_solar_system	= (this->flags_arg & fReuseSolarsystem) != 0;
-	bool			use_known_planets	= (this->flags_arg & fUseKnownPlanets) != 0;
-	bool			no_generate			= (this->flags_arg & fNoGenerate) != 0;
 	bool			only_habitable		= (this->flags_arg & fOnlyHabitable) != 0;
-	bool			only_multi_habitable= (this->flags_arg & fOnlyMultiHabitable) != 0;
-	bool			only_jovian_habitable=(this->flags_arg & fOnlyJovianHabitable) != 0;
-	bool			only_earthlike		= (this->flags_arg & fOnlyEarthlike) != 0;
 
 	if (do_catalog)
 		catalog_count = cat_arg->count;
 
-	if (only_habitable && only_multi_habitable)
+	if (only_habitable && this->isFlag(fOnlyMultiHabitable))
 		only_habitable = false;
 
-	if (only_habitable && only_earthlike)
+	if (only_habitable && this->isFlag(fOnlyEarthlike))
 		only_habitable = false;
 
 	if ((path == NULL) || (path[0] == '\0'))
@@ -1173,14 +1167,11 @@ int Stargen::generate(
 		strncat (subdir, "/", 80-strlen(subdir));
 	}
 
-	sun.mass 		= this->mass_arg;
-	system_count	= this->count_arg;
+	StarGen::Sun sun = StarGen::Sun(0.0, this->mass_arg, 0.0, 0.0, 0.0, "");
+	int system_count	= this->count_arg;
 	int seed_increment	= this->incr_arg;
 
-	if (this->ratio_arg > 0.0)
-		dust_density_coeff *= this->ratio_arg;
-
-	if (reuse_solar_system)
+	if (this->isFlag(fReuseSolarsystem))
 	{
 		system_count = 1 + (int) ((MAX_MASS - MIN_MASS) / INCREMENT_MASS);
 
@@ -1192,19 +1183,20 @@ int Stargen::generate(
 		sun.age 		= 5.0E9;
 		sun.r_ecosphere	= 1.0;
 
-		use_solar_system = true;
+        this->addFlag(fUseSolarsystem);
 	}
 	else if (do_catalog)
 	{
 		system_count = catalog_count + ((system_count - 1) * (catalog_count - 1));
-		use_solar_system = true;
+        this->addFlag(fUseSolarsystem);
 	}
 
-	if ((system_count > 1)
-	 && !(this->out_format == CSVdl))
+	if ((system_count > 1) && !(this->out_format == CSVdl))
 	{
 		if (strlen(filename_arg) > 0)
+        {
 			strcpy(thumbnail_file, filename_arg);
+        }
 
 		thumbnails = open_html_file ("Thumbnails", this->flag_seed, path, url_path, thumbnail_file, ".html",
 									 this->progname, sgOut);
@@ -1236,8 +1228,8 @@ int Stargen::generate(
 					 sys_no,
 					 sys_no,
 					 sun.mass,
-					 (only_earthlike) ? "E"
-					 : (only_multi_habitable) ? "2"
+					 this->isFlag(fOnlyEarthlike) ? "E"
+					 : this->isFlag(fOnlyMultiHabitable) ? "2"
 					 : (only_habitable) ? "H"
 					 : "all",
 					 this->flag_seed,
@@ -1335,11 +1327,11 @@ int Stargen::generate(
 			}
 
 			seed_planets = NULL;
-			if (use_known_planets || no_generate)
+			if (this->isFlag(fUseKnownPlanets) || this->isFlag(fNoGenerate))
 			{
 				seed_planets = cat_arg->stars[sys_no].known_planets;
 
-				use_seed_system	= no_generate;
+				use_seed_system	= this->isFlag(fNoGenerate);
 			}
 
 			in_celestia = cat_arg->stars[sys_no].in_celestia;
@@ -1383,7 +1375,7 @@ int Stargen::generate(
 				outer_limit = 0.0;
 			}
 		}
-		else if (reuse_solar_system)
+		else if (this->isFlag(fReuseSolarsystem))
 		{
 			sprintf (&system_name[0], "Earth-M%LG", earth.mass * SUN_MASS_IN_EARTH_MASSES);
 			sprintf (&designation[0], "Earth-M%LG", earth.mass * SUN_MASS_IN_EARTH_MASSES);
@@ -1432,12 +1424,12 @@ int Stargen::generate(
 		habitable			 = 0;
 		habitable_jovians	 = 0;
 
-		if (reuse_solar_system)
+		if (this->isFlag(fReuseSolarsystem))
 		{
 			seed_planets	= solar_system;
 			use_seed_system	= true;
 		}
-		else if (use_solar_system)
+		else if (this->isFlag(fUseSolarsystem))
 		{
 			if  (index == 0)
 			{
@@ -1448,7 +1440,7 @@ int Stargen::generate(
 			{
 				use_seed_system	= false;
 
-				if (!use_known_planets)
+				if (!this->isFlag(fUseKnownPlanets))
 				{
 					seed_planets = NULL;
 				}
@@ -1520,11 +1512,11 @@ int Stargen::generate(
 		total_habitable += habitable;
 		total_earthlike += earthlike;
 
-		if ((!(only_habitable || only_multi_habitable || only_jovian_habitable || only_earthlike))
+		if ((!(only_habitable || this->isFlag(fOnlyMultiHabitable) || this->isFlag(fOnlyJovianHabitable) || this->isFlag(fOnlyEarthlike)))
 		 || (only_habitable && (habitable > 0))
-		 || (only_multi_habitable && (habitable > 1))
-		 || (only_jovian_habitable && (habitable_jovians > 0))
-		 || (only_earthlike && (earthlike > 0))
+		 || (this->isFlag(fOnlyMultiHabitable) && (habitable > 1))
+		 || (this->isFlag(fOnlyJovianHabitable) && (habitable_jovians > 0))
+		 || (this->isFlag(fOnlyEarthlike) && (earthlike > 0))
 		 )
 		{
 			char	system_url[300] = "";
@@ -1637,7 +1629,7 @@ int Stargen::generate(
 				case CELESTIA:
 					if (in_celestia != false)
 					{
-						if (has_known_planets && !use_known_planets)
+						if (has_known_planets && !this->isFlag(fUseKnownPlanets))
 						{
 							fprintf (stderr, "Skipping %s -- Has planets in Celestia already\n",
 									designation);
@@ -1662,12 +1654,12 @@ int Stargen::generate(
 			}
 		}
 
-		if (! ((use_solar_system) && (index == 0)))
+		if (! (this->isFlag(fUseSolarsystem) && (index == 0)))
 		{
 			this->flag_seed += seed_increment;
 		}
 
-		if (reuse_solar_system)
+		if (this->isFlag(fReuseSolarsystem))
 		{
 			earth.mass += (EM(INCREMENT_MASS));
 		}

@@ -109,7 +109,6 @@ namespace StarGen {
 			OutputFormats out_format;
 			GraphicFormats graphic_format;
             int flags_arg;
-            long double ratio_arg;
             int sys_no_arg;
             int incr_arg;
 		 	int count_arg;
@@ -117,6 +116,7 @@ namespace StarGen {
             long flag_seed;
 			long double	mass_arg;
             const char * progname;
+            long double dust_density_coeff;
 
             void initRandomGenerator();
 
