@@ -112,31 +112,6 @@ namespace StarGen {
         }
     }
 
- 	/*
-	 * 0x0001 Earthlike count
- 	 * 0x0002 Trace Min/max
- 	 * 0x0004 List habitable
- 	 * 0x0008 List Earth-like (and Sphinx-line)
- 	 *
- 	 * 0x0010 List Gases
- 	 * 0x0020 Trace temp iterations
- 	 * 0x0040 Gas lifetimes
- 	 * 0x0080 List loss of accreted gas mass
- 	 *
- 	 * 0x0100 Injecting, collision
- 	 * 0x0200 Checking..., Failed...
- 	 * 0x0400 List binary info
- 	 * 0x0800 List Gas Dwarfs etc.
- 	 *
- 	 * 0x1000 Moons
- 	 * 0x2000 Oxygen poisoned
- 	 * 0x4000 Trace gas %ages (whoops)
- 	 * 0x8000 Jovians in habitable zone
- 	 *
- 	 * 0x10000 List type diversity
- 	 * 0x20000 Trace Surface temp interations
- 	 * 0x40000 Lunar orbits
-	 */
 	int Stargen::flag_verbose = 0;
 
 	void Stargen::setVerbosity(int value)
