@@ -372,8 +372,8 @@ int main (int argc, char *argv[]) {
 	}
 
     oStargen->setCatalog(catalog);
+    oStargen->setFlagChar(flag_char);
 	oStargen->generate(
-		flag_char,
 		path,
 		url_path_arg,
 		filename_arg,

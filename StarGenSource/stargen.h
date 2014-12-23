@@ -62,8 +62,9 @@ namespace StarGen {
 
             void setCatalog(catalog * c);
 
+            void setFlagChar(char c);
+
 			int generate(
-				char flag_char,
 			 	char *path,			// OS path to where to write files
 			 	char *url_path_arg,	// HTML path to parent of both the
  									//  directory named in 'path' and
@@ -119,6 +120,7 @@ namespace StarGen {
             const char * progname;
             long double dust_density_coeff;
             catalog * cat_arg;
+            char flag_char;
 
             void initRandomGenerator();
 
@@ -126,7 +128,6 @@ namespace StarGen {
                 StarGen::Sun* sun,
                 bool use_seed_system,
                 planet_pointer seed_system,
-                char flag_char,
                 int sys_no,
                 char *system_name,
                 long double outer_planet_limit
@@ -137,7 +138,6 @@ namespace StarGen {
             void generate_planets(
                 StarGen::Sun* sun,
                 bool random_tilt,
-                char flag_char,
                 int sys_no,
                 char *system_name
             );

@@ -41,6 +41,7 @@ namespace StarGen {
         this->incr_arg = 1;
         this->count_arg = 1;
         this->flag_seed = 0;
+        this->flag_char = '?';
         this->mass_arg = 0.0;
         this->cat_arg = NULL;
         setRatio(0.0);
@@ -125,6 +126,11 @@ namespace StarGen {
     void Stargen::setCatalog(catalog * c)
     {
         this->cat_arg = c;
+    }
+
+    void Stargen::setFlagChar(char c)
+    {
+        this->flag_char = c;
     }
 
 	int Stargen::flag_verbose = 0;
@@ -284,7 +290,6 @@ void Stargen::initRandomGenerator()
 void Stargen::generate_stellar_system(StarGen::Sun* sun,
 							 bool 			use_seed_system,
 							 planet_pointer seed_system,
-							 char			flag_char,
 							 int			sys_no,
 							 char*			system_name,
 							 long double 	outer_planet_limit)
@@ -328,7 +333,6 @@ void Stargen::generate_stellar_system(StarGen::Sun* sun,
 
 	generate_planets(sun,
 					 !use_seed_system,
-					 flag_char,
 					 sys_no,
 					 system_name);
 }
@@ -1061,7 +1065,6 @@ void Stargen::check_planet(planet_pointer planet, char* planet_id, int is_moon)
 
 void Stargen::generate_planets(StarGen::Sun* sun,
 					  bool 			random_tilt,
-					  char			flag_char,
 					  int			sys_no,
 					  char*			system_name)
 {
@@ -1078,7 +1081,7 @@ void Stargen::generate_planets(StarGen::Sun* sun,
 
 		sprintf(planet_id,
 				"%s (-s%ld -%c%d) %d",
-				system_name, this->flag_seed, flag_char, sys_no, planet_no);
+				system_name, this->flag_seed, this->flag_char, sys_no, planet_no);
 
 		generate_planet(planet, planet_no,
 						sun, random_tilt,
@@ -1107,7 +1110,6 @@ void Stargen::generate_planets(StarGen::Sun* sun,
 }
 
 int Stargen::generate(
-			 char			flag_char,
 			 char *			path,
 			 char *			url_path_arg,
 			 char *			filename_arg,
@@ -1464,7 +1466,6 @@ int Stargen::generate(
 		generate_stellar_system(&sun,
 								use_seed_system,
 								seed_planets,	// solar_system
-								flag_char,
 								sys_no,
 								system_name,
 								outer_limit);
@@ -1505,7 +1506,7 @@ int Stargen::generate(
 							this->flag_seed,
 							system_name,
 							this->flag_seed,
-							flag_char,
+							this->flag_char,
 							sys_no,
 							type_count,
 							counter,
@@ -1653,7 +1654,7 @@ int Stargen::generate(
 						this->flag_seed,
 						system_name,
 						this->flag_seed,
-						flag_char,
+						this->flag_char,
 						sys_no,
 						habitable);
 			}
