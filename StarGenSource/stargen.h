@@ -127,8 +127,7 @@ namespace StarGen {
                 char flag_char,
                 int sys_no,
                 char *system_name,
-                long double outer_planet_limit,
-                bool do_moons
+                long double outer_planet_limit
             );
 
             void calculate_gases(StarGen::Sun* sun, planet_pointer planet, char* planet_id);
@@ -138,8 +137,7 @@ namespace StarGen {
                 bool random_tilt,
                 char flag_char,
                 int sys_no,
-                char *system_name,
-                bool do_moons
+                char *system_name
             );
 
             void generate_planet(
@@ -148,7 +146,6 @@ namespace StarGen {
                 StarGen::Sun *sun,
                 bool random_tilt,
                 char *planet_id,
-                bool do_moons,
                 bool is_moon
             );
 
