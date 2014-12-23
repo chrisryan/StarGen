@@ -68,6 +68,11 @@ namespace StarGen {
         this->flags_arg |= f;
     }
 
+	bool Stargen::isFlag(int f)
+	{
+		return (this->flags_arg & f);
+	}
+
     void Stargen::setRatio(long double r)
     {
         this->ratio_arg = r;
@@ -274,7 +279,6 @@ void Stargen::generate_stellar_system(StarGen::Sun* sun,
 							 int			sys_no,
 							 char*			system_name,
 							 long double 	outer_planet_limit,
-							 bool			do_gases,
 							 bool			do_moons)
 {
 	long double		outer_dust_limit;
@@ -319,7 +323,6 @@ void Stargen::generate_stellar_system(StarGen::Sun* sun,
 					 flag_char,
 					 sys_no,
 					 system_name,
-					 do_gases,
 					 do_moons);
 }
 
@@ -478,7 +481,6 @@ void Stargen::generate_planet(planet_pointer planet,
 					 StarGen::Sun* sun,
 					 bool 			random_tilt,
 					 char*			planet_id,
-					 bool			do_gases,
 					 bool			do_moons,
 					 bool			is_moon)
 {
@@ -661,7 +663,7 @@ void Stargen::generate_planet(planet_pointer planet,
 												 *		planet->ice_cover
 												 */
 
-			if (do_gases &&
+			if (this->isFlag(fDoGases) &&
 				(planet->max_temp >= FREEZING_POINT_OF_WATER) &&
 				(planet->min_temp <= planet->boil_point))
 				calculate_gases(sun, planet, planet_id);
@@ -757,7 +759,6 @@ void Stargen::generate_planet(planet_pointer planet,
 						generate_planet(ptr, n,
 										sun, random_tilt,
 										moon_id,
-										do_gases,
 										do_moons, true);	// Adjusts ptr->density
 
 						roche_limit = 2.44 * planet->radius * pow((planet->density / ptr->density), (1.0 / 3.0));
@@ -1057,7 +1058,6 @@ void Stargen::generate_planets(StarGen::Sun* sun,
 					  char			flag_char,
 					  int			sys_no,
 					  char*			system_name,
-					  bool			do_gases,
 					  bool			do_moons)
 {
 	planet_pointer	planet;
@@ -1078,7 +1078,7 @@ void Stargen::generate_planets(StarGen::Sun* sun,
 		generate_planet(planet, planet_no,
 						sun, random_tilt,
 						planet_id,
-						do_gases, do_moons, false);
+						do_moons, false);
 
 		/*
 		 *	Now we're ready to test for habitable planets,
@@ -1128,7 +1128,6 @@ int Stargen::generate(
 
 	int				do_catalog			= ((cat_arg != NULL) && (this->sys_no_arg == 0));
 	int				catalog_count		= 0;
-	bool			do_gases			= (this->flags_arg & fDoGases) != 0;
 	bool			use_solar_system	= (this->flags_arg & fUseSolarsystem) != 0;
 	bool			reuse_solar_system	= (this->flags_arg & fReuseSolarsystem) != 0;
 	bool			use_known_planets	= (this->flags_arg & fUseKnownPlanets) != 0;
@@ -1249,7 +1248,7 @@ int Stargen::generate(
 					 this->flag_seed,
 					 this->count_arg,
 					 this->incr_arg,
-					 (do_gases)					? "on" : "off",	// one of ("on", "off")
+					 this->isFlag(fDoGases) ? "on" : "off",	// one of ("on", "off")
 					 (do_moons)					? "on" : "off",	// one of ("on", "off")
 					 (this->graphic_format == SVG)	? "on" : "off"	// one of ("on", "off")
 					);
@@ -1477,7 +1476,6 @@ int Stargen::generate(
 								sys_no,
 								system_name,
 								outer_limit,
-								do_gases,
 								do_moons);
 
 		{
@@ -1564,7 +1562,7 @@ int Stargen::generate(
 						 sys_no,
 						 sun.mass,
 						 this->flag_seed,
-						 (do_gases)					? "on" : "off",	// one of ("on", "off")
+						 this->isFlag(fDoGases) ? "on" : "off",	// one of ("on", "off")
 						 (do_moons)					? "on" : "off",	// one of ("on", "off")
 						 (this->graphic_format == SVG)	? "on" : "off"	// one of ("on", "off")
 						);
@@ -1576,7 +1574,7 @@ int Stargen::generate(
 						 sys_no,
 						 sun.mass,
 						 this->flag_seed,
-						 (do_gases)					? "on" : "off",	// one of ("on", "off")
+						 this->isFlag(fDoGases) ? "on" : "off",	// one of ("on", "off")
 						 (do_moons)					? "on" : "off",	// one of ("on", "off")
 						 (this->graphic_format == SVG)	? "on" : "off"	// one of ("on", "off")
 						);
@@ -1620,7 +1618,7 @@ int Stargen::generate(
 											system_name,
 											url_path, system_url, svg_url, file_name,
 											true, false, true, do_moons, (this->graphic_format == SVG));
-							html_describe_system(innermost_planet, do_gases, url_path, html_file);
+							html_describe_system(innermost_planet, this->isFlag(fDoGases), url_path, html_file);
 							close_html_file(html_file);
 						}
 						else
@@ -1633,13 +1631,13 @@ int Stargen::generate(
 				break;
 
 				case TEXT:
-					text_describe_system(innermost_planet, do_gases, this->flag_seed);
+					text_describe_system(innermost_planet, this->isFlag(fDoGases), this->flag_seed);
 				break;
 
 				case CSV:
 				case CSVdl:
 					if (csv_file != NULL)
-						csv_describe_system(csv_file, innermost_planet, do_gases, this->flag_seed);
+						csv_describe_system(csv_file, innermost_planet, this->isFlag(fDoGases), this->flag_seed);
 				break;
 
 				case CELESTIA:
@@ -1714,7 +1712,7 @@ int Stargen::generate(
 
 	if (system_count > 1)
 	{
-		if (do_gases)
+		if (this->isFlag(fDoGases))
 		{
 			html_thumbnail_totals(thumbnails);
 		}

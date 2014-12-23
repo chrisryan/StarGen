@@ -37,6 +37,7 @@ namespace StarGen {
 
             void setFlags(int f);
             void addFlag(int f);
+			bool isFlag(int f);
 
             // Change dust density (experimental)
             void setRatio(long double r);
@@ -127,7 +128,6 @@ namespace StarGen {
                 int sys_no,
                 char *system_name,
                 long double outer_planet_limit,
-                bool do_gases,
                 bool do_moons
             );
 
@@ -139,7 +139,6 @@ namespace StarGen {
                 char flag_char,
                 int sys_no,
                 char *system_name,
-                bool do_gases,
                 bool do_moons
             );
 
@@ -149,7 +148,6 @@ namespace StarGen {
                 StarGen::Sun *sun,
                 bool random_tilt,
                 char *planet_id,
-                bool do_gases,
                 bool do_moons,
                 bool is_moon
             );
