@@ -42,6 +42,7 @@ namespace StarGen {
         this->count_arg = 1;
         this->flag_seed = 0;
         this->mass_arg = 0.0;
+        this->cat_arg = NULL;
         setRatio(0.0);
         setProgramName(NULL);
 
@@ -119,6 +120,11 @@ namespace StarGen {
         {
             this->progname = "StarGen";
         }
+    }
+
+    void Stargen::setCatalog(catalog * c)
+    {
+        this->cat_arg = c;
     }
 
 	int Stargen::flag_verbose = 0;
@@ -1107,8 +1113,7 @@ int Stargen::generate(
 			 char *			filename_arg,
 			 char *			sys_name_arg,
 
-			 FILE *			sgOut,
-			 catalog *		cat_arg
+			 FILE *			sgOut
 			 )
 {
 
@@ -1123,12 +1128,12 @@ int Stargen::generate(
 	FILE 			*thumbnails			= NULL;
 	FILE			*csv_file			= NULL;
 
-	int				do_catalog			= ((cat_arg != NULL) && (this->sys_no_arg == 0));
+	int				do_catalog			= ((this->cat_arg != NULL) && (this->sys_no_arg == 0));
 	int				catalog_count		= 0;
 	bool			only_habitable		= (this->flags_arg & fOnlyHabitable) != 0;
 
 	if (do_catalog)
-		catalog_count = cat_arg->count;
+		catalog_count = this->cat_arg->count;
 
 	if (only_habitable && this->isFlag(fOnlyMultiHabitable))
 		only_habitable = false;
@@ -1224,7 +1229,7 @@ int Stargen::generate(
 
 			sprintf (&csv_url[0],
 					 "/cgi-bin/StarGen.pl?Catalog=%s&Dole=%s&SolStation=%s&Mass=%LG&Output=%s&Seed=%ld&Count=%d&Incr=%d&Gas=%s&Moon=%s&SVG=%s&DoIt=CSV",
-					 (cat_arg == NULL) ? "none" : cat_arg->arg,
+					 (this->cat_arg == NULL) ? "none" : this->cat_arg->arg,
 					 sys_no,
 					 sys_no,
 					 sun.mass,
@@ -1321,7 +1326,7 @@ int Stargen::generate(
 				}
 			}
 
-			if (cat_arg->stars[sys_no].known_planets != NULL)
+			if (this->cat_arg->stars[sys_no].known_planets != NULL)
 			{
 				has_known_planets = true;
 			}
@@ -1329,20 +1334,20 @@ int Stargen::generate(
 			seed_planets = NULL;
 			if (this->isFlag(fUseKnownPlanets) || this->isFlag(fNoGenerate))
 			{
-				seed_planets = cat_arg->stars[sys_no].known_planets;
+				seed_planets = this->cat_arg->stars[sys_no].known_planets;
 
 				use_seed_system	= this->isFlag(fNoGenerate);
 			}
 
-			in_celestia = cat_arg->stars[sys_no].in_celestia;
+			in_celestia = this->cat_arg->stars[sys_no].in_celestia;
 
-			sun.mass = cat_arg->stars[sys_no].mass;
-			sun.luminosity = cat_arg->stars[sys_no].luminosity;
+			sun.mass = this->cat_arg->stars[sys_no].mass;
+			sun.luminosity = this->cat_arg->stars[sys_no].luminosity;
 
 			if (do_catalog || sys_name_arg[0] == '\0')
 			{
-				sprintf (&system_name[0], "%s", cat_arg->stars[sys_no].name);
-				sprintf (&designation[0], "%s", cat_arg->stars[sys_no].desig);
+				sprintf (&system_name[0], "%s", this->cat_arg->stars[sys_no].name);
+				sprintf (&designation[0], "%s", this->cat_arg->stars[sys_no].desig);
 
 			}
 			else
@@ -1353,7 +1358,7 @@ int Stargen::generate(
 
 			sprintf (&file_name[0], "%s-%ld", designation, this->flag_seed);
 
-			if (cat_arg->stars[sys_no].m2 > .001)
+			if (this->cat_arg->stars[sys_no].m2 > .001)
 			{
 				/*
 				 *	The following is Holman & Wiegert's equation 1 from
@@ -1361,10 +1366,10 @@ int Stargen::generate(
 				 *	The Astronomical Journal, 117:621-628, Jan 1999
 				 */
 				long double m1 = sun.mass;
-				long double m2 = cat_arg->stars[sys_no].m2;
+				long double m2 = this->cat_arg->stars[sys_no].m2;
 				long double mu = m2 / (m1 + m2);
-				long double e = cat_arg->stars[sys_no].e;
-				long double a = cat_arg->stars[sys_no].a;
+				long double e = this->cat_arg->stars[sys_no].e;
+				long double a = this->cat_arg->stars[sys_no].a;
 
 				outer_limit = (0.464 + (-0.380 * mu) + (-0.631 * e) +
 							   (0.586 * mu * e) + (0.150 * pow2(e)) +
@@ -1543,7 +1548,7 @@ int Stargen::generate(
 
 				sprintf (system_url,
 						 "/cgi-bin/StarGen.pl?Catalog=%s&Dole=%d&SolStation=%d&Mass=%LG&Output=all&Seed=%ld&Count=1&Incr=1&Gas=%s&Moon=%s&SVG=%s",
-						 (cat_arg == NULL) ? "none" : cat_arg->arg,
+						 (this->cat_arg == NULL) ? "none" : this->cat_arg->arg,
 						 sys_no,
 						 sys_no,
 						 sun.mass,
@@ -1555,7 +1560,7 @@ int Stargen::generate(
 
 				sprintf (svg_url,
 						 "/cgi-bin/StarGen.pl?Catalog=%s&Dole=%d&SolStation=%d&Mass=%LG&Output=all&Seed=%ld&Count=1&Incr=1&Gas=%s&Moon=%s&SVG=%s&DoIt=SVG",
-						 (cat_arg == NULL) ? "none" : cat_arg->arg,
+						 (this->cat_arg == NULL) ? "none" : this->cat_arg->arg,
 						 sys_no,
 						 sys_no,
 						 sun.mass,

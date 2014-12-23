@@ -60,6 +60,8 @@ namespace StarGen {
 
             void setProgramName(const char *name);
 
+            void setCatalog(catalog * c);
+
 			int generate(
 				char flag_char,
 			 	char *path,			// OS path to where to write files
@@ -69,10 +71,9 @@ namespace StarGen {
 			 	char *filename_arg,	// Output file name (optional)
 			 	char *sys_name_arg,	// Human readble System name (opt.)
 
-			 	FILE *sgOut,		// Main stream to write to
+			 	FILE *sgOut 		// Main stream to write to
 			 						//	Thumbnails will be written there
 			 						//  for HTML format
-			 	catalog *cat_arg	// A star catalog (see below)
 			);
 
 			/*
@@ -117,6 +118,7 @@ namespace StarGen {
 			long double	mass_arg;
             const char * progname;
             long double dust_density_coeff;
+            catalog * cat_arg;
 
             void initRandomGenerator();
 

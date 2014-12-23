@@ -371,6 +371,7 @@ int main (int argc, char *argv[]) {
 		return 1;
 	}
 
+    oStargen->setCatalog(catalog);
 	oStargen->generate(
 		flag_char,
 		path,
@@ -378,8 +379,7 @@ int main (int argc, char *argv[]) {
 		filename_arg,
 		arg_name,
 
-		use_stdout ? stdout : NULL,
-		catalog
+		use_stdout ? stdout : NULL
 	);
 
 	return 0;
