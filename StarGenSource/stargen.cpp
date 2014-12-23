@@ -1323,27 +1323,29 @@ int Stargen::generate(
 		if (do_catalog || this->sys_no_arg)
 		{
 			if (this->sys_no_arg)
+			{
 				sys_no = this->sys_no_arg - 1;
+			}
 			else
 			{
+				sys_no = index;
 				if (index >= catalog_count)
+				{
 					sys_no = ((index - 1) % (catalog_count - 1)) + 1 ;
-				else
-					sys_no = index;
+				}
 			}
 
 			if (cat_arg->stars[sys_no].known_planets != NULL)
+			{
 				has_known_planets = true;
+			}
 
+			seed_planets = NULL;
 			if (use_known_planets || no_generate)
 			{
 				seed_planets = cat_arg->stars[sys_no].known_planets;
 
 				use_seed_system	= no_generate;
-			}
-			else
-			{
-				seed_planets = NULL;
 			}
 
 			in_celestia = cat_arg->stars[sys_no].in_celestia;
@@ -1383,7 +1385,9 @@ int Stargen::generate(
 							   (-0.198 * mu * pow2(e))) * a;
 			}
 			else
+			{
 				outer_limit = 0.0;
+			}
 		}
 		else if (reuse_solar_system)
 		{
@@ -1421,10 +1425,14 @@ int Stargen::generate(
 			strcpy(file_name, filename_arg);
 
 		while ((cp = strchr(file_name,' ')) != 0)
+		{
 			*cp = '-';
+		}
 
 		while ((cp = strchr(file_name,'\'')) != 0)
+		{
 			*cp = '-';
+		}
 
 		earthlike			 = 0;
 		habitable			 = 0;
@@ -1447,15 +1455,17 @@ int Stargen::generate(
 				use_seed_system	= false;
 
 				if (!use_known_planets)
+				{
 					seed_planets = NULL;
+				}
 			}
 		}
 
 		{
-			int	i;
-
-			for (i = 0; i < 12; i++)
+			for (int i = 0; i < 12; i++)
+			{
 				type_counts[i] = 0;
+			}
 
 			type_count = 0;
 		}
@@ -1501,6 +1511,7 @@ int Stargen::generate(
 				max_type_count = norm_type_count;
 
 				if (StarGen::Stargen::isVerbose(0x10000))
+				{
 					fprintf (stderr, "System %ld - %s (-s%ld -%c%d) has %d types out of %d planets. [%d]\n",
 							this->flag_seed,
 							system_name,
@@ -1510,6 +1521,7 @@ int Stargen::generate(
 							type_count,
 							counter,
 							norm_type_count);
+				}
 			}
 		}
 
@@ -1592,11 +1604,15 @@ int Stargen::generate(
  					if ((system_count == 1) || (sgOut == NULL))
  					{
 						if ((system_count == 1) && (sgOut != NULL))
+						{
 							html_file = open_html_file (system_name, this->flag_seed, path, url_path, file_name, ".html",
 														this->progname, sgOut);
+						}
 						else
+						{
 							html_file = open_html_file (system_name, this->flag_seed, path, url_path, file_name, ".html",
 														this->progname, NULL);
+						}
 
 						if (NULL != html_file)
 						{
@@ -1630,15 +1646,20 @@ int Stargen::generate(
 					if (in_celestia != false)
 					{
 						if (has_known_planets && !use_known_planets)
+						{
 							fprintf (stderr, "Skipping %s -- Has planets in Celestia already\n",
 									designation);
+						}
 						else
+						{
 							celestia_describe_system(innermost_planet, designation);
+						}
 					}
 				break;
 			}
-			if ((habitable > 1) &&
-				StarGen::Stargen::isVerbose(0x0001))
+
+			if ((habitable > 1) && StarGen::Stargen::isVerbose(0x0001))
+			{
 				fprintf (stderr, "System %ld - %s (-s%ld -%c%d) has %d planets with breathable atmospheres.\n",
 						this->flag_seed,
 						system_name,
@@ -1646,13 +1667,18 @@ int Stargen::generate(
 						flag_char,
 						sys_no,
 						habitable);
+			}
 		}
 
 		if (! ((use_solar_system) && (index == 0)))
+		{
 			this->flag_seed += seed_increment;
+		}
 
 		if (reuse_solar_system)
+		{
 			earth.mass += (EM(INCREMENT_MASS));
+		}
 
 		free_atmosphere (innermost_planet);
 
@@ -1689,16 +1715,19 @@ int Stargen::generate(
 	if (system_count > 1)
 	{
 		if (do_gases)
+		{
 			html_thumbnail_totals(thumbnails);
+		}
 
 		close_html_file(thumbnails);
 	}
+
 	if (csv_file != NULL)
 	{
 		fflush (csv_file);
 		fclose (csv_file);
 	}
 
-	return(0);
+	return 0;
 }
 } // End StarGen namespace
