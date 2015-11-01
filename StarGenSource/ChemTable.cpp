@@ -70,18 +70,18 @@ static int diminishing_abundance(const void *xp, const void *yp)
 
 void Gases::initialize()
 {
-	for (int index = 0; index < StarGen::Gases::max_gas; index++)
-	{
-		if (StarGen::Gases::gases[index].max_ipp == 0.0)
-		{
-			StarGen::Gases::gases[index].max_ipp = INCREDIBLY_LARGE_NUMBER;
-		}
-	}
+    for (int index = 0; index < StarGen::Gases::max_gas; index++)
+    {
+        if (StarGen::Gases::gases[index].max_ipp == 0.0)
+        {
+            StarGen::Gases::gases[index].max_ipp = INCREDIBLY_LARGE_NUMBER;
+        }
+    }
 
-	qsort(
-		StarGen::Gases::gases,
-		Gases::max_gas,
+    qsort(
+        StarGen::Gases::gases,
+        Gases::max_gas,
         sizeof(*StarGen::Gases::gases),
         diminishing_abundance
-	);
+    );
 }

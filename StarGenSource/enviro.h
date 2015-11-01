@@ -26,10 +26,10 @@ void iterate_surface_temp(planet_pointer);
 long double inspired_partial_pressure (long double, long double);
 
 enum Breathability {
-	None,
-	Breathable,
-	Unbreathable,
-	Poisonous
+    None,
+    Breathable,
+    Unbreathable,
+    Poisonous
 };
 
 Breathability breathability(planet_pointer);

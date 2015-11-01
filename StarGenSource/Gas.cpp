@@ -4,8 +4,8 @@ using namespace StarGen;
 
 Gas::Gas(int num, long double surf_pressure)
 {
-	this->num = num;
-	this->surf_pressure = surf_pressure;
+    this->num = num;
+    this->surf_pressure = surf_pressure;
 }
 
 /*
