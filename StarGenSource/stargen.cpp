@@ -353,6 +353,7 @@ void Stargen::calculate_gases(StarGen::Sun* sun, planet_pointer planet, char* pl
                              (373. * ((log((pressure) + 0.001) / -5050.5) +
                                      (1.0 / 373.)));
 
+            amount[i] = 0.0;
             if ((yp >= 0 && yp < planet->low_temp)
              && (StarGen::Gases::gases[i].weight >= planet->molec_weight))
             {
@@ -428,8 +429,6 @@ void Stargen::calculate_gases(StarGen::Sun* sun, planet_pointer planet, char* pl
                 if (amount[i] > 0.0)
                     n++;
             }
-            else
-                amount[i] = 0.0;
         }
 
         if (n > 0)
@@ -531,12 +530,11 @@ void Stargen::generate_planet(planet_pointer planet,
           && ((planet->gas_mass / planet->mass)        > 0.05)
           && (min_molec_weight(planet)                  <= 4.0))
         {
+            planet->type = tGasGiant;
             if ((planet->gas_mass / planet->mass) < 0.20)
                 planet->type = tSubSubGasGiant;
             else if ((planet->mass * SUN_MASS_IN_EARTH_MASSES) < 20.0)
                 planet->type = tSubGasGiant;
-            else
-                planet->type = tGasGiant;
         }
         else // If not, it's rocky.
         {
@@ -659,10 +657,9 @@ void Stargen::generate_planet(planet_pointer planet,
                                                        planet->radius,
                                                        planet->surf_grav);
 
-            if ((planet->surf_pressure == 0.0))
-                planet->boil_point             = 0.0;
-            else
-                planet->boil_point             = boiling_point(planet->surf_pressure);
+            planet->boil_point = 0.0;
+            if ((planet->surf_pressure != 0.0))
+                planet->boil_point = boiling_point(planet->surf_pressure);
 
             iterate_surface_temp(planet);        /*    Sets:
                                                  *        planet->surf_temp
@@ -684,11 +681,10 @@ void Stargen::generate_planet(planet_pointer planet,
 
             if (planet->surf_pressure < 1.0)
             {
+                planet->type = tRock;
                 if (!is_moon
                  && ((planet->mass * SUN_MASS_IN_EARTH_MASSES) < ASTEROID_MASS_LIMIT))
                     planet->type             = tAsteroids;
-                else
-                    planet->type             = tRock;
             }
             else if ((planet->surf_pressure > 6000.0) &&
                      (planet->molec_weight <= 2.0))    // Retains Hydrogen
@@ -774,15 +770,12 @@ void Stargen::generate_planet(planet_pointer planet,
                         roche_limit = 2.44 * planet->radius * pow((planet->density / ptr->density), (1.0 / 3.0));
                         hill_sphere = planet->a * KM_PER_AU * pow((planet->mass / (3.0 * sun->mass)), (1.0 / 3.0));
 
+                        ptr->moon_a = 0;
+                        ptr->moon_e = 0;
                         if ((roche_limit * 3.0) < hill_sphere)
                         {
                             ptr->moon_a = StarGen::Random::number(roche_limit * 1.5, hill_sphere / 2.0) / KM_PER_AU;
                             ptr->moon_e = StarGen::Random::eccentricity ();
-                        }
-                        else
-                        {
-                            ptr->moon_a = 0;
-                            ptr->moon_e = 0;
                         }
 
                         if (StarGen::Stargen::isVerbose(0x40000))
@@ -1315,17 +1308,15 @@ int Stargen::generate(
 
         if (do_catalog || this->sys_no_arg)
         {
+            sys_no = index;
+            if (index >= catalog_count)
+            {
+                sys_no = ((index - 1) % (catalog_count - 1)) + 1 ;
+            }
+
             if (this->sys_no_arg)
             {
                 sys_no = this->sys_no_arg - 1;
-            }
-            else
-            {
-                sys_no = index;
-                if (index >= catalog_count)
-                {
-                    sys_no = ((index - 1) % (catalog_count - 1)) + 1 ;
-                }
             }
 
             if (this->cat_arg->stars[sys_no].known_planets != NULL)
@@ -1360,6 +1351,7 @@ int Stargen::generate(
 
             sprintf (&file_name[0], "%s-%ld", designation, this->flag_seed);
 
+            outer_limit = 0.0;
             if (this->cat_arg->stars[sys_no].m2 > .001)
             {
                 /*
@@ -1376,10 +1368,6 @@ int Stargen::generate(
                 outer_limit = (0.464 + (-0.380 * mu) + (-0.631 * e) +
                                (0.586 * mu * e) + (0.150 * pow2(e)) +
                                (-0.198 * mu * pow2(e))) * a;
-            }
-            else
-            {
-                outer_limit = 0.0;
             }
         }
         else if (this->isFlag(fReuseSolarsystem))
@@ -1438,19 +1426,17 @@ int Stargen::generate(
         }
         else if (this->isFlag(fUseSolarsystem))
         {
+            use_seed_system = false;
+
+            if (!this->isFlag(fUseKnownPlanets))
+            {
+                seed_planets = NULL;
+            }
+
             if  (index == 0)
             {
                 seed_planets    = solar_system;
                 use_seed_system    = true;
-            }
-            else
-            {
-                use_seed_system    = false;
-
-                if (!this->isFlag(fUseKnownPlanets))
-                {
-                    seed_planets = NULL;
-                }
             }
         }
 
@@ -1591,18 +1577,16 @@ int Stargen::generate(
                                         url_path, system_url, svg_url, file_name,
                                         false, true, false, this->isFlag(fDoMoons), (this->graphic_format == SVG));
 
-                     if ((system_count == 1) || (sgOut == NULL))
-                     {
-                        if ((system_count == 1) && (sgOut != NULL))
+                    if ((system_count == 1) || (sgOut == NULL))
+                    {
+                        FILE * fileOut = NULL;
+                        if (system_count == 1)
                         {
-                            html_file = open_html_file (system_name, this->flag_seed, path, url_path, file_name, ".html",
-                                                        this->progname, sgOut);
+                            fileOut = sgOut;
                         }
-                        else
-                        {
-                            html_file = open_html_file (system_name, this->flag_seed, path, url_path, file_name, ".html",
-                                                        this->progname, NULL);
-                        }
+
+                        html_file = open_html_file (system_name, this->flag_seed, path, url_path, file_name, ".html",
+                                                    this->progname, fileOut);
 
                         if (NULL != html_file)
                         {

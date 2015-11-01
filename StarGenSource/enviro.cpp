@@ -1,5 +1,5 @@
 #include    <stdio.h>
-#include    <math.h>
+#include    <algorithm>
 #include    "const.h"
 #include    "structs.h"
 #include    "enviro.h"
@@ -13,10 +13,10 @@ long double luminosity(long double mass_ratio)
 {
     long double n;
 
+    n = 0.5 * (2.0 - mass_ratio) + 4.4;
     if (mass_ratio < 1.0)
         n = 1.75 * (mass_ratio - 0.1) + 3.325;
-    else
-        n = 0.5 * (2.0 - mass_ratio) + 4.4;
+
     return(pow(mass_ratio,n));
 }
 
@@ -29,10 +29,11 @@ int orb_zone(long double luminosity, long double orb_radius)
 {
     if (orb_radius < (4.0 * sqrt(luminosity)))
         return(1);
-    else if (orb_radius < (15.0 * sqrt(luminosity)))
+
+    if (orb_radius < (15.0 * sqrt(luminosity)))
         return(2);
-    else
-        return(3);
+
+    return(3);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -64,46 +65,30 @@ long double kothari_radius(long double mass, bool giant, int zone)
     volatile long double temp1;
     long double temp, temp2, atomic_weight, atomic_num;
 
+
+    atomic_weight = 10.0;
+    atomic_num = 5.0;
+    if (giant)
+    {
+        atomic_weight = 7.0;
+        atomic_num = 4.0;
+        if (zone == 2)
+        {
+            atomic_weight = 2.47;
+            atomic_num = 2.0;
+        }
+    }
+
     if (zone == 1)
     {
+        atomic_weight = 15.0;
+        atomic_num = 8.0;
         if (giant)
         {
             atomic_weight = 9.5;
             atomic_num = 4.5;
         }
-        else
-        {
-            atomic_weight = 15.0;
-            atomic_num = 8.0;
-        }
     }
-    else
-        if (zone == 2)
-        {
-            if (giant)
-            {
-                atomic_weight = 2.47;
-                atomic_num = 2.0;
-            }
-            else
-            {
-                atomic_weight = 10.0;
-                atomic_num = 5.0;
-            }
-        }
-        else
-        {
-            if (giant)
-            {
-                atomic_weight = 7.0;
-                atomic_num = 4.0;
-            }
-            else
-            {
-                atomic_weight = 10.0;
-                atomic_num = 5.0;
-            }
-        }
 
     temp1 = atomic_weight * atomic_num;
 
@@ -136,8 +121,8 @@ long double empirical_density(long double mass, long double orb_radius,
     temp = temp * pow1_4(r_ecosphere / orb_radius);
     if (gas_giant)
         return(temp * 1.2);
-    else
-        return(temp * 5.5);
+
+    return(temp * 5.5);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -204,10 +189,9 @@ long double day_length(planet_pointer    planet)
 
     planet->resonant_period = false;    /* Warning: Modify the planet */
 
+    k2 = 0.33;
     if (giant)
         k2 = 0.24;
-    else
-        k2 = 0.33;
 
     base_angular_velocity = sqrt(2.0 * J * (planetary_mass_in_grams) /
                                  (k2 * pow2(equatorial_radius_in_cm)));
@@ -226,24 +210,21 @@ long double day_length(planet_pointer    planet)
 
 /* Now we change from rad/sec to hours/rotation.                         */
 
-    if (ang_velocity <= 0.0)
-    {
-       stopped = true;
-       day_in_hours = INCREDIBLY_LARGE_NUMBER ;
-    }
-    else
+    stopped = (ang_velocity <= 0.0);
+    day_in_hours = INCREDIBLY_LARGE_NUMBER ;
+    if (ang_velocity > 0.0)
         day_in_hours = RADIANS_PER_ROTATION / (SECONDS_PER_HOUR * ang_velocity);
 
     if ((day_in_hours >= year_in_hours) || stopped)
     {
         if (planet->e > 0.1)
         {
-          spin_resonance_factor     = (1.0 - planet->e) / (1.0 + planet->e);
-          planet->resonant_period     = true;
-          return(spin_resonance_factor * year_in_hours);
+            spin_resonance_factor     = (1.0 - planet->e) / (1.0 + planet->e);
+            planet->resonant_period     = true;
+            return(spin_resonance_factor * year_in_hours);
         }
-        else
-          return(year_in_hours);
+
+        return(year_in_hours);
     }
 
     return(day_in_hours);
@@ -363,11 +344,11 @@ long double vol_inventory(long double mass, long double escape_vel, long double 
         temp2 = temp1;
         if (greenhouse_effect || accreted_gas)
             return(temp2);
-        else
-            return(temp2 / 140.0);    /* 100 -> 140 JLB */
+
+        return(temp2 / 140.0);    /* 100 -> 140 JLB */
     }
-    else
-        return(0.0);
+
+    return(0.0);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -419,8 +400,8 @@ long double hydro_fraction(long double volatile_gas_inventory, long double plane
              * pow2(KM_EARTH_RADIUS / planet_radius);
     if (temp >= 1.0)
         return(1.0);
-    else
-        return(temp);
+
+    return(temp);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -441,18 +422,16 @@ long double cloud_fraction(long double surf_temp, long double smallest_MW_retain
 
     if (smallest_MW_retained > WATER_VAPOR)
         return(0.0);
-    else
-    {
-        surf_area = 4.0 * PI * pow2(equat_radius);
-        hydro_mass = hydro_fraction * surf_area * EARTH_WATER_MASS_PER_AREA;
-        water_vapor_in_kg = (0.00000001 * hydro_mass) *
-                            exp(Q2_36 * (surf_temp - EARTH_AVERAGE_KELVIN));
-        fraction = CLOUD_COVERAGE_FACTOR * water_vapor_in_kg / surf_area;
-        if (fraction >= 1.0)
-            return(1.0);
-        else
-            return(fraction);
-    }
+
+    surf_area = 4.0 * PI * pow2(equat_radius);
+    hydro_mass = hydro_fraction * surf_area * EARTH_WATER_MASS_PER_AREA;
+    water_vapor_in_kg = (0.00000001 * hydro_mass) *
+                        exp(Q2_36 * (surf_temp - EARTH_AVERAGE_KELVIN));
+    fraction = CLOUD_COVERAGE_FACTOR * water_vapor_in_kg / surf_area;
+    if (fraction >= 1.0)
+        return(1.0);
+
+    return(fraction);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -475,8 +454,8 @@ long double ice_fraction(long double hydro_fraction, long double surf_temp)
         temp = (1.5 * hydro_fraction);
     if (temp >= 1.0)
         return(1.0);
-    else
-        return(temp);
+
+    return(temp);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -520,8 +499,8 @@ bool grnhouse(long double r_ecosphere, long double orb_radius)
 
     if (temp > FREEZING_POINT_OF_WATER)
         return(true);
-    else
-        return(false);
+
+    return(false);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -569,33 +548,24 @@ long double planet_albedo(long double water_fraction, long double cloud_fraction
     cloud_adjustment = cloud_fraction / components;
 
     if (rock_fraction >= cloud_adjustment)
-        rock_fraction = rock_fraction - cloud_adjustment;
-    else
-        rock_fraction = 0.0;
+        rock_fraction = std::max((long double)0.0, rock_fraction - cloud_adjustment);
 
     if (water_fraction > cloud_adjustment)
-        water_fraction = water_fraction - cloud_adjustment;
-    else
-        water_fraction = 0.0;
+        water_fraction = std::max((long double)0.0, water_fraction - cloud_adjustment);
 
     if (ice_fraction > cloud_adjustment)
-        ice_fraction = ice_fraction - cloud_adjustment;
-    else
-        ice_fraction = 0.0;
+        ice_fraction = std::max((long double)0.0, ice_fraction - cloud_adjustment);
 
     cloud_part = cloud_fraction * CLOUD_ALBEDO;        /* about(...,0.2); */
 
+    rock_part = rock_fraction * ROCKY_ALBEDO;    /* about(...,0.1); */
+    water_part = water_fraction * WATER_ALBEDO;    /* about(...,0.2); */
+    ice_part = ice_fraction * ICE_ALBEDO;        /* about(...,0.1); */
     if (surf_pressure == 0.0)
     {
         rock_part = rock_fraction * ROCKY_AIRLESS_ALBEDO;    /* about(...,0.3); */
         ice_part = ice_fraction * AIRLESS_ICE_ALBEDO;        /* about(...,0.4); */
         water_part = 0;
-    }
-    else
-    {
-        rock_part = rock_fraction * ROCKY_ALBEDO;    /* about(...,0.1); */
-        water_part = water_fraction * WATER_ALBEDO;    /* about(...,0.2); */
-        ice_part = ice_fraction * ICE_ALBEDO;        /* about(...,0.1); */
     }
 
     return(cloud_part + rock_part + water_part + ice_part);
@@ -814,10 +784,9 @@ void calculate_surface_temp(planet_pointer     planet,
         planet->hydrosphere    = 0.0;
         boil_off = true;
 
+        planet->cloud_cover = 1.0;
         if (planet->molec_weight > WATER_VAPOR)
             planet->cloud_cover = 0.0;
-        else
-            planet->cloud_cover = 1.0;
     }
 
     if (planet->surf_temp < (FREEZING_POINT_OF_WATER - 3.0))

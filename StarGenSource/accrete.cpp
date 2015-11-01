@@ -204,14 +204,12 @@ long double collect_dust(long double last_mass, long double *new_dust,
     if (dust_band == NULL)
         return(0.0);
 
-    if (dust_band->dust_present == false)
-        temp_density = 0.0;
-    else
+    temp_density = 0.0;
+    if (dust_band->dust_present != false)
         temp_density = dust_density;
 
-    if ((last_mass < crit_mass) || (dust_band->gas_present == false))
-        mass_density = temp_density;
-    else
+    mass_density = temp_density;
+    if (!((last_mass < crit_mass) || (dust_band->gas_present == false)))
     {
         mass_density = K * temp_density / (1.0 + sqrt(crit_mass / last_mass)
                                     * (K - 1.0));
@@ -509,10 +507,7 @@ void coalesce_planetesimals(long double a, long double e, long double mass, long
         the_planet->greenhs_rise    = 0;
         the_planet->minor_moons     = false;
 
-        if (mass >= crit_mass)
-            the_planet->gas_giant = true;
-        else
-            the_planet->gas_giant = false;
+        the_planet->gas_giant = (mass >= crit_mass);
 
         if (planet_head == NULL)
         {
@@ -565,10 +560,9 @@ planet_pointer dist_planetary_masses(long double stell_mass_ratio,
     set_initial_conditions(inner_dust,outer_dust);
     planet_inner_bound = nearest_planet(stell_mass_ratio);
 
+    planet_outer_bound = outer_planet_limit;
     if (outer_planet_limit == 0)
         planet_outer_bound = farthest_planet(stell_mass_ratio);
-    else
-        planet_outer_bound = outer_planet_limit;
 
     while (dust_left)
     {

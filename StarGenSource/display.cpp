@@ -35,8 +35,8 @@ char *engineer_notation(long double d, int p)
     static char mansign;
     static char expsign;
     static char output[1+MAX_MAN_DIGS+1+1+MAX_EXP_DIGS+1];
-    long double mantissa;
-    int         exponent;
+    long double mantissa = 0;
+    int exponent = 0;
 
     mansign = '+';
     expsign = '+';
@@ -50,12 +50,8 @@ char *engineer_notation(long double d, int p)
         mansign = '-';
         d = -d;
     }
-    if (d == 0.0)
-    {
-        exponent = 0;
-        mantissa = 0;
-    }
-    else
+
+    if (d != 0.0)
     {
         exponent = (int)log10(d);
         if (exponent == 0 && d < 1.0)    /* log10 sometimes lies */
@@ -526,15 +522,12 @@ void create_svg_file (FILE                *file_arg,
     FILE*    file = stdout;
     char    file_spec[300];
 
+    file = file_arg;
     if (file_arg == NULL)
     {
         sprintf (&file_spec[0], "%s%s%s", path, file_name, svg_ext);
 
         file = fopen (file_spec, "w");
-    }
-    else
-    {
-        file = file_arg;
     }
 
     if (NULL != file)
@@ -742,11 +735,8 @@ FILE *open_html_file (const char *system_name,
     char file_spec[300];
     int  noname = ((NULL == system_name) || (0 == system_name[0]));
 
-    if (file_arg != NULL)
-    {
-        file = file_arg;
-    }
-    else
+    file = file_arg;
+    if (file_arg == NULL)
     {
         sprintf (&file_spec[0], "%s%s%s", path, file_name, ext);
 
@@ -806,96 +796,94 @@ void print_description(FILE*            file,
      || (planet->type == tSubGasGiant)
      || (planet->type == tSubSubGasGiant))
     {
-        // Nothing, for now.
+        return;
     }
+
+    int            first      = true;
+    long double    rel_temp   = (planet->surf_temp -  FREEZING_POINT_OF_WATER) -
+                             EARTH_AVERAGE_CELSIUS;
+    long double    seas       = (planet->hydrosphere * 100.0);
+    long double    clouds     = (planet->cloud_cover * 100.0);
+    long double    atmosphere = (planet->surf_pressure /
+                             EARTH_SURF_PRES_IN_MILLIBARS);
+    long double    ice        = (planet->ice_cover * 100.0);
+    long double    gravity    = planet->surf_grav;
+
+    fputs (opening, file);
+
+    if (gravity < .8)                LPRINT ("Low-G")    /* .8 gees */
+    else if (gravity > 1.2)            LPRINT ("High-G")
+
+    if (rel_temp < -5.)                LPRINT ("Cold")        /* 5 C below earth */
+    else if (rel_temp < -2.0)        LPRINT ("Cool")
+    else if (rel_temp > 7.5)        LPRINT ("Hot")
+    else if (rel_temp > 3.0)        LPRINT ("Warm")
+
+    if (ice > 10.)                    LPRINT ("Icy")        /* 10% surface is ice */
+
+    if (atmosphere < 0.001)            LPRINT ("Airless")
     else
     {
-        int            first      = true;
-        long double    rel_temp   = (planet->surf_temp -  FREEZING_POINT_OF_WATER) -
-                                 EARTH_AVERAGE_CELSIUS;
-        long double    seas       = (planet->hydrosphere * 100.0);
-        long double    clouds     = (planet->cloud_cover * 100.0);
-        long double    atmosphere = (planet->surf_pressure /
-                                 EARTH_SURF_PRES_IN_MILLIBARS);
-        long double    ice        = (planet->ice_cover * 100.0);
-        long double    gravity    = planet->surf_grav;
-
-        fputs (opening, file);
-
-        if (gravity < .8)                LPRINT ("Low-G")    /* .8 gees */
-        else if (gravity > 1.2)            LPRINT ("High-G")
-
-        if (rel_temp < -5.)                LPRINT ("Cold")        /* 5 C below earth */
-        else if (rel_temp < -2.0)        LPRINT ("Cool")
-        else if (rel_temp > 7.5)        LPRINT ("Hot")
-        else if (rel_temp > 3.0)        LPRINT ("Warm")
-
-        if (ice > 10.)                    LPRINT ("Icy")        /* 10% surface is ice */
-
-        if (atmosphere < 0.001)            LPRINT ("Airless")
-        else
+        if (planet->type != tWater)
         {
-            if (planet->type != tWater)
-            {
-                if (seas < 25.)            LPRINT ("Arid")        /* 25% surface is water */
-                else if (seas < 50.)    LPRINT ("Dry")
-                else if (seas > 80.)    LPRINT ("Wet")
-            }
-
-            if (clouds < 10.)            LPRINT ("Cloudless")/* 10% cloud cover */
-            else if (clouds < 40.)        LPRINT ("Few clouds")
-            else if (clouds > 80.)        LPRINT ("Cloudy")
-
-            if (planet->max_temp >= planet->boil_point)
-                                        LPRINT ("Boiling ocean")
-
-            if (planet->surf_pressure < MIN_O2_IPP)
-                                        LPRINT ("Unbreathably thin atmosphere")
-            else if (atmosphere < 0.5)    LPRINT ("Thin atmosphere")
-            else if (atmosphere > MAX_HABITABLE_PRESSURE /    /* Dole, pp. 18-19 */
-                                  EARTH_SURF_PRES_IN_MILLIBARS)
-                                        LPRINT ("Unbreathably thick atmosphere")
-            else if (atmosphere > 2.0)    LPRINT ("Thick atmosphere")
-            else if (planet->type != tTerrestrial)
-                                        LPRINT ("Normal atmosphere")
+            if (seas < 25.)            LPRINT ("Arid")        /* 25% surface is water */
+            else if (seas < 50.)    LPRINT ("Dry")
+            else if (seas > 80.)    LPRINT ("Wet")
         }
 
-        if (first)                        LPRINT ("Earth-like");
+        if (clouds < 10.)            LPRINT ("Cloudless")/* 10% cloud cover */
+        else if (clouds < 40.)        LPRINT ("Few clouds")
+        else if (clouds > 80.)        LPRINT ("Cloudy")
 
-        if (planet->gases > 0)
-        {
-            int    i;
-            int    first = true;
+        if (planet->max_temp >= planet->boil_point)
+                                    LPRINT ("Boiling ocean")
 
-            fprintf (file, " (");
-
-            for (i = 0; i < planet->gases; i++)
-            {
-                int n;
-                int index = StarGen::Gases::max_gas;
-
-                for (n = 0; n < StarGen::Gases::max_gas; n++)
-                {
-                    if (StarGen::Gases::gases[n].num == planet->atmosphere[i].num)
-                        index = n;
-                }
-
-                if ((planet->atmosphere[i].surf_pressure / planet->surf_pressure)
-                    > .01)
-                {
-                    LPRINT (StarGen::Gases::gases[index].html_symbol);
-                }
-            }
-
-            fprintf(file, " - %s)", breathabilityToText(breathability(planet)));
-        }
-
-        if ((int)planet->day == (int)(planet->orb_period * 24.0)
-         || (planet->resonant_period))
-            LPRINT ("1-Face");
-
-        fputs (closing, file);
+        if (planet->surf_pressure < MIN_O2_IPP)
+                                    LPRINT ("Unbreathably thin atmosphere")
+        else if (atmosphere < 0.5)    LPRINT ("Thin atmosphere")
+        else if (atmosphere > MAX_HABITABLE_PRESSURE /    /* Dole, pp. 18-19 */
+                              EARTH_SURF_PRES_IN_MILLIBARS)
+                                    LPRINT ("Unbreathably thick atmosphere")
+        else if (atmosphere > 2.0)    LPRINT ("Thick atmosphere")
+        else if (planet->type != tTerrestrial)
+                                    LPRINT ("Normal atmosphere")
     }
+
+    if (first)                        LPRINT ("Earth-like");
+
+    if (planet->gases > 0)
+    {
+        int    i;
+        int    first = true;
+
+        fprintf (file, " (");
+
+        for (i = 0; i < planet->gases; i++)
+        {
+            int n;
+            int index = StarGen::Gases::max_gas;
+
+            for (n = 0; n < StarGen::Gases::max_gas; n++)
+            {
+                if (StarGen::Gases::gases[n].num == planet->atmosphere[i].num)
+                    index = n;
+            }
+
+            if ((planet->atmosphere[i].surf_pressure / planet->surf_pressure)
+                > .01)
+            {
+                LPRINT (StarGen::Gases::gases[index].html_symbol);
+            }
+        }
+
+        fprintf(file, " - %s)", breathabilityToText(breathability(planet)));
+    }
+
+    if ((int)planet->day == (int)(planet->orb_period * 24.0)
+     || (planet->resonant_period))
+        LPRINT ("1-Face");
+
+    fputs (closing, file);
 }
 
 /*

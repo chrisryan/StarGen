@@ -279,17 +279,17 @@ int main (int argc, char *argv[]) {
                     oStargen->addFlag(fDoGases);
                     break;
                 case 'v':         // verbosity
-                    if (isdigit(*(c+1))) {
-                        int flag_verbose;
-                        sscanf (++c, "%x", &flag_verbose);
-                        skip = true;
-                        StarGen::Stargen::setVerbosity(flag_verbose);
-                        if (StarGen::Stargen::isVerbose(0x0001)) {
-                            oStargen->addFlag(fDoGases);
-                        }
-                    } else {
+                    if (!isdigit(*(c+1))) {
                         StarGen::ListVerbosity();
                         return 1;
+                    }
+
+                    int flag_verbose;
+                    sscanf (++c, "%x", &flag_verbose);
+                    skip = true;
+                    StarGen::Stargen::setVerbosity(flag_verbose);
+                    if (StarGen::Stargen::isVerbose(0x0001)) {
+                        oStargen->addFlag(fDoGases);
                     }
 
                     break;
@@ -365,7 +365,8 @@ int main (int argc, char *argv[]) {
         StarGen::ListCatalog(catalog);
         return 1;
     }
-    else if (listCatalogAsHTML)
+
+    if (listCatalogAsHTML)
     {
         StarGen::ListCatalogHTML(catalog);
         return 1;
