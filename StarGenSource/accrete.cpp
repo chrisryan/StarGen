@@ -12,7 +12,7 @@
 #include	"structs.h"
 #include 	"accrete.h"
 #include 	"stargen.h"
-#include 	"utils.h"
+#include 	"Random.h"
 
 typedef struct dust_record  *dust_pointer;
 typedef struct dust_record {

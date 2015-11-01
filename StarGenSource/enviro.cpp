@@ -4,7 +4,7 @@
 #include	"structs.h"
 #include	"enviro.h"
 #include	"stargen.h"
-#include	"utils.h"
+#include	"Random.h"
 #include "ChemTable.h"
 
 void set_temp_range(planet_pointer planet);

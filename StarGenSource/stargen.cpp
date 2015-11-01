@@ -21,7 +21,7 @@
 #include	"enviro.h"
 #include	"display.h"
 #include	"stargen.h"
-#include	"utils.h"
+#include	"Random.h"
 #include "ChemTable.h"
 #include "Catalogs.h"
 
