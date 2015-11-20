@@ -269,8 +269,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
                         index = n;
                 }
 
-                if (inspired_partial_pressure (planet->surf_pressure,
-                                               planet->atmosphere[i].surf_pressure)
+                if (planet->atmosphere[i].inspired_partial_pressure(planet->surf_pressure)
                     > StarGen::Gases::gases[index].max_ipp)
                     poisonous = true;
 
@@ -283,8 +282,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
                                     100. * (planet->atmosphere[i].surf_pressure /
                                             planet->surf_pressure),
                                     planet->atmosphere[i].surf_pressure,
-                                    inspired_partial_pressure (planet->surf_pressure,
-                                                               planet->atmosphere[i].surf_pressure),
+                                    planet->atmosphere[i].inspired_partial_pressure(planet->surf_pressure),
                                     poisonous ? " poisonous" : ""
                             );
                     ptr = buffer + strlen(buffer);
@@ -368,8 +366,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
                             index = n;
                     }
 
-                    if (inspired_partial_pressure (moon->surf_pressure,
-                                                   moon->atmosphere[i].surf_pressure)
+                    if (moon->atmosphere[i].inspired_partial_pressure(moon->surf_pressure)
                         > StarGen::Gases::gases[index].max_ipp)
                         poisonous = true;
 
@@ -382,8 +379,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
                                         100. * (moon->atmosphere[i].surf_pressure /
                                                 moon->surf_pressure),
                                         moon->atmosphere[i].surf_pressure,
-                                        inspired_partial_pressure (moon->surf_pressure,
-                                                                   moon->atmosphere[i].surf_pressure),
+                                        moon->atmosphere[i].inspired_partial_pressure(moon->surf_pressure),
                                         poisonous ? " poisonous" : ""
                                 );
                         ptr = buffer + strlen(buffer);
@@ -1486,8 +1482,7 @@ void html_decribe_planet(planet_pointer planet,
                     index = n;
             }
 
-            if (inspired_partial_pressure (planet->surf_pressure,
-                                           planet->atmosphere[i].surf_pressure)
+            if (planet->atmosphere[i].inspired_partial_pressure(planet->surf_pressure)
                 > StarGen::Gases::gases[index].max_ipp)
                 poisonous = true;
 
@@ -1504,8 +1499,7 @@ void html_decribe_planet(planet_pointer planet,
                                 100. * (planet->atmosphere[i].surf_pressure /
                                         planet->surf_pressure),
                                 planet->atmosphere[i].surf_pressure,
-                                inspired_partial_pressure (planet->surf_pressure,
-                                                           planet->atmosphere[i].surf_pressure),
+                                planet->atmosphere[i].inspired_partial_pressure(planet->surf_pressure),
                                 poisonous ? "poisonous" : ""
                         );
             }

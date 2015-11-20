@@ -448,8 +448,7 @@ void Stargen::calculate_gases(StarGen::Sun* sun, planet_pointer planet, char* pl
                     if (StarGen::Stargen::isVerbose(0x2000))
                     {
                         if ((planet->atmosphere[n].num == AN_O) &&
-                            inspired_partial_pressure (planet->surf_pressure,
-                                                       planet->atmosphere[n].surf_pressure)
+                            planet->atmosphere[n].inspired_partial_pressure(planet->surf_pressure)
                             > StarGen::Gases::gases[i].max_ipp)
                         {
                             fprintf (stderr, "%s\t Poisoned by O2\n",

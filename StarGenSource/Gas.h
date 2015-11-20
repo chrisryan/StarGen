@@ -9,6 +9,8 @@ namespace StarGen {
             static int diminishing_pressure(const void *xp, const void *yp);
 
             Gas(int num = 0, long double surf_pressure = 0);
+
+            long double inspired_partial_pressure(long double surf_pressure);
     };
 
 }

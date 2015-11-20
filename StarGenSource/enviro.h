@@ -23,8 +23,6 @@ long double opacity(long double, long double);
 long double gas_life(long double, planet_pointer);
 void iterate_surface_temp(planet_pointer);
 
-long double inspired_partial_pressure (long double, long double);
-
 enum Breathability {
     None,
     Breathable,

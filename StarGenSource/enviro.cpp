@@ -827,18 +827,6 @@ void iterate_surface_temp(planet_pointer planet) {
 }
 
 //
-// Inspired partial pressure, taking into account humidification of the
-// air in the nasal passage and throat This formula is on Dole's p. 14
-//
-
-long double inspired_partial_pressure (long double surf_pressure, long double gas_pressure) {
-    long double pH2O = (H20_ASSUMED_PRESSURE);
-    long double fraction = gas_pressure / surf_pressure;
-
-    return (surf_pressure - pH2O) * fraction;
-}
-
-//
 // This function uses figures on the maximum inspired partial pressures
 // of Oxygen, other atmospheric and traces gases as laid out on pages 15,
 // 16 and 18 of Dole's Habitable Planets for Man to derive breathability
@@ -857,7 +845,7 @@ Breathability breathability (planet_pointer planet) {
         int n;
         int gas_no = 0;
 
-        long double ipp = inspired_partial_pressure (planet->surf_pressure, planet->atmosphere[index].surf_pressure);
+        long double ipp = planet->atmosphere[index].inspired_partial_pressure(planet->surf_pressure);
 
         for (n = 0; n < StarGen::Gases::max_gas; n++) {
             if (StarGen::Gases::gases[n].num == planet->atmosphere[index].num) {
