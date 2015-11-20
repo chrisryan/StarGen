@@ -301,8 +301,9 @@ void Stargen::generate_stellar_system(StarGen::Sun* sun,
 
     outer_dust_limit     = stellar_dust_limit(sun->mass);
 
-    if (sun->luminosity == 0)
-        sun->luminosity     = luminosity(sun->mass);
+    if (sun->luminosity == 0) {
+        sun->calculateLuminosity();
+    }
 
     sun->r_ecosphere     = sqrt(sun->luminosity);
     sun->life             = 1.0E10 * (sun->mass / sun->luminosity);

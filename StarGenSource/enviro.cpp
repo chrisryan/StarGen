@@ -9,17 +9,6 @@
 
 void set_temp_range(planet_pointer planet);
 
-long double luminosity(long double mass_ratio) {
-    long double n;
-
-    n = 0.5 * (2.0 - mass_ratio) + 4.4;
-    if (mass_ratio < 1.0) {
-        n = 1.75 * (mass_ratio - 0.1) + 3.325;
-    }
-
-    return(pow(mass_ratio, n));
-}
-
 //
 // This function, given the orbital radius of a planet in AU, returns
 // the orbital 'zone' of the particle.

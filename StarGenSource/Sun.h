@@ -12,5 +12,7 @@ namespace StarGen {
 
             Sun(long double luminosity, long double mass, long double life,
                 long double age, long double r_ecosphere, const char *name);
+
+            void calculateLuminosity();
     };
 }
