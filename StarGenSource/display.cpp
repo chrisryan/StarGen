@@ -30,63 +30,6 @@
 #define MAX_EXP_DIGS 3
 #define MAX_MAN_DIGS 20
 
-char *engineer_notation(long double d, int p) {
-    static char mansign;
-    static char expsign;
-    static char output[1+MAX_MAN_DIGS+1+1+MAX_EXP_DIGS+1];
-    long double mantissa = 0;
-    int exponent = 0;
-
-    mansign = '+';
-    expsign = '+';
-    if (p > MAX_MAN_DIGS) {
-        p = MAX_MAN_DIGS;
-    }
-
-    if (p < 3) {
-        p = 3;
-    }
-
-    --p;
-    if (d < 0.0) {
-        mansign = '-';
-        d = -d;
-    }
-
-    if (d != 0.0) {
-        exponent = (int)log10(d);
-        // log10 sometimes lies
-        if (exponent == 0 && d < 1.0) {
-            --exponent;
-            --p;
-        }
-
-        if (exponent < 0) {
-            expsign = '-';
-            --exponent;
-        }
-
-        mantissa = d / pow(10.0, (long double) exponent);
-        if (exponent < 0) {
-            exponent = -exponent;
-        }
-
-        while ((exponent % 3) != 0) {
-            mantissa *= 10.0;
-            p--;
-            if (expsign == '-') {
-                ++exponent;
-            } else {
-                --exponent;
-            }
-        }
-    }
-
-    sprintf(output, "%c%*.*Lfe%c%*.*d", mansign, p, p, mantissa, expsign, MAX_EXP_DIGS, MAX_EXP_DIGS, exponent);
-
-    return output;
-}
-
 void text_describe_system(planet_pointer innermost_planet, bool do_gases, long int seed) {
     planet_pointer planet;
     StarGen::Sun* sun = innermost_planet->sun;

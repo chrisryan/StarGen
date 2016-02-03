@@ -1,6 +1,5 @@
 #pragma once
 
-char *engineer_notation(long double, int);
 void text_describe_system(planet_pointer, bool, long);
 void csv_describe_system(FILE *, planet_pointer, bool, long);
 void csv_thumbnails(FILE*, char*, char*, char*, char*);
