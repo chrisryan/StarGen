@@ -728,114 +728,74 @@ namespace StarGen {
             if ((breathe == Breathable) &&
                 (!planet->resonant_period) && // Option needed?
                 ((int)planet->day != (int)(planet->orb_period * 24.0))) {
-                int list_it = false;
+                bool modified = false;
                 long double illumination = pow2 (1.0 / planet->a) * (planet->sun)->luminosity;
 
                 habitable++;
 
                 if (min_breathable_temp > planet->surf_temp) {
                     min_breathable_temp = planet->surf_temp;
-
-                    if (StarGen::Stargen::isVerbose(0x0002)) {
-                        list_it = true;
-                    }
+                    modified = true;
                 }
 
                 if (max_breathable_temp < planet->surf_temp) {
                     max_breathable_temp = planet->surf_temp;
-
-                    if (StarGen::Stargen::isVerbose(0x0002)) {
-                        list_it = true;
-                    }
+                    modified = true;
                 }
 
                 if (min_breathable_g > planet->surf_grav) {
                     min_breathable_g = planet->surf_grav;
-
-                    if (StarGen::Stargen::isVerbose(0x0002)) {
-                        list_it = true;
-                    }
+                    modified = true;
                 }
 
                 if (max_breathable_g < planet->surf_grav) {
                     max_breathable_g = planet->surf_grav;
-
-                    if (StarGen::Stargen::isVerbose(0x0002)) {
-                        list_it = true;
-                    }
+                    modified = true;
                 }
 
                 if (min_breathable_l > illumination) {
                     min_breathable_l = illumination;
-
-                    if (StarGen::Stargen::isVerbose(0x0002)) {
-                        list_it = true;
-                    }
+                    modified = true;
                 }
 
                 if (max_breathable_l < illumination) {
                     max_breathable_l = illumination;
-
-                    if (StarGen::Stargen::isVerbose(0x0002)) {
-                        list_it = true;
-                    }
+                    modified = true;
                 }
 
                 if (planet->type == tTerrestrial) {
                     if (min_breathable_terrestrial_g > planet->surf_grav) {
                         min_breathable_terrestrial_g = planet->surf_grav;
-
-                        if (StarGen::Stargen::isVerbose(0x0002)) {
-                            list_it = true;
-                        }
+                        modified = true;
                     }
 
                     if (max_breathable_terrestrial_g < planet->surf_grav) {
                         max_breathable_terrestrial_g = planet->surf_grav;
-
-                        if (StarGen::Stargen::isVerbose(0x0002)) {
-                            list_it = true;
-                        }
+                        modified = true;
                     }
 
                     if (min_breathable_terrestrial_l > illumination) {
                         min_breathable_terrestrial_l = illumination;
-
-                        if (StarGen::Stargen::isVerbose(0x0002)) {
-                            list_it = true;
-                        }
+                        modified = true;
                     }
 
                     if (max_breathable_terrestrial_l < illumination) {
                         max_breathable_terrestrial_l = illumination;
-
-                        if (StarGen::Stargen::isVerbose(0x0002)) {
-                            list_it = true;
-                        }
+                        modified = true;
                     }
                 }
 
                 if (min_breathable_p > planet->surf_pressure) {
                     min_breathable_p = planet->surf_pressure;
-
-                    if (StarGen::Stargen::isVerbose(0x0002)) {
-                        list_it = true;
-                    }
+                    modified = true;
                 }
 
                 if (max_breathable_p < planet->surf_pressure) {
                     max_breathable_p = planet->surf_pressure;
-
-                    if (StarGen::Stargen::isVerbose(0x0002)) {
-                        list_it = true;
-                    }
+                    modified = true;
                 }
 
-                if (StarGen::Stargen::isVerbose(0x0004)) {
-                    list_it = true;
-                }
-
-                if (list_it) {
+                if (StarGen::Stargen::isVerbose(0x0004) || (StarGen::Stargen::isVerbose(0x0002) && modified)) {
                     fprintf(stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\tl=%4.2Lf\t%s\n",
                             type_string (planet->type),
                             planet->surf_pressure,
