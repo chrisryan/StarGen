@@ -1,13 +1,11 @@
-/*
- *    StarGen Main Routine
- *
- *    This file provides the main command-line interface to StarGen.
- *    Other platform-specific UIs can be created by duplicating its
- *    general functionality and then calling stargen(), whose API is
- *    defined in stargen.h
- *
- *    $Id: main.c,v 1.13 2008/12/30 23:15:13 brons Exp $
- */
+//
+// StarGen Main Routine
+//
+// This file provides the main command-line interface to StarGen.
+// Other platform-specific UIs can be created by duplicating its
+// general functionality and then calling stargen(), whose API is
+// defined in stargen.h
+//
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,19 +63,19 @@ void usage(char *prognam) {
     );
 }
 
-int main (int argc, char *argv[]) {
-    char        flag_char               = '?';
-    char        path[300]               = SUBDIR;
-    char        url_path_arg[300]       = "";
-    char        filename_arg[300]       = "";
-    char        arg_name [80]           = "";
+int main(int argc, char *argv[]) {
+    char flag_char = '?';
+    char path[300] = SUBDIR;
+    char url_path_arg[300] = "";
+    char filename_arg[300] = "";
+    char arg_name [80] = "";
 
-    bool        use_stdout              = false;
-    char *      prognam;
-    catalog *   catalog                 = NULL;
+    bool use_stdout = false;
+    char * prognam;
+    catalog * catalog = NULL;
 
-    char *      c                       = NULL;
-    bool        skip                    = false;
+    char * c = NULL;
+    bool skip = false;
 
     bool listCatalog = false;
     bool listCatalogAsHTML = false;
@@ -102,13 +100,13 @@ int main (int argc, char *argv[]) {
                 case '-':
                     use_stdout = true;
                     break;
-                case 's':         // set random seed
+                case 's': // set random seed
                     oStargen->setSeed(atol(&(*++c)));
                     skip = true;
                     break;
-                case 'm':         // set mass of star
+                case 'm': // set mass of star
                 {
-                    double m;     // gnu C doesn't like to scanf long doubles
+                    double m; // gnu C doesn't like to scanf long doubles
 
                     sscanf (++c, "%lf", &m);
                     oStargen->setMass(m);
@@ -116,21 +114,21 @@ int main (int argc, char *argv[]) {
                     skip = true;
                     break;
                 }
-                case 'n':         // number of systems
+                case 'n': // number of systems
                     oStargen->setCount(atoi(&(*++c)));
                     skip = true;
                     break;
-                case 'i':         // number of systems
+                case 'i': // number of systems
                     oStargen->setIncrement(atoi(&(*++c)));
                     skip = true;
                     break;
-                case 'x':         // Use the solar system
+                case 'x': // Use the solar system
                     flag_char = *c;
                     oStargen->addFlag(fUseSolarsystem);
                     if (oStargen->getMass() == 0.0)
                         oStargen->setMass(1.0);
                     break;
-                case 'a':         // Use the solar system varying earth
+                case 'a': // Use the solar system varying earth
                     flag_char = *c;
                     oStargen->addFlag(fReuseSolarsystem);
                     break;
@@ -176,7 +174,7 @@ int main (int argc, char *argv[]) {
                     catalog = &solstation;
                     flag_char = toupper(*c);
                     break;
-                case 'b':         // experimental catal (Manticore, Helios etc.)
+                case 'b': // experimental catal (Manticore, Helios etc.)
                     catalog = &manticore_cat;
                     flag_char = toupper(*c);
                     break;
@@ -217,7 +215,7 @@ int main (int argc, char *argv[]) {
 
                     skip = true;
                     break;
-                case 't':         // display text
+                case 't': // display text
                     oStargen->setOutputFormat(StarGen::TEXT);
                     break;
                 case 'e':
@@ -278,7 +276,7 @@ int main (int argc, char *argv[]) {
                 case 'g':
                     oStargen->addFlag(fDoGases);
                     break;
-                case 'v':         // verbosity
+                case 'v': // verbosity
                     if (!isdigit(*(c+1))) {
                         StarGen::ListVerbosity();
                         return 1;
@@ -360,28 +358,19 @@ int main (int argc, char *argv[]) {
         }
     }
 
-    if (listCatalog)
-    {
+    if (listCatalog) {
         StarGen::ListCatalog(catalog);
         return 1;
     }
 
-    if (listCatalogAsHTML)
-    {
+    if (listCatalogAsHTML) {
         StarGen::ListCatalogHTML(catalog);
         return 1;
     }
 
     oStargen->setCatalog(catalog);
     oStargen->setFlagChar(flag_char);
-    oStargen->generate(
-        path,
-        url_path_arg,
-        filename_arg,
-        arg_name,
-
-        use_stdout ? stdout : NULL
-    );
+    oStargen->generate(path, url_path_arg, filename_arg, arg_name, use_stdout ? stdout : NULL);
 
     return 0;
 }
