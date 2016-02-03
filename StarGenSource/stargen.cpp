@@ -21,6 +21,7 @@
 #include "Random.h"
 #include "ChemTable.h"
 #include "Catalogs.h"
+#include "Util.h"
 
 #define MIN_MASS 0.4
 #define INCREMENT_MASS 0.05
@@ -513,7 +514,7 @@ namespace StarGen {
             {
                 long double temp = planet->estimated_terr_temp;
 
-                if ((temp >= FREEZING_POINT_OF_WATER) && (temp <= EARTH_AVERAGE_KELVIN + 10.) && (sun->age > 2.0E9)) {
+                if (Util::between(temp, FREEZING_POINT_OF_WATER, EARTH_AVERAGE_KELVIN + 10.) && (sun->age > 2.0E9)) {
                     habitable_jovians++;
 
                     if (StarGen::Stargen::isVerbose(0x8000)) {
@@ -889,12 +890,12 @@ namespace StarGen {
             long double gravity = planet->surf_grav;
             Breathability breathe = breathability(planet);
 
-            if ((gravity >= .8) && (gravity <= 1.2) &&
-                (rel_temp >= -2.0) && (rel_temp <= 3.0) &&
+            if (Util::between(gravity, .8, 1.2) &&
+                Util::between(rel_temp, -2.0, 3.0) &&
                 (ice <= 10.) &&
-                (pressure >= 0.5) && (pressure <= 2.0) &&
-                (clouds >= 40.) && (clouds <= 80.) &&
-                (seas >= 50.) && (seas <= 80.) &&
+                Util::between(pressure, 0.5, 2.0) &&
+                Util::between(clouds, 40., 80.) &&
+                Util::between(seas, 50., 80.) &&
                 (planet->type != tWater) &&
                 (breathe == Breathable)) {
                 earthlike++;

@@ -102,7 +102,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_stargen_OBJECTS = accrete.$(OBJEXT) display.$(OBJEXT) \
 	enviro.$(OBJEXT) main.$(OBJEXT) stargen.$(OBJEXT) \
 	Random.$(OBJEXT) ChemTable.$(OBJEXT) Gas.$(OBJEXT) \
-	Sun.$(OBJEXT) Catalogs.$(OBJEXT)
+	Sun.$(OBJEXT) Catalogs.$(OBJEXT) Util.$(OBJEXT)
 stargen_OBJECTS = $(am_stargen_OBJECTS)
 stargen_DEPENDENCIES =
 AM_V_P = $(am__v_P_@AM_V@)
@@ -246,7 +246,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-stargen_SOURCES = accrete.cpp display.cpp enviro.cpp main.cpp stargen.cpp Random.cpp ChemTable.cpp Gas.cpp Sun.cpp Catalogs.cpp
+stargen_SOURCES = accrete.cpp display.cpp enviro.cpp main.cpp stargen.cpp Random.cpp ChemTable.cpp Gas.cpp Sun.cpp Catalogs.cpp Util.cpp
 stargen_LDADD = -lm
 all: all-am
 
@@ -339,6 +339,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Gas.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Random.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Sun.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/accrete.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/display.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/enviro.Po@am__quote@
