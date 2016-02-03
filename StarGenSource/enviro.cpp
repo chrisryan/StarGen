@@ -285,7 +285,7 @@ long double vol_inventory(long double mass, long double escape_vel, long double 
     if (velocity_ratio >= GAS_RETENTION_THRESHOLD) {
         switch (zone) {
             case 1:
-                proportion_const = 140000.0;    /* 100 -> 140 JLB */
+                proportion_const = 140000.0; // 100 -> 140 JLB
                 break;
             case 2:
                 proportion_const = 75000.0;
@@ -594,15 +594,6 @@ long double gas_life(long double molecular_weight, planet_pointer planet) {
     long double t = (pow3(v) / (2.0 * pow2(g) * r)) * exp((3.0 * g * r) / pow2(v));
     long double years = t / (SECONDS_PER_HOUR * 24.0 * DAYS_IN_A_YEAR);
 
-//    long double ve = planet->esc_velocity;
-//    long double k = 2;
-//    long double t2 = ((k * pow3(v) * r) / pow4(ve)) * exp((3.0 * pow2(ve)) / (2.0 * pow2(v)));
-//    long double years2 = t2 / (SECONDS_PER_HOUR * 24.0 * DAYS_IN_A_YEAR);
-
-//    if (StarGen::Stargen::isVerbose(0x0040)) {
-//        fprintf (stderr, "gas_life: %LGs, V ratio: %Lf\n", years, ve / v);
-//    }
-
     if (years > 2.0E10) {
         years = INCREDIBLY_LARGE_NUMBER;
     }
@@ -669,10 +660,8 @@ long double min_molec_weight (planet_pointer planet) {
 //     planet->boil_point
 //
 
-void calculate_surface_temp(planet_pointer planet, bool first,
-                            long double last_water, long double last_clouds,
-                            long double last_ice, long double last_temp,
-                            long double last_albedo) {
+void calculate_surface_temp(planet_pointer planet, bool first, long double last_water, long double last_clouds,
+                            long double last_ice, long double last_temp, long double last_albedo) {
     long double effective_temp;
     long double water_raw;
     long double clouds_raw;
@@ -761,7 +750,7 @@ void calculate_surface_temp(planet_pointer planet, bool first,
     set_temp_range(planet);
 
     if (StarGen::Stargen::isVerbose(0x0020)) {
-        fprintf (stderr, "%5.1Lf AU: %5.1Lf = %5.1Lf ef + %5.1Lf gh%c "
+        fprintf(stderr, "%5.1Lf AU: %5.1Lf = %5.1Lf ef + %5.1Lf gh%c "
                 "(W: %4.2Lf (%4.2Lf) C: %4.2Lf (%4.2Lf) I: %4.2Lf A: (%4.2Lf))\n",
                 planet->a,
                 planet->surf_temp - FREEZING_POINT_OF_WATER,
@@ -784,15 +773,15 @@ void iterate_surface_temp(planet_pointer planet) {
     long double n_life = gas_life(ATOMIC_NITROGEN, planet);
 
     if (StarGen::Stargen::isVerbose(0x20000)) {
-        fprintf (stderr, "%d:                     %5.1Lf it [%5.1Lf re %5.1Lf a %5.1Lf alb]\n",
+        fprintf(stderr, "%d:                     %5.1Lf it [%5.1Lf re %5.1Lf a %5.1Lf alb]\n",
                 planet->planet_no,
                 initial_temp,
                 planet->sun->r_ecosphere, planet->a, planet->albedo
-                );
+               );
     }
 
     if (StarGen::Stargen::isVerbose(0x0040)) {
-        fprintf (stderr, "\nGas lifetimes: H2 - %Lf, H2O - %Lf, N - %Lf, N2 - %Lf\n",
+        fprintf(stderr, "\nGas lifetimes: H2 - %Lf, H2O - %Lf, N - %Lf, N2 - %Lf\n",
                 h2_life, h2o_life, n_life, n2_life);
     }
 
@@ -815,14 +804,14 @@ void iterate_surface_temp(planet_pointer planet) {
     planet->greenhs_rise = planet->surf_temp - initial_temp;
 
     if (StarGen::Stargen::isVerbose(0x20000)) {
-        fprintf (stderr, "%d: %5.1Lf gh = %5.1Lf (%5.1Lf C) st - %5.1Lf it [%5.1Lf re %5.1Lf a %5.1Lf alb]\n",
+        fprintf(stderr, "%d: %5.1Lf gh = %5.1Lf (%5.1Lf C) st - %5.1Lf it [%5.1Lf re %5.1Lf a %5.1Lf alb]\n",
                 planet->planet_no,
                 planet->greenhs_rise,
                 planet->surf_temp,
                 planet->surf_temp - FREEZING_POINT_OF_WATER,
                 initial_temp,
                 planet->sun->r_ecosphere, planet->a, planet->albedo
-                );
+               );
     }
 }
 
