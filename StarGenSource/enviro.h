@@ -1,6 +1,5 @@
 #pragma once
 
-long double luminosity(long double);
 int orb_zone(long double, long double);
 long double volume_radius(long double, long double);
 long double kothari_radius(long double, bool, int);
@@ -19,7 +18,6 @@ long double pressure(long double, long double, long double);
 long double boiling_point(long double);
 long double est_temp(long double, long double, long double);
 bool grnhouse(long double r_ecosphere, long double);
-long double opacity(long double, long double);
 long double gas_life(long double, planet_pointer);
 void iterate_surface_temp(planet_pointer);
 
