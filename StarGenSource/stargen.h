@@ -124,6 +124,7 @@ namespace StarGen {
             int type_counts[12];
             int type_count;
             int max_type_count;
+            int habitable_jovians;
 
             void initRandomGenerator();
 
@@ -158,6 +159,7 @@ namespace StarGen {
             void check_planet(planet_pointer planet, char *planet_id, int is_moon);
             void resetTypeCounts();
             void listTypeDiversity(const char * system_name, int sys_no);
+            void listHabitableJovians(Sun *sun, planet_pointer planet, const char* planet_id);
     };
 
 

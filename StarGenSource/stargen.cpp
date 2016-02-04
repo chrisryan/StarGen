@@ -42,6 +42,7 @@ namespace StarGen {
         this->mass_arg = 0.0;
         this->cat_arg = NULL;
         this->max_type_count = 0;
+        this->habitable_jovians = 0;
         setRatio(0.0);
         setProgramName(NULL);
         resetTypeCounts();
@@ -215,7 +216,6 @@ planet_pointer innermost_planet;
 int earthlike = 0;
 int total_earthlike = 0;
 int habitable = 0;
-int habitable_jovians= 0;
 int total_habitable = 0;
 
 long double min_breathable_terrestrial_g = 1000.0;
@@ -510,27 +510,7 @@ namespace StarGen {
             planet->estimated_temp = est_temp(sun->r_ecosphere, planet->a, planet->albedo);
             planet->estimated_terr_temp = est_temp(sun->r_ecosphere, planet->a, EARTH_ALBEDO);
 
-            {
-                long double temp = planet->estimated_terr_temp;
-
-                if (Util::between(temp, FREEZING_POINT_OF_WATER, EARTH_AVERAGE_KELVIN + 10.) && (sun->age > 2.0E9)) {
-                    habitable_jovians++;
-
-                    if (Stargen::isVerbose(0x8000)) {
-                        fprintf(stderr, "%s\t%s (%4.2LfEM %5.3Lf By)%s with earth-like temperature (%.1Lf C, %.1Lf F, %+.1Lf C Earth).\n",
-                                planet_id,
-                                planet->type == tGasGiant ? "Jovian" :
-                                    planet->type == tSubGasGiant ? "Sub-Jovian" :
-                                        planet->type == tSubSubGasGiant ? "Gas Dwarf" : "Big",
-                                planet->mass * SUN_MASS_IN_EARTH_MASSES,
-                                sun->age /1.0E9,
-                                planet->first_moon == NULL ? "" : " WITH MOON",
-                                temp - FREEZING_POINT_OF_WATER,
-                                32 + ((temp - FREEZING_POINT_OF_WATER) * 1.8),
-                                temp - EARTH_AVERAGE_KELVIN);
-                    }
-                }
-            }
+            listHabitableJovians(sun, planet, planet_id);
         } else {
             planet->estimated_temp = est_temp(sun->r_ecosphere, planet->a, EARTH_ALBEDO);
             planet->estimated_terr_temp = est_temp(sun->r_ecosphere, planet->a, EARTH_ALBEDO);
@@ -1181,7 +1161,7 @@ namespace StarGen {
 
             earthlike = 0;
             habitable = 0;
-            habitable_jovians = 0;
+            this->habitable_jovians = 0;
 
             if (this->isFlag(fReuseSolarsystem)) {
                 seed_planets = solar_system;
@@ -1216,7 +1196,7 @@ namespace StarGen {
             if ((!(only_habitable || this->isFlag(fOnlyMultiHabitable) || this->isFlag(fOnlyJovianHabitable) || this->isFlag(fOnlyEarthlike)))
                 || (only_habitable && (habitable > 0))
                 || (this->isFlag(fOnlyMultiHabitable) && (habitable > 1))
-                || (this->isFlag(fOnlyJovianHabitable) && (habitable_jovians > 0))
+                || (this->isFlag(fOnlyJovianHabitable) && (this->habitable_jovians > 0))
                 || (this->isFlag(fOnlyEarthlike) && (earthlike > 0))
                ) {
                 char system_url[300] = "";
@@ -1446,6 +1426,28 @@ namespace StarGen {
                         this->type_count,
                         counter,
                         norm_type_count);
+            }
+        }
+    }
+
+    void Stargen::listHabitableJovians(Sun * sun, planet_pointer planet, const char* planet_id) {
+        long double temp = planet->estimated_terr_temp;
+
+        if (Util::between(temp, FREEZING_POINT_OF_WATER, EARTH_AVERAGE_KELVIN + 10.) && (sun->age > 2.0E9)) {
+            this->habitable_jovians++;
+
+            if (Stargen::isVerbose(0x8000)) {
+                fprintf(stderr, "%s\t%s (%4.2LfEM %5.3Lf By)%s with earth-like temperature (%.1Lf C, %.1Lf F, %+.1Lf C Earth).\n",
+                        planet_id,
+                        planet->type == tGasGiant ? "Jovian" :
+                            planet->type == tSubGasGiant ? "Sub-Jovian" :
+                                planet->type == tSubSubGasGiant ? "Gas Dwarf" : "Big",
+                        planet->mass * SUN_MASS_IN_EARTH_MASSES,
+                        sun->age /1.0E9,
+                        planet->first_moon == NULL ? "" : " WITH MOON",
+                        temp - FREEZING_POINT_OF_WATER,
+                        32 + ((temp - FREEZING_POINT_OF_WATER) * 1.8),
+                        temp - EARTH_AVERAGE_KELVIN);
             }
         }
     }
