@@ -58,8 +58,8 @@ int Gases::max_gas = (sizeof(Gases::gases) / sizeof(Element)) - 1;
  */
 static int diminishing_abundance(const void *xp, const void *yp)
 {
-    const StarGen::Element *x = (StarGen::Element *) xp;
-    const StarGen::Element *y = (StarGen::Element *) yp;
+    const Element *x = (Element *) xp;
+    const Element *y = (Element *) yp;
     long double    xx = x->abunds * x->abunde;
     long double    yy = y->abunds * y->abunde;
 
@@ -70,18 +70,18 @@ static int diminishing_abundance(const void *xp, const void *yp)
 
 void Gases::initialize()
 {
-    for (int index = 0; index < StarGen::Gases::max_gas; index++)
+    for (int index = 0; index < Gases::max_gas; index++)
     {
-        if (StarGen::Gases::gases[index].max_ipp == 0.0)
+        if (Gases::gases[index].max_ipp == 0.0)
         {
-            StarGen::Gases::gases[index].max_ipp = INCREDIBLY_LARGE_NUMBER;
+            Gases::gases[index].max_ipp = INCREDIBLY_LARGE_NUMBER;
         }
     }
 
     qsort(
-        StarGen::Gases::gases,
+        Gases::gases,
         Gases::max_gas,
-        sizeof(*StarGen::Gases::gases),
+        sizeof(*Gases::gases),
         diminishing_abundance
     );
 }

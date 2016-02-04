@@ -125,7 +125,7 @@ namespace StarGen {
             void initRandomGenerator();
 
             void generate_stellar_system(
-                StarGen::Sun* sun,
+                Sun* sun,
                 bool use_seed_system,
                 planet_pointer seed_system,
                 int sys_no,
@@ -133,10 +133,10 @@ namespace StarGen {
                 long double outer_planet_limit
             );
 
-            void calculate_gases(StarGen::Sun* sun, planet_pointer planet, char* planet_id);
+            void calculate_gases(Sun* sun, planet_pointer planet, char* planet_id);
 
             void generate_planets(
-                StarGen::Sun* sun,
+                Sun* sun,
                 bool random_tilt,
                 int sys_no,
                 char *system_name
@@ -145,7 +145,7 @@ namespace StarGen {
             void generate_planet(
                 planet_pointer planet,
                 int planet_no,
-                StarGen::Sun *sun,
+                Sun *sun,
                 bool random_tilt,
                 char *planet_id,
                 bool is_moon

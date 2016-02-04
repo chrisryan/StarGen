@@ -44,7 +44,7 @@ namespace StarGen {
         setRatio(0.0);
         setProgramName(NULL);
 
-        StarGen::Gases::initialize();
+        Gases::initialize();
     }
 
     void Stargen::setOutputFormat(OutputFormats of) {
@@ -126,20 +126,20 @@ namespace StarGen {
     void ListGases() {
         long double total = 0.0;
 
-        StarGen::Gases::initialize();
+        Gases::initialize();
 
-        for (int index = 0; index < StarGen::Gases::max_gas; index++) {
-            if (StarGen::Gases::gases[index].weight >= AN_N && StarGen::Gases::gases[index].max_ipp < 1E9) {
-                total += StarGen::Gases::gases[index].max_ipp;
+        for (int index = 0; index < Gases::max_gas; index++) {
+            if (Gases::gases[index].weight >= AN_N && Gases::gases[index].max_ipp < 1E9) {
+                total += Gases::gases[index].max_ipp;
             }
 
             fprintf(stdout,
                     " %2d: %4s - %-13s %3.0f mb - %5.0Lf mb\n",
                     index,
-                    StarGen::Gases::gases[index].symbol,
-                    StarGen::Gases::gases[index].name,
-                    StarGen::Gases::gases[index].num == AN_O ? MIN_O2_IPP : 0.0,
-                    StarGen::Gases::gases[index].max_ipp
+                    Gases::gases[index].symbol,
+                    Gases::gases[index].name,
+                    Gases::gases[index].num == AN_O ? MIN_O2_IPP : 0.0,
+                    Gases::gases[index].max_ipp
             );
         }
 
@@ -249,12 +249,12 @@ namespace StarGen {
         (void)srand(this->flag_seed);
     }
 
-    void Stargen::generate_stellar_system(StarGen::Sun* sun, bool use_seed_system, planet_pointer seed_system,
+    void Stargen::generate_stellar_system(Sun* sun, bool use_seed_system, planet_pointer seed_system,
                                  int sys_no, char* system_name, long double outer_planet_limit) {
         long double outer_dust_limit;
 
         if ((sun->mass < 0.2) || (sun->mass > 1.5)) {
-            sun->mass = StarGen::Random::number(0.7, 1.4);
+            sun->mass = Random::number(0.7, 1.4);
         }
 
         outer_dust_limit = stellar_dust_limit(sun->mass);
@@ -280,68 +280,68 @@ namespace StarGen {
             innermost_planet = dist_planetary_masses(sun->mass, sun->luminosity, 0.0,outer_dust_limit, outer_planet_limit,
                                                      this->dust_density_coeff, seed_system, this->isFlag(fDoMoons));
 
-            sun->age = StarGen::Random::number(min_age, max_age);
+            sun->age = Random::number(min_age, max_age);
         }
 
         generate_planets(sun, !use_seed_system, sys_no, system_name);
     }
 
-    void Stargen::calculate_gases(StarGen::Sun* sun, planet_pointer planet, char* planet_id) {
+    void Stargen::calculate_gases(Sun* sun, planet_pointer planet, char* planet_id) {
         if (planet->surf_pressure > 0) {
-            long double *amount = (long double*)calloc((StarGen::Gases::max_gas + 1), sizeof(long double));
+            long double *amount = (long double*)calloc((Gases::max_gas + 1), sizeof(long double));
             long double totamount = 0;
             long double pressure = planet->surf_pressure/MILLIBARS_PER_BAR;
             int n = 0;
             int i;
 
-            for (i = 0; i < StarGen::Gases::max_gas; i++) {
-                long double yp = StarGen::Gases::gases[i].boil / (373. * ((log((pressure) + 0.001) / -5050.5) + (1.0 / 373.)));
+            for (i = 0; i < Gases::max_gas; i++) {
+                long double yp = Gases::gases[i].boil / (373. * ((log((pressure) + 0.001) / -5050.5) + (1.0 / 373.)));
 
                 amount[i] = 0.0;
-                if ((yp >= 0 && yp < planet->low_temp) && (StarGen::Gases::gases[i].weight >= planet->molec_weight)) {
-                    long double vrms = rms_vel(StarGen::Gases::gases[i].weight, planet->exospheric_temp);
+                if ((yp >= 0 && yp < planet->low_temp) && (Gases::gases[i].weight >= planet->molec_weight)) {
+                    long double vrms = rms_vel(Gases::gases[i].weight, planet->exospheric_temp);
                     long double pvrms = pow(1 / (1 + vrms / planet->esc_velocity), sun->age / 1e9);
-                    long double abund = StarGen::Gases::gases[i].abunds; // gases[i].abunde
+                    long double abund = Gases::gases[i].abunds; // gases[i].abunde
                     long double react = 1.0;
                     long double fract = 1.0;
                     long double pres2 = 1.0;
 
-                    if (strcmp(StarGen::Gases::gases[i].symbol, "Ar") == 0) {
+                    if (strcmp(Gases::gases[i].symbol, "Ar") == 0) {
                         react = .15 * sun->age / 4e9;
-                    } else if (strcmp(StarGen::Gases::gases[i].symbol, "He") == 0) {
+                    } else if (strcmp(Gases::gases[i].symbol, "He") == 0) {
                         abund = abund * (0.001 + (planet->gas_mass / planet->mass));
                         pres2 = (0.75 + pressure);
-                        react = pow(1 / (1 + StarGen::Gases::gases[i].reactivity), sun->age/2e9 * pres2);
-                    } else if ((strcmp(StarGen::Gases::gases[i].symbol, "O") == 0 ||
-                              strcmp(StarGen::Gases::gases[i].symbol, "O2") == 0) &&
+                        react = pow(1 / (1 + Gases::gases[i].reactivity), sun->age/2e9 * pres2);
+                    } else if ((strcmp(Gases::gases[i].symbol, "O") == 0 ||
+                              strcmp(Gases::gases[i].symbol, "O2") == 0) &&
                              sun->age > 2e9 &&
                              planet->surf_temp > 270 && planet->surf_temp < 400) {
                         pres2 = (0.89 + pressure/4); // Breathable - M: .6 -1.8
-                        react = pow(1 / (1 + StarGen::Gases::gases[i].reactivity), pow(sun->age/2e9, 0.25) * pres2);
-                    } else if (strcmp(StarGen::Gases::gases[i].symbol, "CO2") == 0 &&
+                        react = pow(1 / (1 + Gases::gases[i].reactivity), pow(sun->age/2e9, 0.25) * pres2);
+                    } else if (strcmp(Gases::gases[i].symbol, "CO2") == 0 &&
                              sun->age > 2e9 &&
                              planet->surf_temp > 270 && planet->surf_temp < 400) {
                         pres2 = (0.75 + pressure);
-                        react = pow(1 / (1 + StarGen::Gases::gases[i].reactivity), pow(sun->age/2e9, 0.5) * pres2);
+                        react = pow(1 / (1 + Gases::gases[i].reactivity), pow(sun->age/2e9, 0.5) * pres2);
                         react *= 1.5;
                     } else {
                         pres2 = (0.75 + pressure);
-                        react = pow(1 / (1 + StarGen::Gases::gases[i].reactivity), sun->age/2e9 * pres2);
+                        react = pow(1 / (1 + Gases::gases[i].reactivity), sun->age/2e9 * pres2);
                     }
 
-                    fract = (1 - (planet->molec_weight / StarGen::Gases::gases[i].weight));
+                    fract = (1 - (planet->molec_weight / Gases::gases[i].weight));
 
                     amount[i] = abund * pvrms * react * fract;
 
-                    if (StarGen::Stargen::isVerbose(0x4000) &&
-                        (strcmp(StarGen::Gases::gases[i].symbol, "O") == 0 ||
-                         strcmp(StarGen::Gases::gases[i].symbol, "N") == 0 ||
-                         strcmp(StarGen::Gases::gases[i].symbol, "Ar") == 0 ||
-                         strcmp(StarGen::Gases::gases[i].symbol, "He") == 0 ||
-                         strcmp(StarGen::Gases::gases[i].symbol, "CO2") == 0)) {
+                    if (Stargen::isVerbose(0x4000) &&
+                        (strcmp(Gases::gases[i].symbol, "O") == 0 ||
+                         strcmp(Gases::gases[i].symbol, "N") == 0 ||
+                         strcmp(Gases::gases[i].symbol, "Ar") == 0 ||
+                         strcmp(Gases::gases[i].symbol, "He") == 0 ||
+                         strcmp(Gases::gases[i].symbol, "CO2") == 0)) {
                         fprintf(stderr, "%-5.2Lf %-3.3s, %-5.2Lf = a %-5.2Lf * p %-5.2Lf * r %-5.2Lf * p2 %-5.2Lf * f %-5.2Lf\t(%.3Lf%%)\n",
                                 planet->mass * SUN_MASS_IN_EARTH_MASSES,
-                                StarGen::Gases::gases[i].symbol,
+                                Gases::gases[i].symbol,
                                 amount[i],
                                 abund,
                                 pvrms,
@@ -361,18 +361,18 @@ namespace StarGen {
 
             if (n > 0) {
                 planet->gases = n;
-                planet->atmosphere = new StarGen::Gas[n];
+                planet->atmosphere = new Gas[n];
 
-                for (i = 0, n = 0; i < StarGen::Gases::max_gas; i++) {
+                for (i = 0, n = 0; i < Gases::max_gas; i++) {
                     if (amount[i] > 0.0) {
-                        planet->atmosphere[n].num = StarGen::Gases::gases[i].num;
+                        planet->atmosphere[n].num = Gases::gases[i].num;
                         planet->atmosphere[n].surf_pressure = planet->surf_pressure
                                                             * amount[i] / totamount;
 
-                        if (StarGen::Stargen::isVerbose(0x2000)) {
+                        if (Stargen::isVerbose(0x2000)) {
                             if ((planet->atmosphere[n].num == AN_O) &&
                                 planet->atmosphere[n].inspired_partial_pressure(planet->surf_pressure)
-                                > StarGen::Gases::gases[i].max_ipp) {
+                                > Gases::gases[i].max_ipp) {
                                 fprintf (stderr, "%s\t Poisoned by O2\n", planet_id);
                             }
                         }
@@ -381,9 +381,9 @@ namespace StarGen {
                     }
                 }
 
-                qsort(planet->atmosphere, planet->gases, sizeof(StarGen::Gas), StarGen::Gas::diminishing_pressure);
+                qsort(planet->atmosphere, planet->gases, sizeof(Gas), Gas::diminishing_pressure);
 
-                if (StarGen::Stargen::isVerbose(0x0010)) {
+                if (Stargen::isVerbose(0x0010)) {
                     fprintf(stderr, "\n%s (%5.1Lf AU) gases:\n", planet_id, planet->a);
 
                     for (i = 0; i < planet->gases; i++) {
@@ -400,7 +400,7 @@ namespace StarGen {
         }
     }
 
-    void Stargen::generate_planet(planet_pointer planet, int planet_no, StarGen::Sun* sun, bool random_tilt, char* planet_id, bool is_moon) {
+    void Stargen::generate_planet(planet_pointer planet, int planet_no, Sun* sun, bool random_tilt, char* planet_id, bool is_moon) {
         planet->atmosphere = NULL;
         planet->gases = 0;
         planet->surf_temp = 0;
@@ -481,7 +481,7 @@ namespace StarGen {
                     planet->surf_grav = gravity(planet->surf_accel);
                 }
 
-                if (((h2_loss + he_loss) > .000001) && (StarGen::Stargen::isVerbose(0x0080))) {
+                if (((h2_loss + he_loss) > .000001) && (Stargen::isVerbose(0x0080))) {
                     fprintf(stderr, "%s\tLosing gas: H2: %5.3Lf EM, He: %5.3Lf EM\n",
                             planet_id,
                             h2_loss * SUN_MASS_IN_EARTH_MASSES, he_loss * SUN_MASS_IN_EARTH_MASSES);
@@ -501,7 +501,7 @@ namespace StarGen {
 
             planet->surf_temp = INCREDIBLY_LARGE_NUMBER;
             planet->greenhs_rise = 0;
-            planet->albedo = StarGen::Random::about(GAS_GIANT_ALBEDO,0.1);
+            planet->albedo = Random::about(GAS_GIANT_ALBEDO,0.1);
             planet->hydrosphere = 1.0;
             planet->cloud_cover = 1.0;
             planet->ice_cover = 0.0;
@@ -517,7 +517,7 @@ namespace StarGen {
                 if (Util::between(temp, FREEZING_POINT_OF_WATER, EARTH_AVERAGE_KELVIN + 10.) && (sun->age > 2.0E9)) {
                     habitable_jovians++;
 
-                    if (StarGen::Stargen::isVerbose(0x8000)) {
+                    if (Stargen::isVerbose(0x8000)) {
                         fprintf(stderr, "%s\t%s (%4.2LfEM %5.3Lf By)%s with earth-like temperature (%.1Lf C, %.1Lf F, %+.1Lf C Earth).\n",
                                 planet_id,
                                 planet->type == tGasGiant ? "Jovian" :
@@ -597,7 +597,7 @@ namespace StarGen {
                 } else {
                     planet->type = tUnknown;
 
-                    if (StarGen::Stargen::isVerbose(0x0001)) {
+                    if (Stargen::isVerbose(0x0001)) {
                         fprintf(stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\t%s\t Unknown %s\n",
                                         type_string (planet->type),
                                         planet->surf_pressure,
@@ -638,11 +638,11 @@ namespace StarGen {
                         ptr->moon_a = 0;
                         ptr->moon_e = 0;
                         if ((roche_limit * 3.0) < hill_sphere) {
-                            ptr->moon_a = StarGen::Random::number(roche_limit * 1.5, hill_sphere / 2.0) / KM_PER_AU;
-                            ptr->moon_e = StarGen::Random::eccentricity ();
+                            ptr->moon_a = Random::number(roche_limit * 1.5, hill_sphere / 2.0) / KM_PER_AU;
+                            ptr->moon_e = Random::eccentricity ();
                         }
 
-                        if (StarGen::Stargen::isVerbose(0x40000)) {
+                        if (Stargen::isVerbose(0x40000)) {
                             fprintf(stderr,
                                     "   Roche limit: R = %4.2Lg, rM = %4.2Lg, rm = %4.2Lg -> %.0Lf km\n"
                                     "   Hill Sphere: a = %4.2Lg, m = %4.2Lg, M = %4.2Lg -> %.0Lf km\n"
@@ -656,7 +656,7 @@ namespace StarGen {
                                    );
                         }
 
-                        if (StarGen::Stargen::isVerbose(0x1000)) {
+                        if (Stargen::isVerbose(0x1000)) {
                             fprintf(stderr, "  %s: (%7.2LfEM) %d %4.2LgEM\n",
                                     planet_id,
                                     planet->mass * SUN_MASS_IN_EARTH_MASSES,
@@ -795,7 +795,7 @@ namespace StarGen {
                     modified = true;
                 }
 
-                if (StarGen::Stargen::isVerbose(0x0004) || (StarGen::Stargen::isVerbose(0x0002) && modified)) {
+                if (Stargen::isVerbose(0x0004) || (Stargen::isVerbose(0x0002) && modified)) {
                     fprintf(stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\tl=%4.2Lf\t%s\n",
                             type_string (planet->type),
                             planet->surf_pressure,
@@ -811,7 +811,7 @@ namespace StarGen {
         if (is_moon && max_moon_mass < planet->mass) {
             max_moon_mass = planet->mass;
 
-            if (StarGen::Stargen::isVerbose(0x0002)) {
+            if (Stargen::isVerbose(0x0002)) {
                 fprintf (stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\t%s Moon Mass\n",
                         type_string (planet->type),
                         planet->surf_pressure,
@@ -822,7 +822,7 @@ namespace StarGen {
             }
         }
 
-        if (StarGen::Stargen::isVerbose(0x0800)
+        if (Stargen::isVerbose(0x0800)
             && (planet->dust_mass * SUN_MASS_IN_EARTH_MASSES >= 0.0006)
             && (planet->gas_mass * SUN_MASS_IN_EARTH_MASSES >= 0.0006)
             && (planet->type != tGasGiant)
@@ -860,7 +860,7 @@ namespace StarGen {
                 (breathe == Breathable)) {
                 earthlike++;
 
-                if (StarGen::Stargen::isVerbose(0x0008)) {
+                if (Stargen::isVerbose(0x0008)) {
                     fprintf(stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\t%d %s\tEarth-like\n",
                                     type_string (planet->type),
                                     planet->surf_pressure,
@@ -870,7 +870,7 @@ namespace StarGen {
                                     habitable,
                                     planet_id);
                 }
-            } else if (StarGen::Stargen::isVerbose(0x0008) &&
+            } else if (Stargen::isVerbose(0x0008) &&
                      (breathe == Breathable) &&
                      (gravity > 1.3) &&
                      (habitable > 1) &&
@@ -887,7 +887,7 @@ namespace StarGen {
         }
     }
 
-    void Stargen::generate_planets(StarGen::Sun* sun, bool random_tilt, int sys_no, char* system_name) {
+    void Stargen::generate_planets(Sun* sun, bool random_tilt, int sys_no, char* system_name) {
         planet_pointer planet;
         int planet_no = 0;
         planet_pointer moon;
@@ -976,7 +976,7 @@ namespace StarGen {
             strncat (subdir, "/", 80-strlen(subdir));
         }
 
-        StarGen::Sun sun = StarGen::Sun(0.0, this->mass_arg, 0.0, 0.0, 0.0, "");
+        Sun sun = Sun(0.0, this->mass_arg, 0.0, 0.0, 0.0, "");
         int system_count = this->count_arg;
         int seed_increment = this->incr_arg;
 
@@ -1163,7 +1163,7 @@ namespace StarGen {
 
             sun.name = system_name;
 
-            if (StarGen::Stargen::isVerbose(0x0400) && (outer_limit > 0.0)) {
+            if (Stargen::isVerbose(0x0400) && (outer_limit > 0.0)) {
                 fprintf (stderr, "%s, Outer Limit: %LG\n", system_name, outer_limit);
             }
 
@@ -1276,7 +1276,7 @@ namespace StarGen {
                 if (max_type_count < norm_type_count) {
                     max_type_count = norm_type_count;
 
-                    if (StarGen::Stargen::isVerbose(0x10000)) {
+                    if (Stargen::isVerbose(0x10000)) {
                         fprintf(stderr, "System %ld - %s (-s%ld -%c%d) has %d types out of %d planets. [%d]\n",
                                 this->flag_seed,
                                 system_name,
@@ -1406,7 +1406,7 @@ namespace StarGen {
                         break;
                 }
 
-                if ((habitable > 1) && StarGen::Stargen::isVerbose(0x0001)) {
+                if ((habitable > 1) && Stargen::isVerbose(0x0001)) {
                     fprintf(stderr, "System %ld - %s (-s%ld -%c%d) has %d planets with breathable atmospheres.\n",
                             this->flag_seed,
                             system_name,
@@ -1431,7 +1431,7 @@ namespace StarGen {
             free_generations();
         }
 
-        if (StarGen::Stargen::isVerbose(0x0001) || StarGen::Stargen::isVerbose(0x0002)) {
+        if (Stargen::isVerbose(0x0001) || Stargen::isVerbose(0x0002)) {
             fprintf(stderr, "Earthlike planets: %d\n", total_earthlike);
             fprintf(stderr, "Breathable atmospheres: %d\n", total_habitable);
             fprintf(stderr, "Breathable g range: %4.2Lf -  %4.2Lf\n",

@@ -18,6 +18,8 @@
 
 #include "Catalogs.h"
 
+using namespace StarGen;
+
 void usage(char *prognam) {
     fprintf(stderr, "Usage: %s [options] [system name]\n", prognam);
     fprintf(
@@ -59,7 +61,7 @@ void usage(char *prognam) {
         "\n",
         dole.count - 1,
         solstation.count - 1,
-        StarGen::Stargen::version
+        Stargen::version
     );
 }
 
@@ -91,7 +93,7 @@ int main(int argc, char *argv[]) {
         return(1);
     }
 
-    StarGen::Stargen *oStargen = new StarGen::Stargen();
+    Stargen *oStargen = new Stargen();
     oStargen->setProgramName(prognam);
 
     while (--argc > 0 && (*++argv)[0] == '-') {
@@ -278,15 +280,15 @@ int main(int argc, char *argv[]) {
                     break;
                 case 'v': // verbosity
                     if (!isdigit(*(c+1))) {
-                        StarGen::ListVerbosity();
+                        ListVerbosity();
                         return 1;
                     }
 
                     int flag_verbose;
                     sscanf (++c, "%x", &flag_verbose);
                     skip = true;
-                    StarGen::Stargen::setVerbosity(flag_verbose);
-                    if (StarGen::Stargen::isVerbose(0x0001)) {
+                    Stargen::setVerbosity(flag_verbose);
+                    if (Stargen::isVerbose(0x0001)) {
                         oStargen->addFlag(fDoGases);
                     }
 
