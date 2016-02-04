@@ -157,6 +157,7 @@ namespace StarGen {
             void count_planet(planet_pointer planet);
             void check_planet(planet_pointer planet, char *planet_id, int is_moon);
             void resetTypeCounts();
+            void listTypeDiversity(const char * system_name, int sys_no);
     };
 
 

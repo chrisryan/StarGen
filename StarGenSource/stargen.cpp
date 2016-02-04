@@ -1208,81 +1208,7 @@ namespace StarGen {
                                     system_name,
                                     outer_limit);
 
-            {
-                planet_pointer planet;
-                int counter;
-                int wt_type_count = this->type_count;
-                int norm_type_count = 0;
-
-                if (this->type_counts[3] > 0) {
-                    wt_type_count += 20; // Terrestrial
-                }
-
-                if (this->type_counts[8] > 0) {
-                    wt_type_count += 18; // Water
-                }
-
-                if (this->type_counts[2] > 0) {
-                    wt_type_count += 16; // Venusian
-                }
-
-                if (this->type_counts[7] > 0) {
-                    wt_type_count += 15; // Martian
-                }
-
-                if (this->type_counts[9] > 0) {
-                    wt_type_count += 14; // Ice
-                }
-
-                if (this->type_counts[10] > 0) {
-                    wt_type_count += 13; // Asteroids
-                }
-
-                if (this->type_counts[4] > 0) {
-                    wt_type_count += 12; // Gas Dwarf
-                }
-
-                if (this->type_counts[5] > 0) {
-                    wt_type_count += 11; // Sub_Jovian
-                }
-
-                if (this->type_counts[11] > 0) {
-                    wt_type_count += 10; // 1-Face
-                }
-
-                if (this->type_counts[1] > 0) {
-                    wt_type_count += 3; // Rock
-                }
-
-                if (this->type_counts[6] > 0) {
-                    wt_type_count += 2; // Jovian
-                }
-
-                if (this->type_counts[0] > 0) {
-                    wt_type_count += 1; // Unknown
-                }
-
-                for (planet=innermost_planet, counter=0; planet != NULL; planet=planet->next_planet, counter++)
-                    ;
-
-                norm_type_count = wt_type_count - (counter - this->type_count);
-
-                if (max_type_count < norm_type_count) {
-                    max_type_count = norm_type_count;
-
-                    if (Stargen::isVerbose(0x10000)) {
-                        fprintf(stderr, "System %ld - %s (-s%ld -%c%d) has %d types out of %d planets. [%d]\n",
-                                this->flag_seed,
-                                system_name,
-                                this->flag_seed,
-                                this->flag_char,
-                                sys_no,
-                                this->type_count,
-                                counter,
-                                norm_type_count);
-                    }
-                }
-            }
+            listTypeDiversity(system_name, sys_no);
 
             total_habitable += habitable;
             total_earthlike += earthlike;
@@ -1474,4 +1400,53 @@ namespace StarGen {
         this->type_count = 0;
     }
 
+    void Stargen::listTypeDiversity(const char * system_name, int sys_no) {
+        planet_pointer planet;
+        int counter;
+        int wt_type_count = this->type_count;
+        int norm_type_count = 0;
+
+        // Count modifiers for each type of planet
+        int count_modifier[12] = {
+            1, // Unknown
+            3, // Rock
+            16,// Venusian
+            20,// Terrestial
+            12,// Gas Dwarf
+            11,// Sub Jovian
+            2, // Jovian
+            15,// Martian
+            18,// Water
+            14,// Ice
+            13,// Asteroids
+            10 // 1-Face
+        };
+
+        for (int i = 0; i < 12; i++) {
+            if (this->type_counts[i] > 0) {
+                wt_type_count += count_modifier[i]; // Unknown
+            }
+        }
+
+        for (planet = innermost_planet, counter = 0; planet != NULL; planet = planet->next_planet, counter++)
+            ;
+
+        norm_type_count = wt_type_count - (counter - this->type_count);
+
+        if (max_type_count < norm_type_count) {
+            max_type_count = norm_type_count;
+
+            if (Stargen::isVerbose(0x10000)) {
+                fprintf(stderr, "System %ld - %s (-s%ld -%c%d) has %d types out of %d planets. [%d]\n",
+                        this->flag_seed,
+                        system_name,
+                        this->flag_seed,
+                        this->flag_char,
+                        sys_no,
+                        this->type_count,
+                        counter,
+                        norm_type_count);
+            }
+        }
+    }
 } // End StarGen namespace
