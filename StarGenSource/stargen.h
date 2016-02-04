@@ -121,6 +121,9 @@ namespace StarGen {
             long double dust_density_coeff;
             catalog * cat_arg;
             char flag_char;
+            int type_counts[12];
+            int type_count;
+            int max_type_count;
 
             void initRandomGenerator();
 
@@ -151,7 +154,9 @@ namespace StarGen {
                 bool is_moon
             );
 
+            void count_planet(planet_pointer planet);
             void check_planet(planet_pointer planet, char *planet_id, int is_moon);
+            void resetTypeCounts();
     };
 
 

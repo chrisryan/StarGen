@@ -41,8 +41,10 @@ namespace StarGen {
         this->flag_char = '?';
         this->mass_arg = 0.0;
         this->cat_arg = NULL;
+        this->max_type_count = 0;
         setRatio(0.0);
         setProgramName(NULL);
+        resetTypeCounts();
 
         Gases::initialize();
     }
@@ -230,9 +232,6 @@ long double max_breathable_terrestrial_l = 0.0;
 long double max_breathable_l = 0.0;
 long double max_moon_mass = 0.0;
 
-int type_counts[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
-int type_count = 0;
-int max_type_count = 0;
 
 namespace StarGen {
 
@@ -669,56 +668,57 @@ namespace StarGen {
         }
     }
 
-    void Stargen::check_planet(planet_pointer planet, char* planet_id, int is_moon) {
-        {
-            int tIndex = 0;
+    void Stargen::count_planet(planet_pointer planet) {
+        int tIndex = 0;
 
-            switch (planet->type) {
-                case tUnknown:
-                    tIndex = 0;
-                    break;
-                case tRock:
-                    tIndex = 1;
-                    break;
-                case tVenusian:
-                    tIndex = 2;
-                    break;
-                case tTerrestrial:
-                    tIndex = 3;
-                    break;
-                case tSubSubGasGiant:
-                    tIndex = 4;
-                    break;
-                case tSubGasGiant:
-                    tIndex = 5;
-                    break;
-                case tGasGiant:
-                    tIndex = 6;
-                    break;
-                case tMartian:
-                    tIndex = 7;
-                    break;
-                case tWater:
-                    tIndex = 8;
-                    break;
-                case tIce:
-                    tIndex = 9; 
-                    break;
-                case tAsteroids:
-                    tIndex = 10;
-                    break;
-                case t1Face:
-                    tIndex = 11;
-                    break;
-            }
-
-            if (type_counts[tIndex] == 0) {
-                ++type_count;
-            }
-
-            ++type_counts[tIndex];
-
+        switch (planet->type) {
+            case tUnknown:
+                tIndex = 0;
+                break;
+            case tRock:
+                tIndex = 1;
+                break;
+            case tVenusian:
+                tIndex = 2;
+                break;
+            case tTerrestrial:
+                tIndex = 3;
+                break;
+            case tSubSubGasGiant:
+                tIndex = 4;
+                break;
+            case tSubGasGiant:
+                tIndex = 5;
+                break;
+            case tGasGiant:
+                tIndex = 6;
+                break;
+            case tMartian:
+                tIndex = 7;
+                break;
+            case tWater:
+                tIndex = 8;
+                break;
+            case tIce:
+                tIndex = 9; 
+                break;
+            case tAsteroids:
+                tIndex = 10;
+                break;
+            case t1Face:
+                tIndex = 11;
+                break;
         }
+
+        if (this->type_counts[tIndex] == 0) {
+            ++this->type_count;
+        }
+
+        ++this->type_counts[tIndex];
+    }
+
+    void Stargen::check_planet(planet_pointer planet, char* planet_id, int is_moon) {
+        this->count_planet(planet);
 
         /* Check for and list planets with breathable atmospheres */
 
@@ -1199,13 +1199,7 @@ namespace StarGen {
                 }
             }
 
-            {
-                for (int i = 0; i < 12; i++) {
-                    type_counts[i] = 0;
-                }
-
-                type_count = 0;
-            }
+            resetTypeCounts();
 
             generate_stellar_system(&sun,
                                     use_seed_system,
@@ -1217,61 +1211,61 @@ namespace StarGen {
             {
                 planet_pointer planet;
                 int counter;
-                int wt_type_count = type_count;
+                int wt_type_count = this->type_count;
                 int norm_type_count = 0;
 
-                if (type_counts[3] > 0) {
+                if (this->type_counts[3] > 0) {
                     wt_type_count += 20; // Terrestrial
                 }
 
-                if (type_counts[8] > 0) {
+                if (this->type_counts[8] > 0) {
                     wt_type_count += 18; // Water
                 }
 
-                if (type_counts[2] > 0) {
+                if (this->type_counts[2] > 0) {
                     wt_type_count += 16; // Venusian
                 }
 
-                if (type_counts[7] > 0) {
+                if (this->type_counts[7] > 0) {
                     wt_type_count += 15; // Martian
                 }
 
-                if (type_counts[9] > 0) {
+                if (this->type_counts[9] > 0) {
                     wt_type_count += 14; // Ice
                 }
 
-                if (type_counts[10] > 0) {
+                if (this->type_counts[10] > 0) {
                     wt_type_count += 13; // Asteroids
                 }
 
-                if (type_counts[4] > 0) {
+                if (this->type_counts[4] > 0) {
                     wt_type_count += 12; // Gas Dwarf
                 }
 
-                if (type_counts[5] > 0) {
+                if (this->type_counts[5] > 0) {
                     wt_type_count += 11; // Sub_Jovian
                 }
 
-                if (type_counts[11] > 0) {
+                if (this->type_counts[11] > 0) {
                     wt_type_count += 10; // 1-Face
                 }
 
-                if (type_counts[1] > 0) {
+                if (this->type_counts[1] > 0) {
                     wt_type_count += 3; // Rock
                 }
 
-                if (type_counts[6] > 0) {
+                if (this->type_counts[6] > 0) {
                     wt_type_count += 2; // Jovian
                 }
 
-                if (type_counts[0] > 0) {
+                if (this->type_counts[0] > 0) {
                     wt_type_count += 1; // Unknown
                 }
 
                 for (planet=innermost_planet, counter=0; planet != NULL; planet=planet->next_planet, counter++)
                     ;
 
-                norm_type_count = wt_type_count - (counter - type_count);
+                norm_type_count = wt_type_count - (counter - this->type_count);
 
                 if (max_type_count < norm_type_count) {
                     max_type_count = norm_type_count;
@@ -1283,7 +1277,7 @@ namespace StarGen {
                                 this->flag_seed,
                                 this->flag_char,
                                 sys_no,
-                                type_count,
+                                this->type_count,
                                 counter,
                                 norm_type_count);
                     }
@@ -1471,4 +1465,13 @@ namespace StarGen {
 
         return 0;
     }
+
+    void Stargen::resetTypeCounts() {
+        for (int i = 0; i < 12; i++) {
+            this->type_counts[i] = 0;
+        }
+
+        this->type_count = 0;
+    }
+
 } // End StarGen namespace
