@@ -8,6 +8,7 @@
 #include "enviro.h"
 #include "stargen.h"
 #include "ChemTable.h"
+#include "StargenStat.h"
 
 #define STARGEN_URL "http://www.eldacur.com/~brons/NerdCorner/StarGen/StarGen.html"
 
@@ -1070,7 +1071,7 @@ void html_thumbnails(planet_pointer innermost_planet, FILE* file, char* system_n
     fflush(file);
 }
 
-void html_thumbnail_totals(FILE *file)
+void html_thumbnail_totals(FILE *file, StarGen::StargenStat * stat)
 {
     fprintf(file,
             "\n<p>\n\n"
@@ -1083,40 +1084,40 @@ void html_thumbnail_totals(FILE *file)
 
     fprintf(file,
             "<tr bgcolor='" BGTABLE "'><td align=right>\n"
-                "\tEarthlike planets\n</td><td align=center>\n\t%d\n</td></tr>\n", total_earthlike);
+                "\tEarthlike planets\n</td><td align=center>\n\t%d\n</td></tr>\n", stat->total_earthlike);
     fprintf(file,
             "<tr bgcolor='" BGTABLE "'><td align=right>\n"
-                "\tBreathable atmospheres\n</td><td align=center>\n\t%d\n</td></tr>\n", total_habitable);
+                "\tBreathable atmospheres\n</td><td align=center>\n\t%d\n</td></tr>\n", stat->total_habitable);
     fprintf(file,
             "<tr bgcolor='" BGTABLE "'><td align=right>\n"
                 "\tBreathable g range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n",
-             min_breathable_g,
-             max_breathable_g);
+             stat->min_breathable_g,
+             stat->max_breathable_g);
     fprintf(file,
             "<tr bgcolor='" BGTABLE "'><td align=right>\n"
                 "\tTerrestrial g range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n",
-             min_breathable_terrestrial_g,
-             max_breathable_terrestrial_g);
+             stat->min_breathable_terrestrial_g,
+             stat->max_breathable_terrestrial_g);
     fprintf(file,
             "<tr bgcolor='" BGTABLE "'><td align=right>\n"
                 "\tBreathable pressure range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n",
-             min_breathable_p,
-             max_breathable_p);
+             stat->min_breathable_p,
+             stat->max_breathable_p);
     fprintf(file,
             "<tr bgcolor='" BGTABLE "'><td align=right>\n"
                 "\tBreathable temp range\n</td><td align=center>\n\t%+.1Lf C -  %+.1Lf C\n</td></tr>\n",
-             min_breathable_temp - EARTH_AVERAGE_KELVIN,
-             max_breathable_temp - EARTH_AVERAGE_KELVIN);
+             stat->min_breathable_temp - EARTH_AVERAGE_KELVIN,
+             stat->max_breathable_temp - EARTH_AVERAGE_KELVIN);
     fprintf(file,
             "<tr bgcolor='" BGTABLE "'><td align=right>\n"
                 "\tBreathable illumination range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n",
-             min_breathable_l,
-             max_breathable_l);
+             stat->min_breathable_l,
+             stat->max_breathable_l);
     fprintf(file,
             "<tr bgcolor='" BGTABLE "'><td align=right>\n"
                 "\tTerrestrial illumination range\n</td><td align=center>\n\t%4.2Lf -  %4.2Lf\n</td></tr>\n",
-             min_breathable_terrestrial_l,
-             max_breathable_terrestrial_l);
+             stat->min_breathable_terrestrial_l,
+             stat->max_breathable_terrestrial_l);
 
     fprintf(file, "</table>\n\n");
 }

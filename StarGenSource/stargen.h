@@ -5,6 +5,8 @@
 
 namespace StarGen {
 
+    class StargenStat;
+
     /*
      * Output file formats
      */
@@ -126,6 +128,8 @@ namespace StarGen {
             int max_type_count;
             int habitable_jovians;
 
+            StargenStat* stats;
+
             void initRandomGenerator();
 
             void generate_stellar_system(
@@ -158,6 +162,8 @@ namespace StarGen {
             void count_planet(planet_pointer planet);
             void check_planet(planet_pointer planet, char *planet_id, int is_moon);
             void resetTypeCounts();
+            void listBreathable(planet_pointer planet, const char* planet_id);
+            void listStatistics();
             void listTypeDiversity(const char * system_name, int sys_no);
             void listHabitableJovians(Sun *sun, planet_pointer planet, const char* planet_id);
     };

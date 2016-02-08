@@ -22,6 +22,7 @@
 #include "ChemTable.h"
 #include "Catalogs.h"
 #include "Util.h"
+#include "StargenStat.h"
 
 #define MIN_MASS 0.4
 #define INCREMENT_MASS 0.05
@@ -43,6 +44,7 @@ namespace StarGen {
         this->cat_arg = NULL;
         this->max_type_count = 0;
         this->habitable_jovians = 0;
+        this->stats = new StargenStat();
         setRatio(0.0);
         setProgramName(NULL);
         resetTypeCounts();
@@ -212,26 +214,6 @@ namespace StarGen {
 
 // These are the global variables used during accretion:
 planet_pointer innermost_planet;
-
-int earthlike = 0;
-int total_earthlike = 0;
-int habitable = 0;
-int total_habitable = 0;
-
-long double min_breathable_terrestrial_g = 1000.0;
-long double min_breathable_g = 1000.0;
-long double max_breathable_terrestrial_g = 0.0;
-long double max_breathable_g = 0.0;
-long double min_breathable_temp = 1000.0;
-long double max_breathable_temp = 0.0;
-long double min_breathable_p = 100000.0;
-long double max_breathable_p = 0.0;
-long double min_breathable_terrestrial_l = 1000.0;
-long double min_breathable_l = 1000.0;
-long double max_breathable_terrestrial_l = 0.0;
-long double max_breathable_l = 0.0;
-long double max_moon_mass = 0.0;
-
 
 namespace StarGen {
 
@@ -698,98 +680,13 @@ namespace StarGen {
     }
 
     void Stargen::check_planet(planet_pointer planet, char* planet_id, int is_moon) {
-        this->count_planet(planet);
+        count_planet(planet);
 
         /* Check for and list planets with breathable atmospheres */
+        listBreathable(planet, planet_id);
 
-        {
-            Breathability breathe = breathability(planet);
-
-            if ((breathe == Breathable) &&
-                (!planet->resonant_period) && // Option needed?
-                ((int)planet->day != (int)(planet->orb_period * 24.0))) {
-                bool modified = false;
-                long double illumination = pow2 (1.0 / planet->a) * (planet->sun)->luminosity;
-
-                habitable++;
-
-                if (min_breathable_temp > planet->surf_temp) {
-                    min_breathable_temp = planet->surf_temp;
-                    modified = true;
-                }
-
-                if (max_breathable_temp < planet->surf_temp) {
-                    max_breathable_temp = planet->surf_temp;
-                    modified = true;
-                }
-
-                if (min_breathable_g > planet->surf_grav) {
-                    min_breathable_g = planet->surf_grav;
-                    modified = true;
-                }
-
-                if (max_breathable_g < planet->surf_grav) {
-                    max_breathable_g = planet->surf_grav;
-                    modified = true;
-                }
-
-                if (min_breathable_l > illumination) {
-                    min_breathable_l = illumination;
-                    modified = true;
-                }
-
-                if (max_breathable_l < illumination) {
-                    max_breathable_l = illumination;
-                    modified = true;
-                }
-
-                if (planet->type == tTerrestrial) {
-                    if (min_breathable_terrestrial_g > planet->surf_grav) {
-                        min_breathable_terrestrial_g = planet->surf_grav;
-                        modified = true;
-                    }
-
-                    if (max_breathable_terrestrial_g < planet->surf_grav) {
-                        max_breathable_terrestrial_g = planet->surf_grav;
-                        modified = true;
-                    }
-
-                    if (min_breathable_terrestrial_l > illumination) {
-                        min_breathable_terrestrial_l = illumination;
-                        modified = true;
-                    }
-
-                    if (max_breathable_terrestrial_l < illumination) {
-                        max_breathable_terrestrial_l = illumination;
-                        modified = true;
-                    }
-                }
-
-                if (min_breathable_p > planet->surf_pressure) {
-                    min_breathable_p = planet->surf_pressure;
-                    modified = true;
-                }
-
-                if (max_breathable_p < planet->surf_pressure) {
-                    max_breathable_p = planet->surf_pressure;
-                    modified = true;
-                }
-
-                if (Stargen::isVerbose(0x0004) || (Stargen::isVerbose(0x0002) && modified)) {
-                    fprintf(stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\tl=%4.2Lf\t%s\n",
-                            type_string (planet->type),
-                            planet->surf_pressure,
-                            planet->mass * SUN_MASS_IN_EARTH_MASSES,
-                            planet->surf_grav,
-                            planet->surf_temp - EARTH_AVERAGE_KELVIN,
-                            illumination,
-                            planet_id);
-                }
-            }
-        }
-
-        if (is_moon && max_moon_mass < planet->mass) {
-            max_moon_mass = planet->mass;
+        if (is_moon && this->stats->max_moon_mass < planet->mass) {
+            this->stats->max_moon_mass = planet->mass;
 
             if (Stargen::isVerbose(0x0002)) {
                 fprintf (stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\t%s Moon Mass\n",
@@ -838,7 +735,7 @@ namespace StarGen {
                 Util::between(seas, 50., 80.) &&
                 (planet->type != tWater) &&
                 (breathe == Breathable)) {
-                earthlike++;
+                this->stats->earthlike++;
 
                 if (Stargen::isVerbose(0x0008)) {
                     fprintf(stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\t%d %s\tEarth-like\n",
@@ -847,13 +744,13 @@ namespace StarGen {
                                     planet->mass * SUN_MASS_IN_EARTH_MASSES,
                                     planet->surf_grav,
                                     planet->surf_temp - EARTH_AVERAGE_KELVIN,
-                                    habitable,
+                                    this->stats->habitable,
                                     planet_id);
                 }
             } else if (Stargen::isVerbose(0x0008) &&
                      (breathe == Breathable) &&
                      (gravity > 1.3) &&
-                     (habitable > 1) &&
+                     (this->stats->habitable > 1) &&
                      ((rel_temp < -2.0) || (ice > 10.))
                     ) {
                 fprintf(stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\t%s\tSphinx-like\n",
@@ -1159,8 +1056,8 @@ namespace StarGen {
                 *cp = '-';
             }
 
-            earthlike = 0;
-            habitable = 0;
+            this->stats->earthlike = 0;
+            this->stats->habitable = 0;
             this->habitable_jovians = 0;
 
             if (this->isFlag(fReuseSolarsystem)) {
@@ -1190,14 +1087,14 @@ namespace StarGen {
 
             listTypeDiversity(system_name, sys_no);
 
-            total_habitable += habitable;
-            total_earthlike += earthlike;
+            this->stats->total_habitable += this->stats->habitable;
+            this->stats->total_earthlike += this->stats->earthlike;
 
             if ((!(only_habitable || this->isFlag(fOnlyMultiHabitable) || this->isFlag(fOnlyJovianHabitable) || this->isFlag(fOnlyEarthlike)))
-                || (only_habitable && (habitable > 0))
-                || (this->isFlag(fOnlyMultiHabitable) && (habitable > 1))
+                || (only_habitable && (this->stats->habitable > 0))
+                || (this->isFlag(fOnlyMultiHabitable) && (this->stats->habitable > 1))
                 || (this->isFlag(fOnlyJovianHabitable) && (this->habitable_jovians > 0))
-                || (this->isFlag(fOnlyEarthlike) && (earthlike > 0))
+                || (this->isFlag(fOnlyEarthlike) && (this->stats->earthlike > 0))
                ) {
                 char system_url[300] = "";
                 char svg_url[300] = "";
@@ -1306,14 +1203,14 @@ namespace StarGen {
                         break;
                 }
 
-                if ((habitable > 1) && Stargen::isVerbose(0x0001)) {
+                if ((this->stats->habitable > 1) && Stargen::isVerbose(0x0001)) {
                     fprintf(stderr, "System %ld - %s (-s%ld -%c%d) has %d planets with breathable atmospheres.\n",
                             this->flag_seed,
                             system_name,
                             this->flag_seed,
                             this->flag_char,
                             sys_no,
-                            habitable);
+                            this->stats->habitable);
                 }
             }
 
@@ -1331,34 +1228,11 @@ namespace StarGen {
             free_generations();
         }
 
-        if (Stargen::isVerbose(0x0001) || Stargen::isVerbose(0x0002)) {
-            fprintf(stderr, "Earthlike planets: %d\n", total_earthlike);
-            fprintf(stderr, "Breathable atmospheres: %d\n", total_habitable);
-            fprintf(stderr, "Breathable g range: %4.2Lf -  %4.2Lf\n",
-                     min_breathable_g,
-                     max_breathable_g);
-            fprintf(stderr, "Terrestrial g range: %4.2Lf -  %4.2Lf\n",
-                     min_breathable_terrestrial_g,
-                     max_breathable_terrestrial_g);
-            fprintf(stderr, "Breathable pressure range: %4.2Lf -  %4.2Lf\n",
-                     min_breathable_p,
-                     max_breathable_p);
-            fprintf(stderr, "Breathable temp range: %+.1Lf C -  %+.1Lf C\n",
-                     min_breathable_temp - EARTH_AVERAGE_KELVIN,
-                     max_breathable_temp - EARTH_AVERAGE_KELVIN);
-            fprintf(stderr, "Breathable illumination range: %4.2Lf -  %4.2Lf\n",
-                     min_breathable_l,
-                     max_breathable_l);
-            fprintf(stderr, "Terrestrial illumination range: %4.2Lf -  %4.2Lf\n",
-                     min_breathable_terrestrial_l,
-                     max_breathable_terrestrial_l);
-            fprintf(stderr, "Max moon mass: %4.2Lf\n",
-                     max_moon_mass * SUN_MASS_IN_EARTH_MASSES);
-        }
+        listStatistics();
 
         if (system_count > 1) {
             if (this->isFlag(fDoGases)) {
-                html_thumbnail_totals(thumbnails);
+                html_thumbnail_totals(thumbnails, this->stats);
             }
 
             close_html_file(thumbnails);
@@ -1378,6 +1252,119 @@ namespace StarGen {
         }
 
         this->type_count = 0;
+    }
+
+    void Stargen::listBreathable(planet_pointer planet, const char* planet_id) {
+        Breathability breathe = breathability(planet);
+
+        if ((breathe == Breathable) &&
+            (!planet->resonant_period) && // Option needed?
+            ((int)planet->day != (int)(planet->orb_period * 24.0))) {
+            bool modified = false;
+            long double illumination = pow2 (1.0 / planet->a) * (planet->sun)->luminosity;
+
+            this->stats->habitable++;
+
+            if (this->stats->min_breathable_temp > planet->surf_temp) {
+                this->stats->min_breathable_temp = planet->surf_temp;
+                modified = true;
+            }
+
+            if (this->stats->max_breathable_temp < planet->surf_temp) {
+                this->stats->max_breathable_temp = planet->surf_temp;
+                modified = true;
+            }
+
+            if (this->stats->min_breathable_g > planet->surf_grav) {
+                this->stats->min_breathable_g = planet->surf_grav;
+                modified = true;
+            }
+
+            if (this->stats->max_breathable_g < planet->surf_grav) {
+                this->stats->max_breathable_g = planet->surf_grav;
+                modified = true;
+            }
+
+            if (this->stats->min_breathable_l > illumination) {
+                this->stats->min_breathable_l = illumination;
+                modified = true;
+            }
+
+            if (this->stats->max_breathable_l < illumination) {
+                this->stats->max_breathable_l = illumination;
+                modified = true;
+            }
+
+            if (planet->type == tTerrestrial) {
+                if (this->stats->min_breathable_terrestrial_g > planet->surf_grav) {
+                    this->stats->min_breathable_terrestrial_g = planet->surf_grav;
+                    modified = true;
+                }
+
+                if (this->stats->max_breathable_terrestrial_g < planet->surf_grav) {
+                    this->stats->max_breathable_terrestrial_g = planet->surf_grav;
+                    modified = true;
+                }
+
+                if (this->stats->min_breathable_terrestrial_l > illumination) {
+                    this->stats->min_breathable_terrestrial_l = illumination;
+                    modified = true;
+                }
+
+                if (this->stats->max_breathable_terrestrial_l < illumination) {
+                    this->stats->max_breathable_terrestrial_l = illumination;
+                    modified = true;
+                }
+            }
+
+            if (this->stats->min_breathable_p > planet->surf_pressure) {
+                this->stats->min_breathable_p = planet->surf_pressure;
+                modified = true;
+            }
+
+            if (this->stats->max_breathable_p < planet->surf_pressure) {
+                this->stats->max_breathable_p = planet->surf_pressure;
+                modified = true;
+            }
+
+            if (Stargen::isVerbose(0x0004) || (Stargen::isVerbose(0x0002) && modified)) {
+                fprintf(stderr, "%12s\tp=%4.2Lf\tm=%4.2Lf\tg=%4.2Lf\tt=%+.1Lf\tl=%4.2Lf\t%s\n",
+                        type_string (planet->type),
+                        planet->surf_pressure,
+                        planet->mass * SUN_MASS_IN_EARTH_MASSES,
+                        planet->surf_grav,
+                        planet->surf_temp - EARTH_AVERAGE_KELVIN,
+                        illumination,
+                        planet_id);
+            }
+        }
+    }
+
+    void Stargen::listStatistics() {
+        if (Stargen::isVerbose(0x0001) || Stargen::isVerbose(0x0002)) {
+            fprintf(stderr, "Earthlike planets: %d\n", this->stats->total_earthlike);
+            fprintf(stderr, "Breathable atmospheres: %d\n", this->stats->total_habitable);
+            fprintf(stderr, "Breathable g range: %4.2Lf -  %4.2Lf\n",
+                     this->stats->min_breathable_g,
+                     this->stats->max_breathable_g);
+            fprintf(stderr, "Terrestrial g range: %4.2Lf -  %4.2Lf\n",
+                     this->stats->min_breathable_terrestrial_g,
+                     this->stats->max_breathable_terrestrial_g);
+            fprintf(stderr, "Breathable pressure range: %4.2Lf -  %4.2Lf\n",
+                     this->stats->min_breathable_p,
+                     this->stats->max_breathable_p);
+            fprintf(stderr, "Breathable temp range: %+.1Lf C -  %+.1Lf C\n",
+                     this->stats->min_breathable_temp - EARTH_AVERAGE_KELVIN,
+                     this->stats->max_breathable_temp - EARTH_AVERAGE_KELVIN);
+            fprintf(stderr, "Breathable illumination range: %4.2Lf -  %4.2Lf\n",
+                     this->stats->min_breathable_l,
+                     this->stats->max_breathable_l);
+            fprintf(stderr, "Terrestrial illumination range: %4.2Lf -  %4.2Lf\n",
+                     this->stats->min_breathable_terrestrial_l,
+                     this->stats->max_breathable_terrestrial_l);
+            fprintf(stderr, "Max moon mass: %4.2Lf\n",
+                     this->stats->max_moon_mass * SUN_MASS_IN_EARTH_MASSES);
+        }
     }
 
     void Stargen::listTypeDiversity(const char * system_name, int sys_no) {
