@@ -190,26 +190,6 @@ namespace StarGen {
                 temp - FREEZING_POINT_OF_WATER,
                 temp - EARTH_AVERAGE_KELVIN);
     }
-
-    void ListCatalog(catalog * cat) {
-        int catalog_count = cat->count;
-        for (int index = 0; index < catalog_count; index++) {
-            fprintf(stdout,
-                    "%3d: %-30.30s M: %4.2LG L: %4.2LG\n",
-                    index,
-                    cat->stars[index].name,
-                    cat->stars[index].mass,
-                    cat->stars[index].luminosity
-                    );
-        }
-    }
-
-    void ListCatalogHTML(catalog * cat) {
-        int catalog_count = cat->count;
-        for (int index = 0; index < catalog_count; index++) {
-            fprintf(stdout, "\t<option value=%d>%s</option>\n", index, cat->stars[index].name);
-        }
-    }
 };
 
 // These are the global variables used during accretion:

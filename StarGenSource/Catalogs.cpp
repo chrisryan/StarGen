@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "const.h"
@@ -219,3 +220,25 @@ star    ilAqrs[] =
 };
 
 catalog ilAqr_cat = {sizeof(ilAqrs) / sizeof (star),  "G", &ilAqrs[0]};
+
+namespace StarGen {
+    void ListCatalog(catalog * cat) {                                                                                   
+        int catalog_count = cat->count;                                                                                 
+        for (int index = 0; index < catalog_count; index++) {                                                           
+            fprintf(stdout,                                                                                             
+                    "%3d: %-30.30s M: %4.2LG L: %4.2LG\n",                                                              
+                    index,                                                                                              
+                    cat->stars[index].name,                                                                             
+                    cat->stars[index].mass,                                                                             
+                    cat->stars[index].luminosity                                                                        
+                    );                                                                                                  
+        }                                                                                                               
+    }                                                                                                                   
+                                                                                                                        
+    void ListCatalogHTML(catalog * cat) {                                                                               
+        int catalog_count = cat->count;                                                                                 
+        for (int index = 0; index < catalog_count; index++) {                                                           
+            fprintf(stdout, "\t<option value=%d>%s</option>\n", index, cat->stars[index].name);                         
+        }                                                                                                               
+    }
+};

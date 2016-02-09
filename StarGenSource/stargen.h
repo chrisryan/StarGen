@@ -173,8 +173,6 @@ namespace StarGen {
     void ListGases();
     void ListVerbosity();
     void SizeCheck();
-    void ListCatalog(catalog * cat);
-    void ListCatalogHTML(catalog * cat);
 };
 
 /*

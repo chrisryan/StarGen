@@ -17,3 +17,8 @@ extern catalog manticore_cat;
 extern planets sphinx;
 
 extern catalog ilAqr_cat;
+
+namespace StarGen {
+    void ListCatalog(catalog * cat);                                                                                    
+    void ListCatalogHTML(catalog * cat);
+}
