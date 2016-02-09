@@ -295,9 +295,17 @@ int main(int argc, char *argv[]) {
                     break;
                 case 'l':
                     listCatalog = true;
+                    if (catalog == NULL) {
+                        catalog = &dole;
+                    }
+
                     break;
                 case 'L':
                     listCatalogAsHTML = true;
+                    if (catalog == NULL) {
+                        catalog = &dole;
+                    }
+
                     break;
                 case 'z':
                     StarGen::SizeCheck();
