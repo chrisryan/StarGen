@@ -191,23 +191,6 @@ namespace StarGen {
 #define fOnlyJovianHabitable    0x0400
 #define fOnlyEarthlike            0x0800
 
-                                        // Various statistics that are kept:
-extern int             total_earthlike;
-extern int             total_habitable;
-
-extern long double    min_breathable_terrestrial_g;
-extern long double    min_breathable_g;
-extern long double    max_breathable_terrestrial_g;
-extern long double    max_breathable_g;
-extern long double    min_breathable_terrestrial_l;
-extern long double    min_breathable_l;
-extern long double    max_breathable_terrestrial_l;
-extern long double    max_breathable_l;
-extern long double    min_breathable_temp;
-extern long double    max_breathable_temp;
-extern long double    min_breathable_p;
-extern long double    max_breathable_p;
-
                                         // OS-specific constants for finding
                                         // the default output directory and
                                         // other dirs:
