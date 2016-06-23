@@ -361,7 +361,7 @@ void csv_describe_system(FILE *file, planet_pointer innermost_planet, bool do_ga
 
 }
 
-void csv_thumbnails(FILE* file, char* url_path, char* subdir, char* file_name, char* csv_url) {
+void csv_thumbnails(FILE* file, char* url_path, char* file_name, char* csv_url) {
     fprintf(file,
             "<table border=3 cellpadding=2 align=center bgcolor='#FFE6CC' width='75%%'>\n"
             "    <tr>\n"
@@ -605,7 +605,7 @@ void create_svg_file(FILE *file_arg, planet_pointer innermost_planet, const char
     }
 }
 
-FILE *open_csv_file(char *path, char *file_name) {
+FILE *open_csv_file(const char *path, const char *file_name) {
     FILE *file;
     char file_spec[120];
 

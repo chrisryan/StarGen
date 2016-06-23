@@ -36,6 +36,7 @@ namespace StarGen {
 
             void setOutputFormat(OutputFormats of);
             void setGraphicFormat(GraphicFormats gf);
+            void setOutputPath(const char *);
 
             void setFlags(int f);
             void addFlag(int f);
@@ -67,7 +68,6 @@ namespace StarGen {
             void setFlagChar(char c);
 
             int generate(
-                 char *path,            // OS path to where to write files
                  char *url_path_arg,    // HTML path to parent of both the
                                      //  directory named in 'path' and
                                      //  the ref directory with images
@@ -112,6 +112,7 @@ namespace StarGen {
 
             OutputFormats out_format;
             GraphicFormats graphic_format;
+            const char * output_path;
             int flags_arg;
             int sys_no_arg;
             int incr_arg;
@@ -191,13 +192,3 @@ namespace StarGen {
 #define fOnlyJovianHabitable    0x0400
 #define fOnlyEarthlike            0x0800
 
-                                        // OS-specific constants for finding
-                                        // the default output directory and
-                                        // other dirs:
-#ifdef WIN32
-#define    SUBDIR    "html\\"
-#define DIRSEP    "\\"
-#else
-#define    SUBDIR    "html/"
-#define DIRSEP    "/"
-#endif

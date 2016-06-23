@@ -60,6 +60,10 @@ namespace StarGen {
         this->graphic_format = gf;
     }
 
+    void Stargen::setOutputPath(const char * path) {
+        this->output_path = path;
+    }
+
     void Stargen::setFlags(int f) {
         this->flags_arg = f;
     }
@@ -773,13 +777,12 @@ namespace StarGen {
         }
     }
 
-    int Stargen::generate(char * path, char * url_path_arg, char * filename_arg, char * sys_name_arg, FILE * sgOut) {
-        char default_path[] = SUBDIR; // OS specific
+    int Stargen::generate(char * url_path_arg, char * filename_arg, char * sys_name_arg, FILE * sgOut) {
         char default_url_path[] = "../";
         char *url_path = default_url_path;
         char thumbnail_file[300] = "Thumbnails";
         char file_name[300] = "StarGen";
-        char subdir[300] = "";
+        const char *subdir = NULL;
         char csv_file_name[300] = "StarGen.csv";
 
         FILE *thumbnails = NULL;
@@ -801,37 +804,11 @@ namespace StarGen {
             only_habitable = false;
         }
 
-        if ((path == NULL) || (path[0] == '\0')) {
-            path = default_path;
-        }
-
         if ((url_path_arg != NULL) && (url_path_arg[0] != '\0')) {
             url_path = url_path_arg;
         }
 
-        { // Find the last sub-dir in the path:
-            size_t l = strlen(DIRSEP);
-            char* s = path;
-            char* e = s + strlen(s) - l;
-
-            if (e < s || (strcmp(e, DIRSEP) != 0)) {
-                fprintf(stderr, "Invalid path: '%s'\n", path);
-                return 1;
-            }
-
-            for (;;) {
-                char*    p = strstr(s, DIRSEP);
-
-                if (p >= e) {
-                    break;
-                }
-
-                s = p + l;
-            }
-
-            strncpy (subdir, s, strlen(s) - l);
-            strncat (subdir, "/", 80-strlen(subdir));
-        }
+        subdir = Util::getLastSubdir(this->output_path);
 
         Sun sun = Sun(0.0, this->mass_arg, 0.0, 0.0, 0.0, "");
         int system_count = this->count_arg;
@@ -859,9 +836,9 @@ namespace StarGen {
                 strcpy(thumbnail_file, filename_arg);
             }
 
-            thumbnails = open_html_file ("Thumbnails", this->flag_seed, path, url_path, thumbnail_file, ".html", this->progname, sgOut);
+            thumbnails = open_html_file ("Thumbnails", this->flag_seed, this->output_path, url_path, thumbnail_file, ".html", this->progname, sgOut);
             if (thumbnails == NULL) {
-                fprintf(stderr, "Could not open file %s%s\n", path, thumbnail_file);
+                fprintf(stderr, "Could not open file %s%s\n", this->output_path, thumbnail_file);
                 exit(0);
             }
         }
@@ -920,16 +897,16 @@ namespace StarGen {
 
                 sprintf(&csv_url[0], "%s%s%s", url_path, subdir, csv_file_name);
 
-                csv_file = open_csv_file (path, csv_file_name);
+                csv_file = open_csv_file (this->output_path, csv_file_name);
             }
 
             if ((csv_file == NULL) && !((this->out_format == CSV) && (sgOut != NULL))) {
-                fprintf(stderr, "Could not open file %s%s\n", path, csv_file_name);
+                fprintf(stderr, "Could not open file %s%s\n", this->output_path, csv_file_name);
                 exit(0);
             }
 
             if (thumbnails != NULL) {
-                csv_thumbnails(thumbnails, url_path, subdir, csv_file_name, csv_url);
+                csv_thumbnails(thumbnails, url_path, csv_file_name, csv_url);
             }
         }
 
@@ -1122,12 +1099,12 @@ namespace StarGen {
                 FILE *html_file = NULL;
                 switch (this->out_format) {
                     case fSVG:
-                        create_svg_file (sgOut, innermost_planet, path, file_name, ".svg", this->progname);
+                        create_svg_file (sgOut, innermost_planet, this->output_path, file_name, ".svg", this->progname);
                         break;
 
                     case HTML:
                         if ((this->graphic_format == SVG) && (sgOut == NULL)) {
-                            create_svg_file (NULL, innermost_planet, path, file_name, ".svg", this->progname);
+                            create_svg_file (NULL, innermost_planet, this->output_path, file_name, ".svg", this->progname);
                         }
 
                         if (thumbnails != NULL) {
@@ -1142,7 +1119,7 @@ namespace StarGen {
                                 fileOut = sgOut;
                             }
 
-                            html_file = open_html_file(system_name, this->flag_seed, path, url_path, file_name, ".html",
+                            html_file = open_html_file(system_name, this->flag_seed, this->output_path, url_path, file_name, ".html",
                                                         this->progname, fileOut);
 
                             if (NULL != html_file) {
@@ -1153,7 +1130,7 @@ namespace StarGen {
                                 html_describe_system(innermost_planet, this->isFlag(fDoGases), url_path, html_file);
                                 close_html_file(html_file);
                             } else {
-                                fprintf(stderr, "Could not open file %s%s%s\n", path, file_name, ".html");
+                                fprintf(stderr, "Could not open file %s%s%s\n", this->output_path, file_name, ".html");
                                 exit(0);
                             }
                         }

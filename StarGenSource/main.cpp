@@ -17,10 +17,11 @@
 #include "stargen.h"
 
 #include "Catalogs.h"
+#include "Util.h"
 
 using namespace StarGen;
 
-void usage(char *prognam) {
+void usage(const char *prognam) {
     fprintf(stderr, "Usage: %s [options] [system name]\n", prognam);
     fprintf(
         stderr,
@@ -67,13 +68,13 @@ void usage(char *prognam) {
 
 int main(int argc, char *argv[]) {
     char flag_char = '?';
-    char path[300] = SUBDIR;
+    char path[300] = "html";
     char url_path_arg[300] = "";
     char filename_arg[300] = "";
     char arg_name [80] = "";
 
     bool use_stdout = false;
-    char * prognam;
+    const char * prognam;
     catalog * catalog = NULL;
 
     char * c = NULL;
@@ -82,11 +83,7 @@ int main(int argc, char *argv[]) {
     bool listCatalog = false;
     bool listCatalogAsHTML = false;
 
-    prognam = argv[0];
-
-    if ((c = strrchr(prognam, DIRSEP[0])) != NULL) {
-        prognam = c + 1;
-    }
+    prognam = Util::getLastSubdir(argv[0]);
 
     if (argc <= 1) {
         usage(prognam);
@@ -251,10 +248,6 @@ int main(int argc, char *argv[]) {
                         strcpy(path, c);
                     }
 
-                    if (strcmp(path + strlen(path) - strlen(DIRSEP), DIRSEP) != 0) {
-                        strncat (path, DIRSEP, 80-strlen(path));
-                    }
-
                     skip = true;
                     break;
                 case 'u':
@@ -380,7 +373,8 @@ int main(int argc, char *argv[]) {
 
     oStargen->setCatalog(catalog);
     oStargen->setFlagChar(flag_char);
-    oStargen->generate(path, url_path_arg, filename_arg, arg_name, use_stdout ? stdout : NULL);
+    oStargen->setOutputPath(path);
+    oStargen->generate(url_path_arg, filename_arg, arg_name, use_stdout ? stdout : NULL);
 
     return 0;
 }
